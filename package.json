@@ -22,11 +22,11 @@
     "update:deps:major": "pnpm dlx taze major -r -w"
   },
   "devDependencies": {
-    "@maas/config": "^1.10.1",
-    "@turbo/gen": "^2.8.1",
-    "eslint": "^9.39.2",
-    "prettier": "^3.8.1",
-    "turbo": "^2.9.14"
+    "@maas/config": "^1.16.1",
+    "@turbo/gen": "^2.11.7",
+    "eslint": "^10.12.0",
+    "prettier": "^3.9.9",
+    "turbo": "^2.11.7"
   },
   "engines": {
     "node": ">=18",
