@@ -1,0 +1,44 @@
+version: 2
+updates:
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    commit-message:
+      # Prefix all commit messages with "chore: "
+      prefix: 'chore'
+    rebase-strategy: 'auto'
+    groups:
+      development:
+        dependency-type: 'development'
+      production:
+        dependency-type: 'production'
+  # - package-ecosystem: 'npm'
+  #   directory: '/apps/frontend'
+  #   schedule:
+  #     interval: 'monthly'
+  #   commit-message:
+  #     # Prefix all commit messages with "chore(frontend): "
+  #     prefix: 'chore(frontend)'
+  #   groups:
+  #     development:
+  #       dependency-type: 'development'
+  #     production:
+  #       dependency-type: 'production'
+  #   ignore:
+  #     - dependency-name: '@maas/vue-equipment'
+  #     - dependency-name: '@maas/mirror'
+  #     - dependency-name: 'nuxt'
+  - package-ecosystem: 'npm'
+    directory: '/packages/config'
+    schedule:
+      interval: 'weekly'
+    commit-message:
+      # Prefix all commit messages with "chore(config): "
+      prefix: 'chore(config)'
+    rebase-strategy: 'auto'
+    groups:
+      development:
+        dependency-type: 'development'
+      production:
+        dependency-type: 'production'
