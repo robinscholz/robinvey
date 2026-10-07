@@ -1,0 +1,35 @@
+{
+  "name": "@robinscholz/web",
+  "private": true,
+  "type": "module",
+  "description": "robinvey.com: the one-page site set from Nuxt Content, and the CV rendered to /cv.pdf",
+  "contributors": [
+    {
+      "name": "Robin Vey",
+      "url": "https://github.com/robinscholz"
+    }
+  ],
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt generate",
+    "preview": "npx serve .output/public",
+    "lint": "eslint .",
+    "typecheck": "nuxt typecheck",
+    "prepare:types": "nuxt prepare"
+  },
+  "dependencies": {
+    "@jasy/pdf": "1.0.0-beta.3",
+    "@nuxt/content": "^3.16.1",
+    "@nuxt/kit": "^4.6.0",
+    "@robinscholz/base": "workspace:*",
+    "nuxt": "^4.6.0",
+    "vue": "^3.5.43"
+  },
+  "devDependencies": {
+    "@maas/config": "^1.16.1",
+    "eslint": "^10.9.1",
+    "typescript": "^5.9.3",
+    "vue-tsc": "^3.3.12",
+    "zod": "^4.6.5"
+  }
+}

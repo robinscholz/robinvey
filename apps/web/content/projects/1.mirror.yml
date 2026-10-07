@@ -1,0 +1,4 @@
+name: Mirror
+description: 'A library for building your own design system: DTCG tokens, generated Tailwind utilities, accessible headless Vue components and a CLI that ties them together.'
+year: 2022
+url: https://github.com/magicasaservice/mirror

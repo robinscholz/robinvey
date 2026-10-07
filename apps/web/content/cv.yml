@@ -1,0 +1,11 @@
+summary: 'Software engineer with a design degree from the Gerrit Rietveld Academie. I build interfaces and the foundations underneath them: design systems, component libraries, API layers, agent skills and more. I ran my own design and technology practice and worked as a creative developer at KMS Team before joining Magic as a Service™.'
+education:
+  - institution: Gerrit Rietveld Academie
+    degree: Bachelor of Arts in Design
+    end: '2015'
+languages:
+  - name: German
+    level: native
+  - name: English
+    level: fluent
+interests: Mountaineering, ski touring, climbing, cycling and photography.

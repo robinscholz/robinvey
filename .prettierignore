@@ -1,0 +1,6 @@
+.nuxt
+.output
+.maas
+.data
+.turbo
+pnpm-lock.yaml

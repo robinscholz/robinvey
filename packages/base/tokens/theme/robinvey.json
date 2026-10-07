@@ -1,0 +1,108 @@
+{
+  "app": {
+    "color": {
+      "surface": {
+        "bg": {
+          "base": {
+            "$value": "{config.color.palette.stone.solid.1}",
+            "$type": "color"
+          }
+        },
+        "fg": {
+          "default": {
+            "$value": "{config.color.palette.stone.solid.15}",
+            "$type": "color"
+          },
+          "muted": {
+            "$value": "{config.color.palette.stone.solid.10}",
+            "$type": "color"
+          },
+          "subtle": {
+            "$value": "{config.color.palette.stone.solid.5}",
+            "$type": "color"
+          }
+        }
+      },
+      "hue": {
+        "1": {
+          "$value": "oklch(0.63 0.248 29)",
+          "$type": "color"
+        },
+        "2": {
+          "$value": "oklch(0.72 0.178 55)",
+          "$type": "color"
+        },
+        "3": {
+          "$value": "oklch(0.79 0.163 80)",
+          "$type": "color"
+        },
+        "4": {
+          "$value": "oklch(0.62 0.202 142)",
+          "$type": "color"
+        },
+        "5": {
+          "$value": "oklch(0.62 0.198 255)",
+          "$type": "color"
+        },
+        "6": {
+          "$value": "oklch(0.55 0.249 282)",
+          "$type": "color"
+        },
+        "7": {
+          "$value": "oklch(0.63 0.298 317)",
+          "$type": "color"
+        }
+      }
+    },
+    "fontFamily": {
+      "surface": {
+        "display": {
+          "$value": "ABC Areal",
+          "$type": "fontFamily"
+        },
+        "title": {
+          "$value": "ABC Areal",
+          "$type": "fontFamily"
+        },
+        "subtitle": {
+          "$value": "ABC Areal",
+          "$type": "fontFamily"
+        },
+        "callout": {
+          "$value": "ABC Areal",
+          "$type": "fontFamily"
+        },
+        "body": {
+          "$value": "ABC Areal",
+          "$type": "fontFamily"
+        },
+        "caption": {
+          "$value": "ABC Areal",
+          "$type": "fontFamily"
+        },
+        "footnote": {
+          "$value": "ABC Areal",
+          "$type": "fontFamily"
+        },
+        "code": {
+          "$value": "ABC Areal",
+          "$type": "fontFamily"
+        }
+      },
+      "component": {
+        "text": {
+          "$value": "ABC Areal",
+          "$type": "fontFamily"
+        },
+        "number": {
+          "$value": "ABC Areal",
+          "$type": "fontFamily"
+        },
+        "symbol": {
+          "$value": "ABC Areal",
+          "$type": "fontFamily"
+        }
+      }
+    }
+  }
+}

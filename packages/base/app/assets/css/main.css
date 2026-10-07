@@ -1,0 +1,83 @@
+@reference './tailwind.css';
+
+@font-face {
+  font-family: 'ABC Areal';
+  src: url('../fonts/ABCArealSuperfamilyVariable.woff2') format('woff2');
+  font-weight: 400 700;
+  font-style: oblique 0deg 12deg;
+  font-display: swap;
+}
+
+@layer base {
+  *,
+  ::before,
+  ::after {
+    font-variation-settings:
+      'MONO' 50,
+      'DRKM' var(--axis-dark, 0);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  [data-color-mode='dark'] {
+    --axis-dark: 1;
+  }
+
+  body {
+    margin: 0;
+    font-kerning: normal;
+    overflow-x: clip;
+    @apply bg-surface-base text-surface text-base;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 1px solid currentColor;
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background-color: color-mix(
+      in oklch,
+      var(--ui-selection-hue) 40%,
+      transparent
+    );
+  }
+
+  [data-scramble][aria-busy='true'] {
+    white-space: pre-line;
+  }
+
+  [data-scramble][aria-busy='true'],
+  [data-scramble][aria-busy='true'] * {
+    white-space-collapse: preserve-breaks;
+    text-wrap-mode: nowrap;
+  }
+
+  [data-intro] [data-scramble] {
+    visibility: hidden;
+    animation: intro-fallback 0s 2s forwards;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
+  }
+}
+
+@keyframes intro-fallback {
+  to {
+    visibility: visible;
+  }
+}

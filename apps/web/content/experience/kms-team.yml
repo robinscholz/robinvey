@@ -1,0 +1,10 @@
+company: KMS Team
+url: https://www.kms-team.com
+role: Creative Developer
+location: Munich
+# TODO: start and end months
+start: '2019'
+end: '2022'
+summary: Built prototypes, ran technical research, liaised with our designers and managed external software engineering partners.
+highlights:
+  - Oversaw the technical implementation of the company’s website, unified several design systems for Zeiss and built an advent calendar for Zürcher Kantonalbank.

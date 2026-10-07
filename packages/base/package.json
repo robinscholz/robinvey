@@ -1,0 +1,53 @@
+{
+  "name": "@robinscholz/base",
+  "private": true,
+  "type": "module",
+  "description": "Nuxt layer for robinvey: mirror v2, vue-equipment and magic-image wiring, the ABC Areal token theme, the type system and the Ui module",
+  "contributors": [
+    {
+      "name": "Robin Vey",
+      "url": "https://github.com/robinscholz"
+    }
+  ],
+  "main": "./nuxt.config.ts",
+  "exports": {
+    ".": "./nuxt.config.ts",
+    "./app/*": "./app/*.ts",
+    "./app/assets/*": "./app/assets/*",
+    "./tokens/*": "./tokens/*"
+  },
+  "scripts": {
+    "build": "mirror tokens && mirror css",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@floating-ui/vue": "^1.1.10",
+    "@maas/magic-image": "^1.0.2",
+    "@maas/mirror": "link:../../../../@maas/mirror",
+    "@maas/vue-autosize": "^1.8.0",
+    "@maas/vue-equipment": "^1.0.0-beta.84",
+    "@maas/vue-primitive": "^1.4.0",
+    "@nuxt/icon": "^2.5.1",
+    "@nuxt/image": "^2.1.0",
+    "@nuxt/kit": "^4.6.0",
+    "@nuxtjs/color-mode": "^3.5.2",
+    "@tailwindcss/vite": "^4.3.3",
+    "@unlazy/nuxt": "^2.0.1",
+    "@vueuse/core": "^14.4.0",
+    "defu": "^6.1.7",
+    "focus-trap": "^7.8.0",
+    "mitt": "^3.0.1",
+    "tailwindcss": "^4.3.3"
+  },
+  "peerDependencies": {
+    "nuxt": "^4.6.0",
+    "vue": "^3.5.43"
+  },
+  "devDependencies": {
+    "@maas/config": "^1.16.1",
+    "eslint": "^10.9.1",
+    "nuxt": "^4.6.0",
+    "typescript": "^5.9.3",
+    "vue": "^3.5.43"
+  }
+}
