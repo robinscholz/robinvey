@@ -183,8 +183,9 @@ static `cv.pdf`.
 It follows the site: name, role and location in the margin column with the
 summary beside them, then one section after another, Contact last. Space comes
 in lines of text: one between the entries of a section, two above a section.
-Each role reads as one paragraph. Linked titles, and the contact lines, carry
-the site’s outbound arrow after them, which links too.
+Each role reads as one paragraph. Project titles link out and carry the site’s
+outbound arrow after them, which links too; company names and the contact lines
+link without it.
 
 The PDF engine embeds static faces, and reads kerning only from plain
 pair-positioning lookups, which ABC Areal mostly wraps in Extension lookups.

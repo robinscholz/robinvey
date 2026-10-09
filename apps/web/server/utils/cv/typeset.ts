@@ -3,10 +3,14 @@ import type { TextStyle } from '@jasy/pdf'
 
 type TextSegment = ReturnType<typeof span>
 
-interface TypesetPayload {
+export interface TypesetPart {
   text: string
-  size: number
   style?: TextStyle
+}
+
+interface TypesetPayload {
+  parts: Array<TypesetPart>
+  size: number
 }
 
 interface SpacingPayload {
@@ -41,37 +45,43 @@ function spacing({ char, previous, next, afterNext }: SpacingPayload): number {
   return 0
 }
 
-// The text as runs for `Text`, with each corrected glyph set apart and
-// carrying its own letter spacing. Only for text that stays on one line: the
-// engine may break a line wherever two runs meet, so a correction inside a
-// wrapping paragraph could split its word across lines.
-export function typeset({
-  text,
-  size,
-  style = {},
-}: TypesetPayload): Array<TextSegment> {
-  const chars = [...text]
+// The parts as runs for `Text`, each in its own style, with each corrected
+// glyph set apart and carrying its own letter spacing. The corrections read
+// across parts, so an r still meets a comma that follows it in another tone.
+// Only for text that stays on one line: the engine may break a line wherever
+// two runs meet, so a correction inside a wrapping paragraph could split its
+// word across lines.
+export function typeset({ parts, size }: TypesetPayload): Array<TextSegment> {
+  const chars = parts.flatMap(({ text, style = {} }) =>
+    [...text].map((char) => ({ char, style }))
+  )
   const segments: Array<TextSegment> = []
   let run = ''
-  chars.forEach((char, index) => {
+  let runStyle: TextStyle = {}
+  const flush = () => {
+    if (run) {
+      segments.push(span(run, runStyle))
+      run = ''
+    }
+  }
+  chars.forEach(({ char, style }, index) => {
     const space = spacing({
       char,
-      previous: chars[index - 1] ?? '',
-      next: chars[index + 1] ?? '',
-      afterNext: chars[index + 2] ?? '',
+      previous: chars[index - 1]?.char ?? '',
+      next: chars[index + 1]?.char ?? '',
+      afterNext: chars[index + 2]?.char ?? '',
     })
+    if (style !== runStyle) {
+      flush()
+      runStyle = style
+    }
     if (space === 0) {
       run += char
       return
     }
-    if (run) {
-      segments.push(span(run, style))
-      run = ''
-    }
+    flush()
     segments.push(span(char, { ...style, letterSpacing: space * size }))
   })
-  if (run) {
-    segments.push(span(run, style))
-  }
+  flush()
   return segments
 }

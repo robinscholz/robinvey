@@ -107,9 +107,6 @@ export function cvTransformer(item: CvCollectionItem | null) {
       degree: entry.degree,
       period: formatPeriod({ start: entry.start, end: entry.end }),
     })),
-    languages: (item?.languages ?? [])
-      .map((language) => `${language.name} (${language.level})`)
-      .join(', '),
     interests: item?.interests ?? '',
   }
 }

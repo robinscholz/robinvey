@@ -90,7 +90,6 @@ export default defineContentConfig({
             })
           )
           .optional(),
-        languages: z.array(z.object({ name: z.string(), level: z.string() })),
         interests: z.string().optional(),
       }),
     }),
