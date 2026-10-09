@@ -207,17 +207,11 @@ dates, because the engine may break a line wherever two text runs meet. The site
 ABC Areal is licensed from Dinamo. The font files are committed, so keep this
 repository private.
 
-## Local checkouts
-
-`@maas/mirror` is linked from `../../@maas/mirror`, since mirror v2 is not on
-the registry yet. A build from a bare git checkout (CI, Coolify) needs it
-published first; nothing else depends on the sibling folders.
-
 ## Tooling
 
 - [Turborepo](https://turbo.build/repo), pnpm workspaces
 - [Nuxt 4](https://nuxt.com), [Nuxt Content](https://content.nuxt.com)
-- [mirror v2](../../@maas/mirror), [vue-equipment](https://github.com/magicasaservice/vue-equipment), [magic-image](https://github.com/magicasaservice/magic-image)
+- [mirror v2](https://github.com/magicasaservice/mirror), [vue-equipment](https://github.com/magicasaservice/vue-equipment), [magic-image](https://github.com/magicasaservice/magic-image)
 - [`@jasy/pdf`](https://www.npmjs.com/package/@jasy/pdf) for the CV
 - [`@nuxt/icon`](https://github.com/nuxt/icon) with the Symbols collection
 - ESLint and Prettier presets from `@maas/config`

@@ -66,11 +66,6 @@ export default defineNuxtConfig({
   ],
 
   vite: {
-    // The linked mirror checkout resolves its own '@vueuse/core', bound to a
-    // second Vue; deduping pins one copy of each until v2 is on the registry.
-    resolve: {
-      dedupe: ['vue', '@vueuse/core'],
-    },
     plugins: [tailwindcss()],
   },
 })

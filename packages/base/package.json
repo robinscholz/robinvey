@@ -23,7 +23,7 @@
   "dependencies": {
     "@floating-ui/vue": "^1.1.10",
     "@maas/magic-image": "^1.0.2",
-    "@maas/mirror": "link:../../../../@maas/mirror",
+    "@maas/mirror": "^2.0.0-beta.1",
     "@maas/vue-autosize": "^1.8.0",
     "@maas/vue-equipment": "^1.0.0-beta.84",
     "@maas/vue-primitive": "^1.4.0",
@@ -37,6 +37,7 @@
     "defu": "^6.1.7",
     "focus-trap": "^7.8.0",
     "mitt": "^3.0.1",
+    "rimraf": "^6.1.3",
     "tailwindcss": "^4.3.3"
   },
   "peerDependencies": {
