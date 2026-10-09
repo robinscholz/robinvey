@@ -56,7 +56,7 @@ const { on, off } = useUiEmitter()
 const char = computed(() => glyph(position))
 
 const rule = useTemplateRef('rule')
-const { width } = useElementSize(rule)
+const { width, height } = useElementSize(rule)
 const advance = ref(0)
 const tracking = ref(0)
 const offset = ref(0)
@@ -137,10 +137,12 @@ function metrics({ char, glyph, text }: GlyphMetricsPayload): GlyphMetrics {
   }
 }
 
-// The type scales with the viewport, so the glyph is measured again from
-// what is on screen whenever the width changes. Measuring the rendered text
-// keeps kerning and the variable font’s axes in the number. Stand-ins would
-// skew it, so a scrambling rule is measured once it settles.
+// The type steps up a size at a breakpoint, so the glyph is measured again
+// from what is on screen whenever the rule’s box changes. Its width can change
+// before the type does; it is a line tall, so its height follows the type.
+// Measuring the rendered text keeps kerning and the variable font’s axes in
+// the number. Stand-ins would skew it, so a scrambling rule is measured once
+// it settles.
 function measure() {
   const element = rule.value
   const text = element?.textContent ?? ''
@@ -172,7 +174,7 @@ function settle(value: number) {
 
 on('introProgress', settle)
 
-watch([width, char, scrambling], measure, { flush: 'post' })
+watch([width, height, char, scrambling], measure, { flush: 'post' })
 
 onMounted(async () => {
   await document.fonts.ready

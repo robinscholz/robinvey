@@ -8,6 +8,15 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'ABC Areal';
+  src: url('../fonts/ABCArealProportional.woff2') format('woff2');
+  font-weight: 400 700;
+  font-style: oblique 0deg 12deg;
+  font-display: swap;
+  unicode-range: U+0028-0029, U+005B, U+005D;
+}
+
 @layer base {
   *,
   ::before,
@@ -30,8 +39,9 @@
   body {
     margin: 0;
     font-kerning: normal;
+    word-spacing: -0.1em;
     overflow-x: clip;
-    @apply bg-surface-base text-surface text-base;
+    @apply bg-surface-base text-surface text-sm sm:text-base;
   }
 
   p {
