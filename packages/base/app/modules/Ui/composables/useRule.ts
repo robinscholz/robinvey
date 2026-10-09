@@ -1,10 +1,6 @@
 // ABC Areal has no asterisk operator; it comes from the system-ui fallback,
 // where it sits on the same axis as the plus and at about its size.
-const GLYPHS = ['∗', '–', '+', '#', '%', '=']
-
-// Red to violet down the page, one hue per rule; indigo sits too close to
-// blue to tell apart in a line of small glyphs.
-const HUES = [1, 2, 3, 4, 5, 7]
+const GLYPHS = ['∗', '–', '+', '×', '#', '%', '=']
 
 export function useRule() {
   // Public state
@@ -22,15 +18,10 @@ export function useRule() {
     return glyphs.value[position % GLYPHS.length] ?? ''
   }
 
-  function hue(position: number): number {
-    return HUES[position % HUES.length] ?? 0
-  }
-
   return {
     glyphs,
     shuffle,
     glyph,
-    hue,
   }
 }
 

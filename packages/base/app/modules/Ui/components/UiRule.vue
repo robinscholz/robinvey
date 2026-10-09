@@ -1,10 +1,10 @@
 <template>
   <div
     ref="rule"
-    class="invisible relative h-lh overflow-hidden leading-[1lh] whitespace-nowrap select-none data-measured:visible"
+    class="text-surface-muted invisible relative h-lh overflow-hidden leading-[1lh] whitespace-nowrap select-none data-measured:visible"
     aria-hidden="true"
     :data-measured="measured || null"
-    :style="[{ color: color(hue(position)) }, spacing]"
+    :style="spacing"
   >
     <template v-if="scrambling">
       <span
@@ -49,8 +49,7 @@ const GAP = 0.35
 
 const { position } = defineProps<UiRuleProps>()
 
-const { glyph, hue } = useRule()
-const { color } = useHue()
+const { glyph } = useRule()
 const { on, off } = useUiEmitter()
 
 const char = computed(() => glyph(position))

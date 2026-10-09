@@ -2,10 +2,10 @@
   <div class="px-5 md:px-10" data-scramble>
     <main>
       <ProfileHeader :page="page" :profile="profile" />
-      <UiSection label="Now" emoji="⏳" :reel="REELS.now">
+      <UiSection label="Now" emoji="⏳" :reel="REELS.now" :rule="0">
         <p>{{ profile.now }}</p>
       </UiSection>
-      <UiSection label="Work" emoji="💼" :reel="REELS.work" :rule="0">
+      <UiSection label="Work" emoji="💼" :reel="REELS.work" :rule="1">
         <ProfileExperience :experience="experience" />
       </UiSection>
       <UiSection
@@ -13,11 +13,11 @@
         label="Sites"
         emoji="🌐"
         :reel="REELS.sites"
-        :rule="1"
+        :rule="2"
       >
         <ProfileSites :sites="sites" />
       </UiSection>
-      <UiSection label="Projects" emoji="🧰" :reel="REELS.projects" :rule="2">
+      <UiSection label="Projects" emoji="🧰" :reel="REELS.projects" :rule="3">
         <ProfileProjects :projects="projects" />
       </UiSection>
       <UiSection
@@ -25,15 +25,15 @@
         label="Writing"
         emoji="✍️"
         :reel="REELS.writing"
-        :rule="3"
+        :rule="4"
       >
         <ProfileWriting :writing="writing" />
       </UiSection>
-      <UiSection label="Contact" emoji="🐌" :reel="REELS.contact" :rule="4">
+      <UiSection label="Contact" emoji="🐌" :reel="REELS.contact" :rule="5">
         <ContentRenderer v-if="contact.document" :value="contact.document" />
       </UiSection>
     </main>
-    <ProfileColophon :colophon="page.colophon" :updated="updated" :rule="5" />
+    <ProfileColophon :colophon="page.colophon" :updated="updated" :rule="6" />
   </div>
 </template>
 
