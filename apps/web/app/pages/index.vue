@@ -5,7 +5,7 @@
       <UiSection label="Now" emoji="⏳" :reel="REELS.now" :rule="0">
         <p>{{ profile.now }}</p>
       </UiSection>
-      <UiSection label="Work" emoji="💼" :reel="REELS.work" :rule="1">
+      <UiSection label="Work" emoji="🌀" :reel="REELS.work" :rule="1">
         <ProfileExperience :experience="experience" />
       </UiSection>
       <UiSection
