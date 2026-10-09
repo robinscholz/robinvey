@@ -1,48 +1,121 @@
 <template>
-  <ClientOnly>
-    <m-radio-group
-      :model-value="preference"
-      :class="groupClass"
-      aria-label="Colour mode"
-      :options="{ orientation: 'horizontal' }"
-      @update:model-value="select"
+  <ColorScheme tag="div">
+    <magic-menu-provider
+      :id="menu.id"
+      :options="{
+        mode: 'dropdown',
+        scrollLock: false,
+        floating: { strategy: 'fixed' },
+        transition: { content: { default: 'ui-color-mode-menu' } },
+      }"
     >
-      <m-radio-root
-        v-for="option in options"
-        :key="option.value"
-        :value="option.value"
-        :class="itemClass"
-        @pointerenter="advance"
-      >
-        {{ option.label }}
-      </m-radio-root>
-    </m-radio-group>
-    <template #fallback>
-      <span :class="groupClass" aria-hidden="true">
-        <span v-for="option in options" :key="option.value" :class="itemClass">
-          {{ option.label }}
-        </span>
+      <magic-menu-view :id="menu.viewId" :placement="placement">
+        <magic-menu-trigger as-child>
+          <button
+            type="button"
+            :class="[
+              rowClass,
+              variant === 'button'
+                ? [
+                    boxClass,
+                    'hover:bg-primary-subtle-hover data-[active=true]:bg-primary-subtle-active py-[0.25lh]',
+                  ]
+                : 'text-surface-muted data-[active=true]:text-(--ui-hue)',
+            ]"
+            :aria-label="`Colour mode: ${current.label}`"
+            @pointerenter="variant === 'plain' && advance()"
+          >
+            <UiIcon :name="current.icon" />
+            <span>{{ current.label }}</span>
+          </button>
+        </magic-menu-trigger>
+        <magic-menu-content :arrow="false">
+          <div :class="[boxClass, 'py-[0.5lh]', menu.gapClass]">
+            <magic-menu-item
+              v-for="option in options"
+              :key="option.value"
+              :class="[rowClass, 'data-[active=true]:text-(--ui-hue)']"
+              @pointerenter="advance"
+              @click="select(option.value)"
+            >
+              <UiIcon
+                :name="option.value === preference ? 'check' : 'spacer'"
+              />
+              <UiIcon :name="option.icon" />
+              <span>{{ option.label }}</span>
+            </magic-menu-item>
+          </div>
+        </magic-menu-content>
+      </magic-menu-view>
+    </magic-menu-provider>
+    <template #placeholder>
+      <span :class="[rowClass, 'invisible']" aria-hidden="true">
+        <UiIcon :name="SYSTEM.icon" />
+        <span>{{ SYSTEM.label }}</span>
       </span>
     </template>
-  </ClientOnly>
+  </ColorScheme>
 </template>
 
 <script setup lang="ts">
+import { MenuIds, MenuViewIds } from '../utils/enums'
+
 type ColorModePreference = 'system' | 'light' | 'dark'
+
+type ColorModeMenuPlacement = 'top-start' | 'bottom-end'
+
+interface UiColorModeSwitchProps {
+  placement?: ColorModeMenuPlacement
+  variant?: 'plain' | 'button'
+}
 
 interface ColorModeOption {
   value: ColorModePreference
   label: string
+  icon: string
 }
+
+const SYSTEM: ColorModeOption = {
+  value: 'system',
+  label: 'System',
+  icon: 'device-phone',
+}
+
+const options: Array<ColorModeOption> = [
+  { value: 'dark', label: 'Dark', icon: 'moon' },
+  { value: 'light', label: 'Light', icon: 'sun' },
+  SYSTEM,
+]
+
+// Each placement is its own instance on the page, so each needs its own menu.
+const MENUS = {
+  'top-start': {
+    id: MenuIds.ColorModeTop,
+    viewId: MenuViewIds.ColorModeTop,
+    gapClass: 'mb-1.5',
+  },
+  'bottom-end': {
+    id: MenuIds.ColorModeBottom,
+    viewId: MenuViewIds.ColorModeBottom,
+    gapClass: 'mt-1.5',
+  },
+} satisfies Record<ColorModeMenuPlacement, unknown>
+
+const rowClass =
+  'flex cursor-pointer items-center gap-x-[1ch] whitespace-nowrap'
+
+// The primary tint is translucent, so the blur keeps content scrolling
+// underneath legible.
+const boxClass =
+  'bg-primary-subtle text-primary-on-subtle rounded-component-compact-sm px-[1ch] backdrop-blur-md'
+
+const { placement = 'top-start', variant = 'plain' } =
+  defineProps<UiColorModeSwitchProps>()
+
+const menu = computed(() => MENUS[placement])
 
 const colorMode = useColorMode()
 const { advance } = useHue()
-
-const options: Array<ColorModeOption> = [
-  { value: 'system', label: 'Auto' },
-  { value: 'light', label: 'Light' },
-  { value: 'dark', label: 'Dark' },
-]
 
 const preference = computed<ColorModePreference>(
   () =>
@@ -50,18 +123,11 @@ const preference = computed<ColorModePreference>(
     'system'
 )
 
-const groupClass = 'inline-flex gap-x-4'
+const current = computed(
+  () => options.find((entry) => entry.value === preference.value) ?? SYSTEM
+)
 
-const itemClass = [
-  'cursor-pointer text-surface-muted underline decoration-1 decoration-transparent underline-offset-[0.2em]',
-  'hover:text-(--ui-hue)',
-  'data-[checked=true]:text-surface data-[checked=true]:decoration-current',
-].join(' ')
-
-function select(value: unknown) {
-  const option = options.find((entry) => entry.value === value)
-  if (option) {
-    colorMode.preference = option.value
-  }
+function select(value: ColorModePreference) {
+  colorMode.preference = value
 }
 </script>

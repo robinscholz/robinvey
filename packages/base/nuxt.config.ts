@@ -20,7 +20,7 @@ export default defineNuxtConfig({
   ],
 
   vueEquipment: {
-    plugins: ['MagicAccordion'],
+    plugins: ['MagicAccordion', 'MagicMenu'],
   },
 
   magicImage: {

@@ -14,6 +14,11 @@
       :value="page.document"
       class="[&_p+p]:mt-[1lh]"
     />
+    <!-- Below lg the switch lives in the colophon; there’s no room up here.
+         The negative margin lines its label up with the name. -->
+    <div class="fixed top-10 right-10 z-10 -mt-[0.25lh] hidden lg:block">
+      <UiColorModeSwitch placement="bottom-end" variant="button" />
+    </div>
   </header>
 </template>
 

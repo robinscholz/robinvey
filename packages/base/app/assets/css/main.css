@@ -81,3 +81,13 @@
     visibility: visible;
   }
 }
+
+.ui-color-mode-menu-enter-active,
+.ui-color-mode-menu-leave-active {
+  transition: opacity 150ms ease-out;
+}
+
+.ui-color-mode-menu-enter-from,
+.ui-color-mode-menu-leave-to {
+  opacity: 0;
+}

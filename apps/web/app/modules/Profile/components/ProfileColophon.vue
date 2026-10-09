@@ -2,7 +2,7 @@
   <footer>
     <UiSection label="Colophon" emoji="🖋️" :reel="REEL" :rule="rule">
       <p class="text-surface-muted">{{ colophon }} Updated {{ updated }}.</p>
-      <div class="mt-[1lh]">
+      <div class="mt-[1lh] lg:hidden">
         <UiColorModeSwitch />
       </div>
     </UiSection>
