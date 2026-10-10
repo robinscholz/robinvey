@@ -1,7 +1,5 @@
 <template>
-  <header
-    class="grid-page items-baseline gap-y-[1lh] pt-6 pb-20 md:pt-10 md:pb-32"
-  >
+  <header class="grid-page items-baseline gap-y-[1lh] pt-6 pb-24 md:pt-10">
     <div>
       <h1 class="font-medium">{{ profile.name }}</h1>
       <p class="text-surface-muted">
