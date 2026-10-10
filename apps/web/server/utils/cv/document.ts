@@ -80,8 +80,8 @@ const MARGIN = { top: 32, right: 40, bottom: 28, left: 40 }
 const LINE = SIZE * LINE_HEIGHT
 const SECTION_SPACE = 2 * LINE
 
-// The role and place under the name, all that follows the lead of a title
-// and the footer step back in tone; everything else is set in black.
+// The role and place under the name, the company and dates after a title and
+// the footer step back in tone; everything else is set in black.
 const muted: TextOptions = { color: MUTED }
 
 // The Symbols arrow the site marks outbound links with, at weight 300, drawn
@@ -238,8 +238,8 @@ export function cvDocument(payload: CvDocumentPayload): JasyDocument {
       children: cv.education.map((entry) =>
         copy({
           parts: [
-            { text: entry.degree },
-            { text: `, ${entry.institution}, ${entry.period}`, style: muted },
+            { text: `${entry.degree}, ${entry.institution}` },
+            { text: `, ${entry.period}`, style: muted },
           ],
         })
       ),
