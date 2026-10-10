@@ -1,17 +1,18 @@
 {
-  "$schema": "https://turbo.build/schema.json",
+  "$schema": "https://turborepo.dev/schema.json",
   "globalDependencies": ["**/.env", "**/.env.*local"],
   "ui": "tui",
   "tasks": {
+    "transit": {
+      "dependsOn": ["^transit"]
+    },
     "build": {
       "dependsOn": ["^build"],
       "outputs": [".maas/**", ".output/**"]
     },
-    "lint": {
-      "dependsOn": ["^build"]
-    },
+    "lint": {},
     "typecheck": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["transit"]
     },
     "dev": {
       "cache": false,

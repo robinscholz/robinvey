@@ -15,7 +15,7 @@
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint -- --fix",
     "typecheck": "turbo run typecheck",
-    "format": "prettier --write \"**/*.{ts,mts,vue,css,json,md,yml}\"",
+    "format": "prettier --write \"**/*.{ts,mjs,vue,css,json,md,yml}\"",
     "preinstall": "npx only-allow pnpm",
     "uninstall": "pnpm dlx rimraf --glob ./**/node_modules --glob ./**/pnpm-lock.yaml",
     "update:deps": "pnpm dlx taze -r -w",

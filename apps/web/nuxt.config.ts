@@ -29,9 +29,11 @@ export default defineNuxtConfig({
     },
   },
 
-  // The transformers in shared/ read the collection types Content generates.
+  // The transformers in shared/ read the collection types Content generates,
+  // and the collection schemas sit outside every directory Nuxt checks.
   typescript: {
     sharedTsConfig: { include: ['./content/types.d.ts'] },
+    nodeTsConfig: { include: ['../content.config.ts'] },
   },
 
   devServer: { port: 3000 },

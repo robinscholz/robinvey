@@ -14,8 +14,7 @@
     "build": "nuxt generate",
     "preview": "npx serve .output/public",
     "lint": "eslint .",
-    "typecheck": "nuxt typecheck",
-    "prepare:types": "nuxt prepare"
+    "typecheck": "nuxt typecheck"
   },
   "dependencies": {
     "@jasy/pdf": "1.0.0-beta.3",
