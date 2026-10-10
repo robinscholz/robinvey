@@ -34,6 +34,17 @@ start from `https://robinvey.com`. Set another origin for a preview deploy:
 NUXT_PUBLIC_SITE_URL=https://preview.robinvey.com pnpm build
 ```
 
+Lint and typecheck before you push:
+
+```sh
+pnpm lint
+pnpm typecheck
+```
+
+Neither waits for the token build. `typecheck` runs through the app, so it
+covers the base layer and the content schemas too, and runs again whenever
+either package changes.
+
 ## Content
 
 Everything on the page and in the PDF comes from `apps/web/content`. Each
@@ -54,7 +65,7 @@ summary: 'I build interfaces and the systems underneath them: design systems …
 | `contact.md`       | `contact`    | The Contact paragraph                                                                   |
 | `profile.yml`      | `profile`    | Name, role, location, email, links and the “Now” line; the CV reads its email and links |
 | `experience/*.yml` | `experience` | Work, newest first by `start`                                                           |
-| `sites/*.yml`      | `sites`      | Sites, in file order, each with a year and a short description                          |
+| `sites/*.yml`      | `sites`      | Sites, newest first by `year`, then in file order, each with a short description        |
 | `projects/*.yml`   | `projects`   | Projects, in file order (`1.mirror.yml` comes first)                                    |
 | `writing/*.yml`    | `writing`    | Articles published elsewhere, newest first by `date`                                    |
 | `cv.yml`           | `cv`         | Everything only the PDF shows: summary, education, etc.                                 |
@@ -89,29 +100,30 @@ deployed, in development too, since the CDN cannot reach `localhost`.
 ## The look
 
 The page is set flush left, like a typed letter. Section labels sit in a margin
-column; each list is a ledger of a date or label, the entry and a mark (`+`,
-`↗`, `↓`). The grid is measured in `ch`, so every column lands on the same
-character grid. Structure comes from whitespace and typed rules: every section
-after the first opens with a line of one glyph, set with `UiRule` at the size
-and weight of the text. Each page load shuffles `∗`, `–`, `+`, `#`, `%` and `=`
-across the rules, which run through the rainbow hues from red to violet down the
-page. ABC Areal has no asterisk operator, so `∗` comes from the `system-ui`
-fallback. The server renders the rules empty, so the shuffle happens in the
+column; each list is a ledger of a date or label, the entry and a mark (`+` to
+open, `↗` to leave). The grid is measured in `ch`, so every column lands on the
+same character grid. Structure comes from whitespace and typed rules: every
+section opens with a line of one glyph, set with `UiRule` at the size and weight
+of the text in the muted ink. Each page load shuffles `∗`, `–`, `+`, `×`, `#`,
+`%` and `=` across the seven rules. ABC Areal has no asterisk operator, so `∗`
+comes from the `system-ui` fallback. The server renders the rules empty, so the shuffle happens in the
 browser and differs from one visit to the next. Every rule keeps the same
 visible gap between glyphs, 0.35em of the text from ink to ink, whatever each
 glyph’s own side bearings; it fits as many whole glyphs as the width allows,
 puts the first and last on the text inset, centres the glyph on the middle of a
 capital, and measures again whenever the width or the type size changes.
 
-Everything is set in ABC Areal Semi Mono: one size, `text-base`, and two weights,
-regular and `font-medium`. Tailwind’s other sizes and weights are reset in
-`packages/base/app/assets/css/tailwind.css`, so a second size cannot creep in.
+Everything is set in ABC Areal Semi Mono at one size, `text-sm` on phones and
+`text-base` from the `sm` breakpoint, in two weights, regular and
+`font-medium`. Tailwind’s other sizes and weights are reset in
+`packages/base/app/assets/css/tailwind.css`, so no other size can creep in.
 
 The font is the variable ABC Areal Superfamily with its `MONO` axis fixed at
-50: Semi Mono, mono letterforms on proportional widths. The date column turns
-on tabular figures so years still line up digit by digit. Dark mode also
-switches on the font’s `DRKM` axis, which thins the strokes for light type on
-a dark ground.
+50: Semi Mono, mono letterforms on proportional widths. Semi Mono sets round
+and square brackets in wide cells, which opens gaps around them, so those come
+from a proportional cut instead. The date column turns on tabular figures so
+years still line up digit by digit. Dark mode also switches on the font’s
+`DRKM` axis, which thins the strokes for light type on a dark ground.
 
 Colour comes from mirror tokens. The `robinvey` theme in
 `packages/base/tokens/theme` sets the paper, the ink and the font family over
@@ -135,9 +147,9 @@ not recolour a selection mid-drag.
 `useHue()` in the Ui module owns the counter. Rows, links and the colour mode
 switch call `advance()` when the pointer enters, and read the result as
 `--ui-hue`. Links in markdown render through `ProseA`, which hands them to
-`UiLink`, so the intro and the Contact paragraph behave like every other link. An open row in Work or Projects
-pins the hue it had when it was opened and keeps it until it closes, so open
-rows stay easy to find.
+`UiLink`, so the intro and the Contact paragraph behave like every other link.
+An open row in Work or Projects pins the hue it had when it was opened and
+keeps it until it closes, so open rows stay easy to find.
 
 ## Intro
 
@@ -190,8 +202,10 @@ link without it.
 The PDF engine embeds static faces, and reads kerning only from plain
 pair-positioning lookups, which ABC Areal mostly wraps in Extension lookups.
 `apps/web/server/assets/fonts` therefore holds a Semi Mono instance at 400, the
-CV’s only weight, with just its kerning lookups, unwrapped; glyphs and kerning
-values are untouched. Cut it again after a font update:
+CV’s only weight, with just its kerning lookups, unwrapped, and its space a
+tenth of an em narrower; glyphs and kerning values are untouched. Brackets
+come from a proportional cut, as on the site, and the section emoji from a
+Noto Color Emoji subset. Cut Semi Mono again after a font update:
 
 ```sh
 python3 apps/web/scripts/cv-font.py
@@ -200,8 +214,8 @@ python3 apps/web/scripts/cv-font.py
 `server/utils/cv/typeset.ts` adds the optical corrections the kerning leaves: a
 comma or full stop moves in to meet an r, and the dash in a range of years gets
 a thin space either side. They apply to one-line text only, such as titles and
-dates, because the engine may break a line wherever two text runs meet. The site sets that dash the same way with
-`UiRange`.
+dates, because the engine may break a line wherever two text runs meet. The
+site sets that dash the same way with `UiRange`.
 
 ## Fonts
 
