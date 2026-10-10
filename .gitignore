@@ -31,3 +31,6 @@ yarn-error.log*
 .output
 .data
 dist
+
+# cloudflare
+.wrangler

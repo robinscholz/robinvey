@@ -17,7 +17,10 @@ export default defineNuxtConfig({
     },
   },
 
+  // Pinned, as Nitro detects Cloudflare's build machines and would swap in a
+  // Worker preset whose generated config takes over `wrangler deploy`.
   nitro: {
+    preset: 'static',
     prerender: {
       routes: ['/', '/cv.pdf'],
     },

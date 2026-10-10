@@ -1,0 +1,9 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "robinvey",
+  "compatibility_date": "2026-10-10",
+  "assets": {
+    "directory": "./apps/web/.output/public",
+    "not_found_handling": "404-page",
+  },
+}

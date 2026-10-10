@@ -12,7 +12,7 @@
   "scripts": {
     "dev": "nuxt dev",
     "build": "nuxt generate",
-    "preview": "npx serve .output/public",
+    "preview": "wrangler dev --config ../../wrangler.jsonc",
     "lint": "eslint .",
     "typecheck": "nuxt typecheck"
   },

@@ -27,8 +27,10 @@ pnpm preview
 ```
 
 `build` writes the static site to `apps/web/.output/public`, `cv.pdf`
-included. Canonical URLs, the links printed on the CV and image sources all
-start from `https://robinvey.com`. Set another origin for a preview deploy:
+included. `preview` serves it the way Cloudflare does, with the same cache
+headers and 404 page, on port 8787. Canonical URLs, the links printed on the CV
+and image sources all start from `https://robinvey.com`. Set another origin for
+a preview deploy:
 
 ```sh
 NUXT_PUBLIC_SITE_URL=https://preview.robinvey.com pnpm build
@@ -217,6 +219,26 @@ a thin space either side. They apply to one-line text only, such as titles and
 dates, because the engine may break a line wherever two text runs meet. The
 site sets that dash the same way with `UiRange`.
 
+## Deploy
+
+The site is a Cloudflare Worker that serves only static files, configured in
+`wrangler.jsonc`. Workers Builds deploys every push to `main`, and every other
+branch gets a preview URL. The build runs from the repository root:
+
+| Setting        | Value                 |
+| -------------- | --------------------- |
+| Root directory | `/`                   |
+| Build command  | `pnpm build`          |
+| Deploy command | `npx wrangler deploy` |
+
+`apps/web/public/_headers` caches the hashed files in `/_nuxt` for a year.
+Everything else, the page and `cv.pdf` included, revalidates on every request,
+so a deploy shows up at once.
+
+The Nitro preset is pinned to `static`. On Cloudflare’s build machines Nitro
+would otherwise switch to a Worker preset, and its generated config would take
+over `wrangler deploy`.
+
 ## Fonts
 
 ABC Areal is licensed from Dinamo. The font files are committed, so keep this
@@ -230,3 +252,4 @@ repository private.
 - [`@jasy/pdf`](https://www.npmjs.com/package/@jasy/pdf) for the CV
 - [`@nuxt/icon`](https://github.com/nuxt/icon) with the Symbols collection
 - ESLint and Prettier presets from `@maas/config`
+- [Cloudflare Workers](https://developers.cloudflare.com/workers/static-assets/) with static assets, deployed by Workers Builds
