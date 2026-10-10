@@ -43,7 +43,7 @@ const { advance, color } = useHue()
 const { on, off } = useUiEmitter()
 
 // The mark waits out the intro, then fades in once the text has settled.
-const pending = ref(false)
+const pending = shallowRef(false)
 
 function hold() {
   pending.value = true

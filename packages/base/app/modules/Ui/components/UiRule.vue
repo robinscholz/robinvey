@@ -55,8 +55,8 @@ const { on, off } = useUiEmitter()
 
 const char = computed(() => glyph(position))
 
-const rule = useTemplateRef('rule')
-const { width, height } = useElementSize(rule)
+const ruleRef = useTemplateRef('rule')
+const { width, height } = useElementSize(ruleRef)
 const advance = ref(0)
 const tracking = ref(0)
 const offset = ref(0)
@@ -146,7 +146,7 @@ function metrics({ char, glyph, text }: GlyphMetricsPayload): GlyphMetrics {
 // the number. Stand-ins would skew it, so a scrambling rule is measured once
 // it settles.
 function measure() {
-  const element = rule.value
+  const element = ruleRef.value
   const text = element?.textContent ?? ''
   if (!element || text.length === 0 || scrambling.value) {
     return
