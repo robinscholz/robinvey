@@ -2,7 +2,7 @@
   <component
     :is="as"
     :class="[
-      'flex items-baseline gap-x-[2ch]',
+      'flex items-baseline gap-x-[1.5ch] md:gap-x-[2ch]',
       {
         'hover:**:text-(--ui-hue) data-pinned:**:text-(--ui-hue)': interactive,
       },
@@ -21,6 +21,7 @@
     </component>
     <span
       class="text-surface-muted w-[1em] shrink-0 transition-opacity duration-300 ease-out data-pending:opacity-0 data-pending:transition-none"
+      :class="{ 'max-md:hidden': !$slots.mark }"
       aria-hidden="true"
       :data-pending="pending || null"
     >
