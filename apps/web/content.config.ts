@@ -28,7 +28,7 @@ export default defineContentConfig({
         location: z.string(),
         email: z.string(),
         now: z.string(),
-        links: z.array(z.object({ label: z.string(), url: z.string() })),
+        links: z.array(z.string()),
       }),
     }),
     experience: defineCollection({
@@ -38,7 +38,6 @@ export default defineContentConfig({
         company: z.string(),
         url: z.string().optional(),
         role: z.string().optional(),
-        location: z.string().optional(),
         start: period,
         end: period.optional(),
         summary: z.string().optional(),

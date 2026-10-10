@@ -168,10 +168,7 @@ function header({ profile, cv, names }: HeaderPayload): PDFElement {
 function contact(profile: Profile): PDFElement {
   const entries = [
     { text: profile.email, href: `mailto:${profile.email}` },
-    ...profile.links.map((link) => ({
-      text: formatLink(link.url),
-      href: link.url,
-    })),
+    ...profile.links.map((url) => ({ text: formatLink(url), href: url })),
   ]
   return Column(entries.map(({ text, href }) => Text(text, { href })))
 }

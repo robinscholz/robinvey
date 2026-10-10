@@ -19,7 +19,6 @@ interface ProjectTransformerPayload {
 export function pageTransformer(item: PagesCollectionItem | null) {
   return {
     document: item,
-    title: item?.title ?? '',
     description: item?.description ?? '',
     colophon: item?.colophon ?? '',
   }
@@ -36,10 +35,7 @@ export function profileTransformer(item: ProfileCollectionItem | null) {
     location: item?.location ?? '',
     email: item?.email ?? '',
     now: item?.now ?? '',
-    links: (item?.links ?? []).map((link) => ({
-      label: link.label,
-      url: link.url,
-    })),
+    links: item?.links ?? [],
   }
 }
 
@@ -52,7 +48,6 @@ export function experienceTransformer(item: ExperienceCollectionItem) {
     url,
     link: url ? formatLink(url) : '',
     role: item.role ?? '',
-    location: item.location ?? '',
     years: formatYears({ start: item.start, end: item.end }),
     period: formatPeriod({ start: item.start, end: item.end }),
     summary,

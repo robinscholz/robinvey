@@ -4,7 +4,5 @@ location: Munich, Germany
 email: mail@robinvey.com
 now: Finalizing Mirror’s V2 beta, working towards stable releases of Vue Equipment and our media cloud plugin for Payload CMS.
 links:
-  - label: Bluesky
-    url: https://bsky.app/profile/robinvey.eurosky.social
-  - label: GitHub
-    url: https://github.com/robinscholz
+  - https://bsky.app/profile/robinvey.eurosky.social
+  - https://github.com/robinscholz
