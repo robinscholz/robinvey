@@ -57,12 +57,12 @@ const char = computed(() => glyph(position))
 
 const ruleRef = useTemplateRef('rule')
 const { width, height } = useElementSize(ruleRef)
-const advance = ref(0)
-const tracking = ref(0)
-const offset = ref(0)
+const advance = shallowRef(0)
+const tracking = shallowRef(0)
+const offset = shallowRef(0)
 
 // How far the intro has settled, from 0 to 1; settled unless it plays.
-const progress = ref(1)
+const progress = shallowRef(1)
 
 const measured = computed(() => advance.value > 0 && width.value > 0)
 

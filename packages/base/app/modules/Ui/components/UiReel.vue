@@ -41,7 +41,7 @@ const turns = useState('ui-reel-turns', () => 0)
 // The symbols passing the window, ending on the reel’s own; empty at rest.
 const strip = ref<Array<string>>([])
 const spinning = computed(() => strip.value.length > 0)
-const order = ref(0)
+const order = shallowRef(0)
 
 // No symbol shows twice in a row, so every step reads as a turn. A reel with
 // nothing to pass stays still.
