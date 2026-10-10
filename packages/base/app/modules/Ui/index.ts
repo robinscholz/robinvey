@@ -18,6 +18,10 @@ export default defineNuxtModule({
       { name: 'useRule', from: resolver.resolve('./composables/useRule') },
       { name: 'useIntro', from: resolver.resolve('./composables/useIntro') },
       {
+        name: 'useTypeface',
+        from: resolver.resolve('./composables/useTypeface'),
+      },
+      {
         name: 'useUiEmitter',
         from: resolver.resolve('./composables/useUiEmitter'),
       },

@@ -1,7 +1,17 @@
+// Text under an element carrying this attribute takes part in every scramble.
+export const ScrambleAttribute = 'data-scramble'
+export const ScrambleSelector = `[${ScrambleAttribute}]`
+
 interface ScramblePayload {
   roots: Array<Element>
   duration: number
   onProgress?: (progress: number) => void
+  swap?: () => Promise<void>
+}
+
+interface BusyPayload {
+  roots: Array<Element>
+  busy: boolean
 }
 
 interface RepeatPayload {
@@ -83,6 +93,11 @@ const KERNING = 0.04
 
 // How often the stand-ins change, in milliseconds; every frame reads as noise.
 const INTERVAL = 40
+
+// The share of the run before the first glyph settles. Until then every glyph
+// is noise, and a swap lands halfway through it.
+const SETTLE_START = 0.3
+const SWAP = SETTLE_START / 2
 
 const SPACE = /\s/
 const DASH = /[-‐–—/]/
@@ -230,7 +245,15 @@ function markBreaks(texts: Array<ScrambledText>) {
 // Every glyph starts scrambled; the first settles at 30% of the run and the
 // rest follow in reading order, so long and short texts finish together.
 function settle({ index, length }: SettlePayload): number {
-  return 0.3 + (0.7 * (index + 1)) / length
+  return SETTLE_START + ((1 - SETTLE_START) * (index + 1)) / length
+}
+
+function markBusy({ roots, busy }: BusyPayload) {
+  roots.forEach((root) =>
+    busy
+      ? root.setAttribute('aria-busy', 'true')
+      : root.removeAttribute('aria-busy')
+  )
 }
 
 // A letter stays itself when no symbol keeps its line within bounds.
@@ -332,22 +355,40 @@ export function scrambleRepeat({
 // duration. While it runs the roots are busy, which sets them to break lines
 // only where the forced breaks are, so no line can rewrap. Each write is
 // reported, so text it leaves to Vue, such as the rules, can keep step.
+//
+// A swap changes the page halfway through the stretch where every glyph is
+// noise. The real text comes back, takes the change and is measured again,
+// then turns back to noise, all before the next paint, so the change never
+// shows until the text settles into it.
 export function scramble({
   roots,
   duration,
   onProgress,
+  swap,
 }: ScramblePayload): Promise<void> {
-  const texts = prepare(roots)
+  let texts = prepare(roots)
+  let pending = swap
   write({ texts, progress: 0 })
   onProgress?.(0)
-  roots.forEach((root) => root.setAttribute('aria-busy', 'true'))
+  markBusy({ roots, busy: true })
 
   return new Promise((resolve) => {
     const start = performance.now()
     let changed = start
 
-    function frame(now: number) {
+    async function frame(now: number) {
       const progress = Math.min(1, (now - start) / duration)
+      if (pending && progress >= SWAP) {
+        const change = pending
+        pending = undefined
+        write({ texts, progress: 1 })
+        markBusy({ roots, busy: false })
+        await change()
+        texts = prepare(roots)
+        markBusy({ roots, busy: true })
+        changed = now
+        write({ texts, progress })
+      }
       if (progress >= 1 || now - changed >= INTERVAL) {
         changed = now
         write({ texts, progress })
@@ -357,7 +398,7 @@ export function scramble({
         requestAnimationFrame(frame)
         return
       }
-      roots.forEach((root) => root.removeAttribute('aria-busy'))
+      markBusy({ roots, busy: false })
       resolve()
     }
 

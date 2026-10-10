@@ -22,7 +22,7 @@
   ::before,
   ::after {
     font-variation-settings:
-      'MONO' 50,
+      'MONO' var(--axis-mono, 50),
       'DRKM' var(--axis-dark, 0);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -34,6 +34,24 @@
 
   [data-color-mode='dark'] {
     --axis-dark: 1;
+  }
+
+  [data-typeface='regular'] {
+    --axis-mono: 0;
+  }
+
+  [data-typeface='regular'] body {
+    word-spacing: normal;
+  }
+
+  [data-typeface-fade] [data-scramble] {
+    transition: opacity 90ms ease-out;
+  }
+
+  [data-typeface-fade='out'] [data-scramble] {
+    opacity: 0;
+    transition-duration: 60ms;
+    transition-timing-function: ease-in;
   }
 
   body {

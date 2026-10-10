@@ -1,11 +1,9 @@
-import { scramble } from '../utils/scramble'
+import { scramble, ScrambleSelector } from '../utils/scramble'
 
 // Set on <html> before the first paint, hiding everything under
 // [data-scramble] until the intro plays. CSS reveals it after two seconds if
 // the intro never does.
 export const IntroAttribute = 'data-intro'
-export const ScrambleAttribute = 'data-scramble'
-export const ScrambleSelector = `[${ScrambleAttribute}]`
 
 // Past this point, in milliseconds since navigation, the fallback is about
 // to reveal the text, so it appears without the scramble.
@@ -30,7 +28,7 @@ export function useIntro() {
     const scrambling = scramble({
       roots: [...document.querySelectorAll(ScrambleSelector)],
       duration: DURATION,
-      onProgress: (progress) => emit('introProgress', progress),
+      onProgress: (progress) => emit('scrambleProgress', progress),
     })
     html.removeAttribute(IntroAttribute)
     await scrambling

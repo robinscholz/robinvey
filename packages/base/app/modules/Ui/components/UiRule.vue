@@ -50,6 +50,7 @@ const GAP = 0.35
 const { position } = defineProps<UiRuleProps>()
 
 const { glyph } = useRule()
+const { typeface } = useTypeface()
 const { on, off } = useUiEmitter()
 
 const char = computed(() => glyph(position))
@@ -140,6 +141,7 @@ function metrics({ char, glyph, text }: GlyphMetricsPayload): GlyphMetrics {
 // The type steps up a size at a breakpoint, so the glyph is measured again
 // from what is on screen whenever the rule’s box changes. Its width can change
 // before the type does; it is a line tall, so its height follows the type.
+// A new typeface changes the glyph but not the box, so it measures again too.
 // Measuring the rendered text keeps kerning and the variable font’s axes in
 // the number. Stand-ins would skew it, so a scrambling rule is measured once
 // it settles.
@@ -172,9 +174,9 @@ function settle(value: number) {
   progress.value = value
 }
 
-on('introProgress', settle)
+on('scrambleProgress', settle)
 
-watch([width, height, char, scrambling], measure, { flush: 'post' })
+watch([width, height, char, scrambling, typeface], measure, { flush: 'post' })
 
 onMounted(async () => {
   await document.fonts.ready
@@ -182,6 +184,6 @@ onMounted(async () => {
 })
 
 onScopeDispose(() => {
-  off('introProgress', settle)
+  off('scrambleProgress', settle)
 })
 </script>

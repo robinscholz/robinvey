@@ -1,7 +1,8 @@
-// The intro’s lifecycle; it only fires when the intro plays.
+// The intro’s lifecycle fires only when the intro plays; progress fires for
+// every scramble, the intro’s and the typeface switch’s.
 export type UiEvents = {
   beforeIntro: undefined
-  introProgress: number
+  scrambleProgress: number
   afterIntro: undefined
 }
 
