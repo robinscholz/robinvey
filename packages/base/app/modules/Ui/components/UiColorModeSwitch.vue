@@ -18,7 +18,7 @@
               variant === 'button'
                 ? [
                     boxClass,
-                    'hover:bg-primary-subtle-hover data-[active=true]:bg-primary-subtle-active py-[0.25lh]',
+                    'hover:bg-primary-subtle-hover data-[active=true]:bg-primary-subtle-active rounded-component-compact-sm px-[1ch] py-[0.25lh]',
                   ]
                 : 'text-surface-muted data-[active=true]:text-(--ui-hue)',
             ]"
@@ -30,11 +30,17 @@
           </button>
         </magic-menu-trigger>
         <magic-menu-content :arrow="false">
-          <div :class="[boxClass, 'py-[0.5lh]', menu.gapClass]">
+          <div :class="[boxClass, 'rounded-component-xs p-1', menu.gapClass]">
+            <!-- Rows sit on the box's tint, so a second layer of it is enough
+                 to highlight them. Their radius is the box's minus its
+                 padding. -->
             <magic-menu-item
               v-for="option in options"
               :key="option.value"
-              :class="[rowClass, 'data-[active=true]:text-(--ui-hue)']"
+              :class="[
+                rowClass,
+                'rounded-component-compact-sm data-[active=true]:bg-primary-subtle px-[1ch] py-[0.125lh] data-[active=true]:text-(--ui-hue)',
+              ]"
               @pointerenter="advance"
               @click="select(option.value)"
             >
@@ -102,12 +108,11 @@ const MENUS = {
 } satisfies Record<ColorModeMenuPlacement, unknown>
 
 const rowClass =
-  'flex cursor-pointer items-center gap-x-[1ch] whitespace-nowrap'
+  'flex cursor-pointer items-center gap-x-[1ch] whitespace-nowrap text-xs'
 
 // The primary tint is translucent, so the blur keeps content scrolling
 // underneath legible.
-const boxClass =
-  'bg-primary-subtle text-primary-on-subtle rounded-component-compact-sm px-[1ch] backdrop-blur-md'
+const boxClass = 'bg-primary-subtle text-primary-on-subtle backdrop-blur-md'
 
 const { placement = 'top-start', variant = 'plain' } =
   defineProps<UiColorModeSwitchProps>()
