@@ -16,7 +16,10 @@
                 @click="viewActive || pin(entry.id)"
               >
                 <UiRow :hue="viewActive ? pinned(entry.id) : 0">
-                  <ProfileExperienceTitle :entry="entry" />
+                  <ProfileExperienceTitle
+                    :entry="entry"
+                    :playing="viewActive"
+                  />
                   <template #meta><UiRange :value="entry.years" /></template>
                   <template #mark>
                     <UiIcon :name="viewActive ? 'minus' : 'plus'" />

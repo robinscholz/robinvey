@@ -14,6 +14,7 @@ export default defineNuxtModule({
       pathPrefix: false,
     })
     addImports([
+      { name: 'useHold', from: resolver.resolve('./composables/useHold') },
       { name: 'useHue', from: resolver.resolve('./composables/useHue') },
       { name: 'useRule', from: resolver.resolve('./composables/useRule') },
       { name: 'useIntro', from: resolver.resolve('./composables/useIntro') },

@@ -1,9 +1,9 @@
 <template>
   <ul>
     <li v-for="article in writing" :key="article.id">
-      <UiLink :to="article.url" :underline="false">
+      <UiLink v-slot="{ held }" :to="article.url" :underline="false" hold>
         <UiRow>
-          {{ article.title }}
+          <UiMarquee :playing="held">{{ article.title }}</UiMarquee>
           <template #meta>{{ article.month }}</template>
           <template #mark><UiIcon name="arrow-n-e" /></template>
         </UiRow>

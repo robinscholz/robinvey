@@ -20,7 +20,7 @@
               @click="viewActive || pin(project.id)"
             >
               <UiRow :hue="viewActive ? pinned(project.id) : 0">
-                {{ project.name }}
+                <UiMarquee :playing="viewActive">{{ project.name }}</UiMarquee>
                 <template #meta>{{ project.year }}</template>
                 <template #mark>
                   <UiIcon :name="viewActive ? 'minus' : 'plus'" />
