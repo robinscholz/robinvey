@@ -4,6 +4,11 @@ interface DocumentInfoPayload {
   author: string
 }
 
+interface TrailerValuePayload {
+  source: string
+  pattern: RegExp
+}
+
 const encoder = new TextEncoder()
 const decoder = new TextDecoder('latin1')
 
@@ -16,8 +21,8 @@ function pdfText(value: string): string {
   return `<${hex.toUpperCase()}>`
 }
 
-function trailerValue(trailer: string, pattern: RegExp): string {
-  const match = pattern.exec(trailer)
+function trailerValue({ source, pattern }: TrailerValuePayload): string {
+  const match = pattern.exec(source)
   if (!match?.[1]) {
     throw new Error(`The CV trailer has no ${pattern.source}`)
   }
@@ -34,9 +39,14 @@ export function withDocumentInfo({
 }: DocumentInfoPayload): Uint8Array {
   const tail = decoder.decode(bytes.subarray(Math.max(0, bytes.length - 1024)))
   const trailer = tail.slice(tail.lastIndexOf('trailer'))
-  const previous = trailerValue(tail, /startxref\s+(\d+)\s+%%EOF\s*$/)
-  const size = Number(trailerValue(trailer, /\/Size (\d+)/))
-  const root = trailerValue(trailer, /\/Root (\d+ \d+ R)/)
+  const previous = trailerValue({
+    source: tail,
+    pattern: /startxref\s+(\d+)\s+%%EOF\s*$/,
+  })
+  const size = Number(
+    trailerValue({ source: trailer, pattern: /\/Size (\d+)/ })
+  )
+  const root = trailerValue({ source: trailer, pattern: /\/Root (\d+ \d+ R)/ })
   const id = /\/ID\s*\[[^\]]*\]/.exec(trailer)?.[0] ?? ''
 
   const lead = bytes[bytes.length - 1] === 0x0a ? '' : '\n'

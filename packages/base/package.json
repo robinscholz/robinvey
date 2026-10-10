@@ -11,10 +11,7 @@
   ],
   "main": "./nuxt.config.ts",
   "exports": {
-    ".": "./nuxt.config.ts",
-    "./app/*": "./app/*.ts",
-    "./app/assets/*": "./app/assets/*",
-    "./tokens/*": "./tokens/*"
+    ".": "./nuxt.config.ts"
   },
   "scripts": {
     "build": "mirror tokens && mirror css",

@@ -58,7 +58,7 @@ export function typeset({ parts, size }: TypesetPayload): Array<TextSegment> {
   const segments: Array<TextSegment> = []
   let run = ''
   let runStyle: TextStyle = {}
-  const flush = () => {
+  function flush() {
     if (run) {
       segments.push(span(run, runStyle))
       run = ''

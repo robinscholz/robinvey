@@ -3,7 +3,7 @@
 const GLYPHS = ['∗', '–', '+', '×', '#', '%', '=']
 
 export function useRule() {
-  // Public state
+  // Private state
   const glyphs = useState<Array<string>>('ui-rule-glyphs', () => [])
 
   // Public functions
@@ -19,7 +19,6 @@ export function useRule() {
   }
 
   return {
-    glyphs,
     shuffle,
     glyph,
   }

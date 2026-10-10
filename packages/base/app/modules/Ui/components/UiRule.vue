@@ -1,7 +1,7 @@
 <template>
   <div
     ref="rule"
-    class="text-surface-muted invisible relative h-lh overflow-hidden leading-[1lh] whitespace-nowrap select-none data-measured:visible"
+    class="text-surface-muted invisible relative h-lh translate-y-(--rule-offset) overflow-hidden leading-[1lh] tracking-(--rule-gap) whitespace-nowrap select-none data-measured:visible"
     aria-hidden="true"
     :data-measured="measured || null"
     :style="spacing"
@@ -10,8 +10,8 @@
       <span
         v-for="(cell, index) in glyphs"
         :key="index"
-        class="absolute top-0 flex w-(--rule-advance) justify-center tracking-normal"
-        :style="{ left: `${index * pitch}px` }"
+        class="absolute top-0 left-[calc(var(--rule-cell)*var(--rule-pitch))] flex w-(--rule-advance) justify-center tracking-normal"
+        :style="{ '--rule-cell': index }"
         v-text="cell"
       />
     </template>
@@ -102,10 +102,11 @@ const spacing = computed(() =>
   measured.value
     ? {
         '--rule-advance': `${advance.value}px`,
-        letterSpacing: `${gap.value}px`,
-        transform: offset.value ? `translateY(${offset.value}px)` : undefined,
+        '--rule-gap': `${gap.value}px`,
+        '--rule-pitch': `${pitch.value}px`,
+        '--rule-offset': `${offset.value}px`,
       }
-    : { letterSpacing: `${GAP}em` }
+    : { '--rule-gap': `${GAP}em` }
 )
 
 function font(style: CSSStyleDeclaration): string {

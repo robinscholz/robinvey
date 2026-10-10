@@ -4,7 +4,8 @@ import { scramble } from '../utils/scramble'
 // [data-scramble] until the intro plays. CSS reveals it after two seconds if
 // the intro never does.
 export const IntroAttribute = 'data-intro'
-export const ScrambleSelector = '[data-scramble]'
+export const ScrambleAttribute = 'data-scramble'
+export const ScrambleSelector = `[${ScrambleAttribute}]`
 
 // Past this point, in milliseconds since navigation, the fallback is about
 // to reveal the text, so it appears without the scramble.

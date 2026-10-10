@@ -6,7 +6,7 @@ import {
 } from '@nuxt/kit'
 
 export default defineNuxtModule({
-  meta: { name: 'profile' },
+  meta: { name: 'Profile' },
   setup() {
     const resolver = createResolver(import.meta.url)
     addComponentsDir({
