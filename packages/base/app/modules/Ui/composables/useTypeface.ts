@@ -13,7 +13,12 @@ export const TypefaceFadeAttribute = 'data-typeface-fade'
 // back a frame, past the point where the anchor is measured.
 export const TypefaceChangingAttribute = 'data-typeface-changing'
 
-export type Typeface = 'semi-mono' | 'regular'
+// Where the visitor’s choice is kept between visits.
+export const TypefaceStorageKey = 'robinvey-typeface'
+
+export const Typefaces = ['semi-mono', 'regular'] as const
+
+export type Typeface = (typeof Typefaces)[number]
 
 type TypefaceFade = 'out' | 'in'
 

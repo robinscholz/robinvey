@@ -170,6 +170,27 @@ without the scramble, and after two seconds CSS reveals it regardless.
 Visitors who prefer reduced motion, or have no JavaScript, see the text
 straight away.
 
+## Typeface switch
+
+The words Semi Mono in the colophon switch the whole page between ABC Areal
+Semi Mono and its Regular cut, by moving the font’s `MONO` axis from 50 to 0.
+The page scrambles, fades out, changes face while hidden and fades back in as
+noise before the text settles, all within 600ms; the switch keeps its place on
+screen while the text above it rewraps. Visitors who prefer reduced motion get
+the new face at once.
+
+The choice is kept in `localStorage` under `robinvey-typeface`. An inline
+script sets it on `<html>` before the first paint, so a returning visitor never
+sees Semi Mono first, and the colophon’s label follows once the page has
+hydrated.
+
+## Titles on phones
+
+Below the `md` breakpoint every title in Work, Sites, Projects and Writing
+stays on one line, cut off with a fade where it does not fit. It scrolls while
+its row is open, or while a link row is held; a hold does not open the link.
+From `md` up, and for visitors who prefer reduced motion, titles wrap.
+
 ## Icons
 
 Icons come from Symbols, the MaaS icon set, served as an Iconify collection
