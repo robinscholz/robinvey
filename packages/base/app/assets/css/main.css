@@ -44,6 +44,13 @@
     word-spacing: normal;
   }
 
+  [data-typeface-changing],
+  [data-typeface-changing] *,
+  [data-typeface-changing] *::before,
+  [data-typeface-changing] *::after {
+    transition: none !important;
+  }
+
   [data-typeface-fade] [data-scramble] {
     transition: opacity 90ms ease-out;
   }

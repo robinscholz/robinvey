@@ -120,10 +120,12 @@ function textNodes(root: Element): Array<Text> {
 }
 
 // Measured in the page rather than on a canvas, which ignores the variable
-// font’s axes and would report the widths of another instance.
+// font’s axes and would report the widths of another instance. The probe
+// clips its own line: wider than a phone, it would widen the page, and the
+// browser would refit it and lose the scroll position.
 function advances({ root, weight }: AdvancesPayload): Map<string, number> {
   const probe = document.createElement('div')
-  probe.style.cssText = `position: absolute; visibility: hidden; white-space: pre; font-weight: ${weight}`
+  probe.style.cssText = `position: absolute; top: 0; left: 0; width: 0; height: 0; overflow: hidden; visibility: hidden; white-space: pre; font-weight: ${weight}`
   const spans = [...LETTERS, ...SYMBOLS].map((char) => {
     const span = document.createElement('span')
     span.textContent = char
