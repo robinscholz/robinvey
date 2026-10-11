@@ -32,7 +32,12 @@ const LABELS = {
   regular: 'Regular',
 } satisfies Record<Typeface, string>
 
-const DURATION = 600
+// The page scrambles in plain sight for 250ms and then fades out over 90ms
+// (both in main.css); the hold outlasts the two, so the face changes while
+// the page is hidden. After the 100ms fade back in, the run settles over the
+// same 250ms the page scrambled before it faded.
+const HOLD = 360
+const DURATION = 350
 
 export function useTypeface() {
   const { emit } = useUiEmitter()
@@ -69,9 +74,8 @@ export function useTypeface() {
 
   // Public functions
   // The page scrambles and fades out, changes face while it is hidden, and
-  // fades back in as noise before the text settles into the new face. The
-  // fades fit in the stretch where every glyph is noise, so the switch takes
-  // no longer for them. Without motion, the face simply changes.
+  // fades back in as noise before the text settles into the new face.
+  // Without motion, the face simply changes.
   async function toggle(anchor?: Element | null) {
     if (switching.value) {
       return
@@ -86,6 +90,7 @@ export function useTypeface() {
     await scramble({
       roots: [...document.querySelectorAll(ScrambleSelector)],
       duration: DURATION,
+      hold: HOLD,
       onProgress: (progress) => emit('scrambleProgress', progress),
       swap: async () => {
         await change({ next, anchor })

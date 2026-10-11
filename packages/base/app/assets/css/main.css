@@ -52,13 +52,12 @@
   }
 
   [data-typeface-fade] [data-scramble] {
-    transition: opacity 90ms ease-out;
+    transition: opacity 100ms ease-out;
   }
 
   [data-typeface-fade='out'] [data-scramble] {
     opacity: 0;
-    transition-duration: 60ms;
-    transition-timing-function: ease-in;
+    transition: opacity 90ms ease-in 250ms;
   }
 
   body {

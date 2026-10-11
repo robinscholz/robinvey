@@ -5,6 +5,7 @@ export const ScrambleSelector = `[${ScrambleAttribute}]`
 interface ScramblePayload {
   roots: Array<Element>
   duration: number
+  hold?: number
   onProgress?: (progress: number) => void
   swap?: () => Promise<void>
 }
@@ -94,10 +95,9 @@ const KERNING = 0.04
 // How often the stand-ins change, in milliseconds; every frame reads as noise.
 const INTERVAL = 40
 
-// The share of the run before the first glyph settles. Until then every glyph
-// is noise, and a swap lands halfway through it.
+// The share of the run before the first glyph settles; until then every glyph
+// is noise.
 const SETTLE_START = 0.3
-const SWAP = SETTLE_START / 2
 
 const SPACE = /\s/
 const DASH = /[-‐–—/]/
@@ -358,13 +358,16 @@ export function scrambleRepeat({
 // only where the forced breaks are, so no line can rewrap. Each write is
 // reported, so text it leaves to Vue, such as the rules, can keep step.
 //
-// A swap changes the page halfway through the stretch where every glyph is
-// noise. The real text comes back, takes the change and is measured again,
-// then turns back to noise, all before the next paint, so the change never
-// shows until the text settles into it.
+// A hold keeps every glyph noise for that long before the run begins, and a
+// swap changes the page as the hold ends. The real text comes back, takes the
+// change and is measured again, then turns back to noise, all before the next
+// paint, so the change never shows until the text settles into it. The run
+// begins once the swap is done, so however long the change takes, the text
+// still settles over the whole duration after it.
 export function scramble({
   roots,
   duration,
+  hold = 0,
   onProgress,
   swap,
 }: ScramblePayload): Promise<void> {
@@ -375,12 +378,11 @@ export function scramble({
   markBusy({ roots, busy: true })
 
   return new Promise((resolve) => {
-    const start = performance.now()
-    let changed = start
+    let changed = performance.now()
+    let begin = changed + hold
 
     async function frame(now: number) {
-      const progress = Math.min(1, (now - start) / duration)
-      if (pending && progress >= SWAP) {
+      if (pending && now >= begin) {
         const change = pending
         pending = undefined
         write({ texts, progress: 1 })
@@ -388,9 +390,11 @@ export function scramble({
         await change()
         texts = prepare(roots)
         markBusy({ roots, busy: true })
-        changed = now
-        write({ texts, progress })
+        begin = performance.now()
+        changed = begin
+        write({ texts, progress: 0 })
       }
+      const progress = Math.min(1, Math.max(0, (now - begin) / duration))
       if (progress >= 1 || now - changed >= INTERVAL) {
         changed = now
         write({ texts, progress })
