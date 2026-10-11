@@ -81,8 +81,8 @@ const LETTERS = [
 // other.
 const SYMBOLS = [...'#$%&()*+,.:;<=>@[\\]^_{~']
 
-// The face is semi mono, so the symbols standing in for a letter are only
-// those about as wide as it, in em of the text.
+// Only symbols about as wide as the letter stand in for it, in em of the text,
+// so a line keeps its length in either face.
 const TOLERANCE = 0.07
 
 // Each line is kept no wider than it ends up, and no more than WINDOW

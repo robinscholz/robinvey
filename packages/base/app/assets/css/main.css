@@ -9,7 +9,7 @@
 }
 
 @font-face {
-  font-family: 'ABC Areal';
+  font-family: 'ABC Areal Brackets';
   src: url('../fonts/ABCArealProportional.woff2') format('woff2');
   font-weight: 400 700;
   font-style: oblique 0deg 12deg;
@@ -41,6 +41,7 @@
   }
 
   [data-typeface='regular'] body {
+    font-family: --theme(--font-mono);
     word-spacing: normal;
   }
 
@@ -62,6 +63,7 @@
 
   body {
     margin: 0;
+    font-family: 'ABC Areal Brackets', --theme(--font-mono);
     font-kerning: normal;
     word-spacing: -0.1em;
     overflow-x: clip;

@@ -177,7 +177,8 @@ Semi Mono and its Regular cut, by moving the font’s `MONO` axis from 50 to 0.
 The page scrambles, fades out, changes face while hidden and fades back in as
 noise before the text settles, all within 600ms; the switch keeps its place on
 screen while the text above it rewraps. Visitors who prefer reduced motion get
-the new face at once.
+the new face at once. Regular drops what is there only for Semi Mono: the
+tighter word spacing and the proportional brackets.
 
 The choice is kept in `localStorage` under `robinvey-typeface`. An inline
 script sets it on `<html>` before the first paint, so a returning visitor never
