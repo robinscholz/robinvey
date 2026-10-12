@@ -170,8 +170,11 @@ function measure() {
   offset.value = glyphMetrics.offset
 }
 
+// Each report rolls new noise, even when the progress holds still, as it does
+// through the hold before a typeface switch.
 function settle(value: number) {
   progress.value = value
+  triggerRef(progress)
 }
 
 on('scrambleProgress', settle)
