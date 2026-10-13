@@ -1,5 +1,15 @@
 <template>
   <div class="px-5 md:px-10" data-scramble>
+    <!-- Below lg the switch lives in the colophon; there’s no room up here.
+         Sticky rather than fixed, so it slides aside with the page over the
+         garden. A sticky box ignores its own margin, so a box inside it
+         carries the nudge that sits the smaller label on the name’s
+         baseline. -->
+    <div class="sticky top-10 z-10 hidden h-0 justify-end lg:flex">
+      <div class="-mt-0.5">
+        <UiColorModeSwitch placement="bottom-end" variant="button" />
+      </div>
+    </div>
     <main>
       <ProfileHeader :page="page" :profile="profile" />
       <UiSection label="Now" emoji="⏳" :reel="REELS.now" :rule="0">

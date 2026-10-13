@@ -17,10 +17,11 @@ export default defineNuxtConfig({
     '@nuxtjs/color-mode',
     '@nuxt/icon',
     join(currentDir, 'app/modules/Ui'),
+    join(currentDir, 'app/modules/Garden'),
   ],
 
   vueEquipment: {
-    plugins: ['MagicAccordion', 'MagicMarquee', 'MagicMenu'],
+    plugins: ['MagicAccordion', 'MagicMarquee', 'MagicMenu', 'MagicTray'],
   },
 
   magicImage: {

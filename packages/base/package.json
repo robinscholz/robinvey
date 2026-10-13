@@ -2,7 +2,7 @@
   "name": "@robinscholz/base",
   "private": true,
   "type": "module",
-  "description": "Nuxt layer for robinvey: mirror v2, vue-equipment and magic-image wiring, the ABC Areal token theme, the type system and the Ui module",
+  "description": "Nuxt layer for robinvey: mirror v2, vue-equipment and magic-image wiring, the ABC Areal token theme, the type system, the Ui module and the garden under the page",
   "contributors": [
     {
       "name": "Robin Vey",

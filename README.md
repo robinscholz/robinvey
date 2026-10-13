@@ -6,10 +6,10 @@ same content rendered to `/cv.pdf` at build time.
 
 ## Apps and packages
 
-| Path            | Package             | Contents                                                                                      |
-| --------------- | ------------------- | --------------------------------------------------------------------------------------------- |
-| `apps/web`      | `@robinscholz/web`  | The one-page site, the content collections, the Profile module and the `/cv.pdf` route        |
-| `packages/base` | `@robinscholz/base` | Nuxt layer: mirror, vue-equipment and magic-image wiring, the token theme, type system and Ui |
+| Path            | Package             | Contents                                                                                                  |
+| --------------- | ------------------- | --------------------------------------------------------------------------------------------------------- |
+| `apps/web`      | `@robinscholz/web`  | The one-page site, the content collections, the Profile module and the `/cv.pdf` route                    |
+| `packages/base` | `@robinscholz/base` | Nuxt layer: mirror, vue-equipment and magic-image wiring, the token theme, type system, Ui and the garden |
 
 ## Setup
 
@@ -184,6 +184,56 @@ The choice is kept in `localStorage` under `robinvey-typeface`. An inline
 script sets it on `<html>` before the first paint, so a returning visitor never
 sees Semi Mono first, and the colophon’s label follows once the page has
 hydrated.
+
+## Garden
+
+A garden of ASCII flowers grows underneath the page. Drag the page’s left or
+right edge towards the middle to uncover it, or click the edge, and the page
+slides aside with it. Let go more than 48 pixels from where you started, or
+flick, and the page snaps to uncover half the viewport, or three quarters of it
+below the `md` breakpoint. Click the garden, the part of the page still showing
+or its edge, or press Escape, to close it again. While one edge is out, the
+other cannot be dragged. Once the page has come to rest open, it casts a shadow
+onto the garden, which fades as soon as the page moves again.
+
+The page sits in vue-equipment’s MagicTray, which clips it with `clip-path`,
+and MagicTrayTransform slides it along with the clip. The transform is only set
+while the page is away from rest, since a transformed ancestor pins fixed
+elements to the page instead of the viewport. The colour mode switch is sticky
+rather than fixed for the same reason, so it slides aside with the page
+wherever the page is scrolled to. The garden is a fixed layer behind the page
+on `bg-surface-low`, and always dark: it carries `data-color-mode="dark"`,
+which scopes the dark mode’s tokens to it, so it stays black with the dark hues
+whichever mode the page is in. It stays hidden until an edge moves, so it never
+shows through an overscroll. The page’s shadow comes from an empty box in the
+garden layer over the part of the page in view, since the clip would cut off a
+shadow cast by the page itself.
+
+The garden is set in ABC Areal Mono, the font’s `MONO` axis at 100, where every
+ASCII glyph is 0.61em wide, so the art sits on an exact grid of cells. Each
+visit plants a new garden from a random seed, as soon as the page has loaded.
+Tall flowers stand at the back, shorter ones in front of them, then blades,
+daisies and grass, all sized to the smaller of the viewport’s width and height.
+A resize regrows the same garden to the new size. Only the seven hover hues
+colour it: each flower takes a hue for its petals, the next one for its stripes
+and a third for its eye, on green or yellow stems.
+
+The wind blows one way for a whole visit, in gusts that travel across the
+garden. Each plant hangs on a damped spring and follows the lean the wind gives
+it at its spot, so tall plants swing slowly and lag behind a gust while short
+ones swing quickly. A flower’s head moves as a whole and its stem bends below
+it. Wherever the stem steps sideways from one row to the next, its stroke turns
+from `|` to `/` or `\`, so the stem stays joined. Grass and blades bend along
+their length and tip their strokes over in strong gusts. Sweeping the pointer
+across a plant pushes it the way the pointer moves. The wind only blows while
+the garden shows, and redraws it 30 times a second. Each plant starts at the
+lean the wind already gives it, so the garden sways from the first frame.
+Visitors who prefer reduced motion find the garden still.
+
+Each species is a function in
+`packages/base/app/modules/Garden/utils/plants.ts` that draws one plant from a
+size and a height. `grow.ts` lays the rows out, `wind.ts` sets the gusts and
+`compose.ts` lays every plant into the grid at its current lean.
 
 ## Titles on phones
 

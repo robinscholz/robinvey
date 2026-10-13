@@ -1,3 +1,6 @@
 <template>
-  <NuxtPage />
+  <GardenBed />
+  <GardenTray>
+    <NuxtPage />
+  </GardenTray>
 </template>
