@@ -1,7 +1,7 @@
 {
   "name": "@robinscholz/robinvey",
   "private": true,
-  "description": "Robin Vey’s personal website and CV: one Nuxt app on mirror v2, vue-equipment and Nuxt Content, generated as a static site with the CV at /cv.pdf",
+  "description": "Robin Vey’s personal website and CV, and a Wunschzettel for the family: two Nuxt apps on mirror v2, vue-equipment and Nuxt Content, generated as static sites with the CV at /cv.pdf",
   "contributors": [
     {
       "name": "Robin Vey",

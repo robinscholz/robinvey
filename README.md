@@ -1,15 +1,17 @@
 # robinvey
 
-Robin Vey’s personal website and CV. One Nuxt 4 app on mirror v2,
-vue-equipment and Nuxt Content, generated as a static site. The CV is the
-same content rendered to `/cv.pdf` at build time.
+Robin Vey’s personal website and CV, and a Wunschzettel for the family. Two
+Nuxt 4 apps on one layer, mirror v2, vue-equipment and Nuxt Content, each
+generated as a static site. The CV is the same content as the site rendered to
+`/cv.pdf` at build time.
 
 ## Apps and packages
 
-| Path            | Package             | Contents                                                                                                  |
-| --------------- | ------------------- | --------------------------------------------------------------------------------------------------------- |
-| `apps/web`      | `@robinscholz/web`  | The one-page site, the content collections, the Profile module and the `/cv.pdf` route                    |
-| `packages/base` | `@robinscholz/base` | Nuxt layer: mirror, vue-equipment and magic-image wiring, the token theme, type system, Ui and the garden |
+| Path                | Package                     | Contents                                                                                                  |
+| ------------------- | --------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `apps/web`          | `@robinscholz/web`          | The one-page site, the content collections, the Profile module and the `/cv.pdf` route                    |
+| `apps/wunschzettel` | `@robinscholz/wunschzettel` | The wish list: the wishes, the Wish module, the add page and the bookmarklet                              |
+| `packages/base`     | `@robinscholz/base`         | Nuxt layer: mirror, vue-equipment and magic-image wiring, the token theme, type system, Ui and the garden |
 
 ## Setup
 
@@ -19,7 +21,8 @@ pnpm dev
 ```
 
 `dev` builds the tokens in `packages/base` first, then starts the site on
-port 3000. `/cv.pdf` renders on every request in development.
+port 3000 and the Wunschzettel on port 3001; `pnpm --filter @robinscholz/web
+dev` starts one of them. `/cv.pdf` renders on every request in development.
 
 ```sh
 pnpm build
@@ -27,13 +30,15 @@ pnpm preview
 ```
 
 `build` writes the static site to `apps/web/.output/public`, `cv.pdf`
-included. `preview` serves it the way Cloudflare does, with the same cache
-headers and 404 page, on port 8787. Canonical URLs, the links printed on the CV
-and image sources all start from `https://robinvey.com`. Set another origin for
-a preview deploy:
+included, and the Wunschzettel to `apps/wunschzettel/.output/public`.
+`preview` serves them the way Cloudflare does, with the same cache headers and
+404 page, on ports 8787 and 8788. Canonical URLs, the links printed on the CV
+and image sources all start from `https://robinvey.com`, and the Wunschzettel’s
+from `https://wunschzettel.robinvey.com`. Set another origin for a preview
+deploy:
 
 ```sh
-NUXT_PUBLIC_SITE_URL=https://preview.robinvey.com pnpm build
+NUXT_PUBLIC_SITE_URL=https://preview.robinvey.com pnpm --filter @robinscholz/web build
 ```
 
 Lint and typecheck before you push:
@@ -43,7 +48,7 @@ pnpm lint
 pnpm typecheck
 ```
 
-Neither waits for the token build. `typecheck` runs through the app, so it
+Neither waits for the token build. `typecheck` runs through each app, so it
 covers the base layer and the content schemas too, and runs again whenever
 either package changes.
 
@@ -291,21 +296,79 @@ a thin space either side. They apply to one-line text only, such as titles and
 dates, because the engine may break a line wherever two text runs meet. The
 site sets that dash the same way with `UiRange`.
 
+## Wunschzettel
+
+`apps/wunschzettel` is a wish list for the family: a grid of things, each a
+link to a shop in Germany with a fair price and an easy return. It extends the
+same base layer as the site, so it is set in the same face on the same paper,
+with the same rules and hover hues, and is generated the same way. It is not
+for search engines: `robots.txt` disallows everything and every page carries
+`noindex`.
+
+Every wish is a YAML file in `apps/wunschzettel/content/wishes`. The grid
+shows them newest first by `added`, then in file order.
+
+```yaml
+title: 'Petzl Actik Core Stirnlampe'
+url: 'https://www.bergzeit.de/p/petzl-actik-core-stirnlampe/5064106/'
+price: 63.2
+image: 'https://static.bergzeit.com/product_gallery_regular/5064106-002_pic1.jpg'
+note: 'Farbe egal'
+added: '2026-10-28'
+```
+
+| Field   | Required | Shown as                                                      |
+| ------- | -------- | ------------------------------------------------------------- |
+| `title` | yes      | The caption                                                   |
+| `url`   | yes      | Where the card links; its host, `bergzeit.de`, names the shop |
+| `shop`  | no       | The shop’s name, in place of the host                         |
+| `price` | no       | A number in euro, printed as `63,20 €`                        |
+| `image` | no       | The picture, by its address on the shop                       |
+| `note`  | no       | A line under the caption: size, colour, anything              |
+| `added` | yes      | A day, `'YYYY-MM-DD'`, quoted                                 |
+
+`content/index.yml` holds the title, the name and the intro. The three wishes
+in the repository are examples; delete them.
+
+Pictures go out through magic-image and the MaaS image CDN, which fetches
+them from the shop by their address, resizes them for the grid and caches
+them. Each multiplies onto the light paper, so a shop’s white backdrop
+disappears; in dark mode the paper comes along as a tile.
+
+### Adding a wish
+
+Open `/add` and drag the 🎁 Wünschen link into the bookmarks bar. On a
+shop’s product page, click it: it reads the product from the page’s JSON-LD
+and Open Graph tags, name, brand, picture and price, strips tracking
+parameters from the address and opens `/add` with the wish in the hash, so
+nothing is sent anywhere. Check the preview, fix what the shop got wrong,
+compare prices on idealo or Geizhals, then click Auf GitHub anlegen: GitHub
+opens a new file under `content/wishes`, named after the title, with the YAML
+filled in. Commit it to `main`, and Workers Builds deploys the list a minute
+later. YAML kopieren puts the same file on the clipboard instead.
+
+The bookmarklet is `apps/wunschzettel/app/modules/Wish/bookmarklet/index.ts`,
+a script in TypeScript. The Wish module minifies it with esbuild at build
+time, and the add page links it with the site’s origin filled in, so a
+preview build’s bookmarklet opens the preview.
+
 ## Deploy
 
-The site is a Cloudflare Worker that serves only static files, configured in
-`wrangler.jsonc`. Workers Builds deploys every push to `main`, and every other
-branch gets a preview URL. The build runs from the repository root:
+Each app is a Cloudflare Worker that serves only static files: the site from
+`wrangler.jsonc` at the root, the Wunschzettel from
+`apps/wunschzettel/wrangler.jsonc`. Each is its own Workers Builds project.
+Workers Builds deploys every push to `main`, and every other branch gets a
+preview URL. Both builds run from the repository root:
 
-| Setting        | Value                 |
-| -------------- | --------------------- |
-| Root directory | `/`                   |
-| Build command  | `pnpm build`          |
-| Deploy command | `npx wrangler deploy` |
+| Setting        | Site                  | Wunschzettel                                                    |
+| -------------- | --------------------- | --------------------------------------------------------------- |
+| Root directory | `/`                   | `/`                                                             |
+| Build command  | `pnpm build`          | `pnpm build`                                                    |
+| Deploy command | `npx wrangler deploy` | `npx wrangler deploy --config apps/wunschzettel/wrangler.jsonc` |
 
-`apps/web/public/_headers` caches the hashed files in `/_nuxt` for a year.
-Everything else, the page and `cv.pdf` included, revalidates on every request,
-so a deploy shows up at once.
+Each app’s `public/_headers` caches the hashed files in `/_nuxt` for a year.
+Everything else, the pages and `cv.pdf` included, revalidates on every
+request, so a deploy shows up at once.
 
 The Nitro preset is pinned to `static`. On Cloudflare’s build machines Nitro
 would otherwise switch to a Worker preset, and its generated config would take
