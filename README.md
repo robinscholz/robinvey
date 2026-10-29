@@ -8,12 +8,12 @@ content as the site rendered to `/cv.pdf` at build time.
 
 ## Apps and packages
 
-| Path                | Package                     | Contents                                                                                                             |
-| ------------------- | --------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| `apps/web`          | `@robinscholz/web`          | The one-page site, the content collections, the Profile module and the `/cv.pdf` route                               |
-| `apps/wunschzettel` | `@robinscholz/wunschzettel` | The wish list: the Wish module, the pages, the API, the picture store, the sign-in gate and the bookmarklet          |
-| `packages/base`     | `@robinscholz/base`         | The site’s Nuxt layer: mirror, vue-equipment and magic-image wiring, the token theme, type system, Ui and the garden |
-| `packages/database` | `@robinscholz/database`     | The Wunschzettel’s D1 database: Drizzle schema, migrations, the wishes repository and the seed                       |
+| Path                | Package                     | Contents                                                                                                              |
+| ------------------- | --------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `apps/web`          | `@robinscholz/web`          | The one-page site, the content collections, the Profile module and the `/cv.pdf` route                                |
+| `apps/wunschzettel` | `@robinscholz/wunschzettel` | The wish list: the Wish module, the pages, the API, the picture store, the sign-in gate and the bookmarklet           |
+| `packages/base`     | `@robinscholz/base`         | The site’s Nuxt layer: mirror and vue-equipment wiring, the token theme and its fonts, type system, Ui and the garden |
+| `packages/database` | `@robinscholz/database`     | The Wunschzettel’s D1 database: Drizzle schema, migrations, the wishes repository and the seed                        |
 
 ## Setup
 
@@ -51,9 +51,9 @@ included, and the Wunschzettel’s Worker to `apps/wunschzettel/.output`.
 headers and 404 page, on port 8787. `pnpm start:wunschzettel` runs the
 Wunschzettel’s production build in workerd, the runtime Cloudflare uses, on
 port 3001 against the same local database, sign-in gate included. Canonical
-URLs, the links printed on the CV
-and image sources all start from `https://robinvey.com`, and the Wunschzettel’s
-from `https://wunschzettel.robinvey.com`. Set another origin for a preview
+URLs, the links printed on the CV and the preview image all start from
+`https://robinvey.com`, and the Wunschzettel’s from
+`https://wunschzettel.robinvey.com`. Set another origin for a preview
 deploy:
 
 ```sh
@@ -108,21 +108,6 @@ The site shows each role’s `summary`; the PDF continues it with its
 Both read the same transformers in `apps/web/shared/utils`, so the two never
 disagree.
 
-### Images
-
-A project takes an optional `image` with `src` and `alt`. Put the file under
-`apps/web/public/images` and write the path from the site root:
-
-```yaml
-image:
-  src: /images/mirror.jpg
-  alt: The Mirror token pipeline
-```
-
-Images go out through magic-image and the MaaS image CDN, which fetches the
-original by its public URL. A new image therefore shows up once it is
-deployed, in development too, since the CDN cannot reach `localhost`.
-
 ## The look
 
 The page is set flush left, like a typed letter. Section labels sit in a margin
@@ -151,6 +136,15 @@ from a proportional cut instead. The date column turns on tabular figures so
 years still line up digit by digit. Dark mode also switches on the font’s
 `DRKM` axis, which thins the strokes for light type on a dark ground.
 
+The face is `packages/base/public/fonts/ABCAreal-400-700.woff2`, named with
+its weight range, and Nuxt Fonts declares it from the `--font-mono` theme
+variable in `packages/base/app/assets/css/tailwind.css`: it preloads the file
+and reads its metrics to declare fallbacks after it, Segoe UI, Helvetica
+Neue, Arial, Noto Sans and Liberation Sans, each sized and lifted to take the
+same room, so text set before the face arrives holds still when it does. The
+brackets face is declared by hand in `main.css`, as it carries a
+`unicode-range` of its own.
+
 Colour comes from mirror tokens. The `robinvey` theme in
 `packages/base/tokens/theme` sets the paper, the ink and the font family over
 the stock mirror-tokens tree, which is fetched from git on every token build.
@@ -172,8 +166,11 @@ not recolour a selection mid-drag.
 
 `useHue()` in the Ui module owns the counter. Rows, links and the colour mode
 switch call `advance()` when the pointer enters, and read the result as
-`--ui-hue`. Links in markdown render through `ProseA`, which hands them to
-`UiLink`, so the intro and the Contact paragraph behave like every other link.
+`--ui-hue`. The hue lands at once and lets go over 150ms: `data-hue` in
+`main.css`. Links in markdown render through `ProseA`, which hands them to
+`UiLink`, so the intro and the Contact paragraph behave like every other link;
+the markdown parser’s `nofollow` is switched off in `nuxt.config.ts`, so
+NuxtLink sets the rel of an outbound link there as it does everywhere else.
 An open row in Work or Projects pins the hue it had when it was opened and
 keeps it until it closes, so open rows stay easy to find.
 
@@ -204,10 +201,25 @@ screen while the text above it rewraps. Visitors who prefer reduced motion get
 the new face at once. Regular drops what is there only for Semi Mono: the
 tighter word spacing and the proportional brackets.
 
+The choreography is `useSwitch()` in the Ui module, which runs one change to
+the whole page at a time; the colour mode switch goes through it too.
+
 The choice is kept in `localStorage` under `robinvey-typeface`. An inline
 script sets it on `<html>` before the first paint, so a returning visitor never
 sees Semi Mono first, and the colophon’s label follows once the page has
 hydrated.
+
+## Colour mode
+
+The colour mode menu, top right from `lg` and in the colophon below that,
+offers Dark, Light and System. A choice that changes the page goes through
+the same choreography as the typeface switch: scrambled, hidden, changed,
+settled. One that leaves the page as it is, System on a system already
+showing that mode, is kept without it. The `theme-color` tags follow the
+mode, so the browser’s own frame takes the paper or the dark ground: one tag
+per system scheme until a choice is made, both with the choice after
+(`useThemeColor()`); the error page keeps the dark one. `color-scheme`
+follows on `<html>`, so scrollbars and form controls match.
 
 ## Garden
 
@@ -268,6 +280,11 @@ over it: `apps/web/app/error.vue` sets a header in the page’s grid over a
 the start. Its emoji spins through the flowers and lands on a wilted one. The
 static build’s `404.html` boots the app in the browser, which finds no page and
 shows the error page; `not_found_handling` in `wrangler.jsonc` serves it.
+Until the app has booted, `app/spa-loading-template.html` stands in with the
+dark ground and the header, so the page never flashes white. The plot is a
+lazy component: on the home page it hydrates once the browser is idle, so its
+code stays out of the intro’s way, and on the error page it loads with the
+page.
 
 ## Titles on phones
 
@@ -288,8 +305,21 @@ the marks in each row stay quiet:
 <UiIcon name="plus" :weight="400" />
 ```
 
-Icons are inlined into the prerendered HTML. One that first appears after a
-click, such as `minus`, is fetched from the same endpoint in the browser.
+Icons are inlined into the prerendered HTML, with five seconds for each to
+arrive at build time. Both marks of a row that opens, `plus` and `minus`, are
+in the HTML, one of them hidden, so the first click waits for no icon; the
+colour mode switch fetches its menu’s icons as soon as it is on the page.
+
+The favicon is the 🚠 emoji: an SVG for the browsers that draw it, and
+`favicon.png` with Apple’s art for Safari, which takes no SVG, next to
+`apple-touch-icon.png` on the paper for the home screen. Both PNGs come from
+`scripts/icons.swift`, which draws an emoji with AppKit:
+
+```sh
+swift scripts/icons.swift 🚠 '#f2f2f0' apps/web/public
+```
+
+The Wunschzettel’s 🎁 is drawn the same way, on white.
 
 ## The CV
 
@@ -325,6 +355,14 @@ a thin space either side. They apply to one-line text only, such as titles and
 dates, because the engine may break a line wherever two text runs meet. The
 site sets that dash the same way with `UiRange`.
 
+## Preview image
+
+`apps/web/server/routes/og.png.get.ts` draws the picture a shared link shows,
+with satori and resvg: the name, role and location from `profile.yml` and
+the site’s host, set in the CV’s Semi Mono cut on the paper, 1200 by 630.
+The build prerenders it to `og.png`, and the page’s Open Graph tags point at
+it.
+
 ## Wunschzettel
 
 `apps/wunschzettel` is a wish list for the family: a grid of things, each a
@@ -332,7 +370,10 @@ link to a shop in Germany with a fair price and an easy return. It stands
 apart from the site’s layer: mirror v2 with the stock tokens and none of the
 `robinvey` theme, a white page in the system font, one size of type with a
 smaller one for the Edit buttons, a grid of pictures with a caption under
-each, no dark mode. The local tokens in `apps/wunschzettel/tokens` merge over
+each, one to a row on a phone and up to four on a wide screen, on a page
+capped at 2000px so a card in four columns is never wider than the widest in
+three, no dark mode. Its icons are the 🎁 emoji, drawn as the site’s are, and
+its `theme-color` is the white of the page. The local tokens in `apps/wunschzettel/tokens` merge over
 the stock tree: `config.json` points the grey palette at neutral, so
 surface, primary and secondary carry no blue, and `application.json` halves
 the focus line and its halo, to 1px and 2px. The colours, radii and focus
@@ -393,6 +434,13 @@ AVIF or GIF with an alpha channel, and keeps that as `imageTransparent`
 once per Worker isolate before the first API request. A picture with an
 alpha channel but a solid backdrop keeps its backdrop.
 
+The first four cards’ pictures come with the page, each with a preload link
+and the share of the screen the grid gives it at every width, so the browser
+asks for the size it shows; the rest load as they scroll into view and
+measure themselves. Every picture fades in once it has loaded. A wish without
+a picture shows the dashed square of an empty card, so the grid keeps its
+shape.
+
 ### Adding a wish
 
 Open `/add` and drag the 🎁 Wish link into the bookmarks bar. On a
@@ -403,8 +451,11 @@ nothing is sent anywhere until you save. Check the preview, fix what the
 shop got wrong, compare prices on idealo or Geizhals, then click Save:
 the wish is first on the list at once, with a toast that says so. A save that
 fails says so too, with the server’s reason when it gave one, such as a
-lapsed sign-in. `/add` without a product lists every wish
-with a Remove link.
+lapsed sign-in. `/add` without a product lists every wish with a Remove
+button, which asks first in the same alert as the drawer and says so in a
+toast if the removal fails. The page is served with the bookmarklet and the
+list in its HTML; arriving with a product, an inline script marks the page
+before it paints and the form takes their place.
 
 The bookmarklet is `apps/wunschzettel/app/modules/Wish/bookmarklet/index.ts`,
 a script in TypeScript. The Wish module minifies it with esbuild at build
@@ -415,13 +466,17 @@ copy of the code: after a change, drag the link again.
 ### Editing a wish
 
 Signed in, hover a card on the list and click Edit: a drawer slides in
-from the right with the wish’s fields, read afresh from the database.
-Save keeps the changes and closes the drawer with a toast; a failed save
-leaves it open and says so in one. Remove asks first, in mirror’s `AlertDialog`, then
-deletes the wish and its picture. Escape or a click beside the drawer closes
-it; while the alert asks, Escape answers the alert alone. The id stays when the title changes,
-and so does the time the wish was added; a new picture address fetches the
-picture again. On a touch screen the Edit buttons show without hovering.
+from the right with the wish’s fields, the title, link and note from the card
+at once and the rest from the record, read afresh from the database. Save
+keeps the changes and closes the drawer with a toast; a failed save leaves it
+open and says so in one. Remove asks first, in mirror’s `AlertDialog`, which
+fades in over the drawer, then deletes the wish and its picture. Escape or a
+click beside the drawer closes it; while the alert asks, Escape answers the
+alert alone. The id stays when the title changes, and so does the time the
+wish was added; a new picture address fetches the picture again. On a touch
+screen the Edit buttons show without hovering, and the fields take 16px so
+iOS does not zoom into them. The page keeps its scrollbar gutter while the
+drawer locks it, so nothing moves when it opens.
 
 ### Sorting
 
@@ -539,9 +594,9 @@ repository private.
 ## Tooling
 
 - [Turborepo](https://turbo.build/repo), pnpm workspaces
-- [Nuxt 4](https://nuxt.com), [Nuxt Content](https://content.nuxt.com)
+- [Nuxt 4](https://nuxt.com), [Nuxt Content](https://content.nuxt.com), [Nuxt Fonts](https://fonts.nuxt.com)
 - [mirror v2](https://github.com/magicasaservice/mirror), [vue-equipment](https://github.com/magicasaservice/vue-equipment), [magic-image](https://github.com/magicasaservice/magic-image)
-- [`@jasy/pdf`](https://www.npmjs.com/package/@jasy/pdf) for the CV
+- [`@jasy/pdf`](https://www.npmjs.com/package/@jasy/pdf) for the CV, [satori](https://github.com/vercel/satori) and [resvg](https://github.com/thx/resvg-js) for the preview image
 - [`@nuxt/icon`](https://github.com/nuxt/icon) with the Symbols collection
 - ESLint and Prettier presets from `@maas/config`
 - [Drizzle](https://orm.drizzle.team) on [Cloudflare D1](https://developers.cloudflare.com/d1/), [nuxt-auth-utils](https://github.com/atinux/nuxt-auth-utils) for the Wunschzettel
