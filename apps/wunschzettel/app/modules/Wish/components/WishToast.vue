@@ -1,11 +1,30 @@
 <template>
   <div
     :role="tone === 'danger' ? 'alert' : 'status'"
-    class="bg-primary-solid text-primary-on-solid rounded-component-sm max-w-xs px-4 py-2.5 shadow-lg"
+    class="bg-primary-solid text-primary-on-solid rounded-component-sm flex w-72 max-w-[calc(100vw_-_2*var(--magic-toast-padding-x))] gap-3 px-4 py-3.5 shadow-lg"
     @click="emit('remove')"
   >
-    <p>{{ message }}</p>
-    <p v-if="reason" class="opacity-70">{{ reason }}</p>
+    <svg
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.25"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+      class="mt-0.5 size-4 shrink-0"
+    >
+      <circle cx="8" cy="8" r="6.5" />
+      <path v-if="tone === 'success'" d="m5.25 8.25 1.75 1.75 3.75-4" />
+      <template v-else>
+        <path d="M8 4.75v3.75" />
+        <circle cx="8" cy="11" r="0.25" fill="currentColor" />
+      </template>
+    </svg>
+    <div class="space-y-0.5">
+      <p>{{ message }}</p>
+      <p v-if="reason" class="opacity-70">{{ reason }}</p>
+    </div>
   </div>
 </template>
 

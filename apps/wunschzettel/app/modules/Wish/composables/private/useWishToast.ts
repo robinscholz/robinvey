@@ -25,20 +25,29 @@ function isServerRefusal(error: unknown): error is ServerRefusal {
 export function useWishToast() {
   const { add } = useMagicToast(ToastIds.Wish)
 
-  // Public functions
-  function announceSaved() {
+  // Private functions
+  function announceSuccess(message: string) {
     add({
       component: WishToast,
-      props: { message: 'Saved.', tone: 'success' },
+      props: { message, tone: 'success' },
       options: { duration: 3000 },
     })
+  }
+
+  // Public functions
+  function announceAdded() {
+    announceSuccess('The wish is on the list.')
+  }
+
+  function announceSaved() {
+    announceSuccess('Your changes are saved.')
   }
 
   function announceSaveFailure(error: unknown) {
     add({
       component: WishToast,
       props: {
-        message: 'Saving did not work.',
+        message: 'The wish could not be saved.',
         tone: 'danger',
         reason: isServerRefusal(error) ? error.data.message : '',
       },
@@ -47,6 +56,7 @@ export function useWishToast() {
   }
 
   return {
+    announceAdded,
     announceSaved,
     announceSaveFailure,
   }

@@ -26,7 +26,7 @@ function today(): string {
 
 export function useWishDraft({ save }: UseWishDraftOptions) {
   const route = useRoute()
-  const { announceSaved, announceSaveFailure } = useWishToast()
+  const { announceAdded, announceSaveFailure } = useWishToast()
 
   // Public state
   const draft = reactive<WishDraft>(emptyDraft())
@@ -68,7 +68,7 @@ export function useWishDraft({ save }: UseWishDraftOptions) {
     saving.value = true
     try {
       await save({ id: id.value, ...draftToPayload(draft), added: today() })
-      announceSaved()
+      announceAdded()
       await navigateTo('/')
     } catch (error) {
       announceSaveFailure(error)
