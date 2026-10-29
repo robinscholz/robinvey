@@ -3,7 +3,7 @@
     <MagicToastProvider
       :id="ToastIds.Wish"
       :options="options"
-      class="[--magic-toast-animation-duration:300ms] [--magic-toast-padding-x:--spacing(6)] [--magic-toast-padding-y:--spacing(5.5)] motion-reduce:[--magic-toast-animation-duration:0ms] md:[--magic-toast-padding-x:--spacing(12)] md:[--magic-toast-padding-y:--spacing(9.5)] xl:[--magic-toast-padding-x:--spacing(20)]"
+      class="[--magic-toast-animation-duration:300ms] [--magic-toast-padding-x:--spacing(4)] [--magic-toast-padding-y:--spacing(4)] motion-reduce:[--magic-toast-animation-duration:0ms]"
     />
   </ClientOnly>
 </template>
@@ -15,9 +15,8 @@ import type { MagicToastOptions } from '@maas/vue-equipment/plugins/MagicToast'
 const { id } = useWishEditor()
 
 // An open modal dialog keeps the rest of the page below it and inert, so the
-// toasts move into the drawer while it is open. They line up with the page
-// edge and sit centred on the header line, slide in from the right and are
-// swiped back out the same way.
+// toasts move into the drawer while it is open. They slide in from the right
+// and are swiped back out the same way.
 const options = computed<MagicToastOptions>(() => ({
   position: 'top-right',
   transition: 'wish-toast',

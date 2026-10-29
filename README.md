@@ -328,15 +328,14 @@ surface, primary and secondary carry no blue, and `application.json` halves
 the focus line and its halo, to 1px and 2px. The colours, radii and focus
 ring are mirror utilities, fields are underlined, and every button is
 `WishButton`, mirror’s `Button` as a ghost that fills in on hover: success
-for Save, danger for Remove. A save answers with a toast at the top right,
-from vue-equipment’s MagicToast, lined up with the page edge and the header
-line; while the drawer is open the toaster moves into it, since a modal
-dialog leaves the rest of the page below it and inert. It runs as
-a Cloudflare Worker: the pages and `/api` come from one Nitro server, the
-wishes live in a D1 database and the pictures in an R2 bucket. Everyone can
-read; adding, editing and removing is behind a GitHub sign-in. It is not for
-search engines: `robots.txt` disallows everything and every page carries
-`noindex`.
+for Save, danger for Remove. A save answers with a toast 1rem in from the top
+right corner, from vue-equipment’s MagicToast; while the drawer is open the
+toaster moves into it, since a modal dialog leaves the rest of the page below
+it and inert. It runs as a Cloudflare Worker: the pages and `/api` come from
+one Nitro server, the wishes live in a D1 database and the pictures in an R2
+bucket. Everyone can read; adding, editing and removing is behind a GitHub
+sign-in. It is not for search engines: `robots.txt` disallows everything and
+every page carries `noindex`.
 
 The database is `packages/database`: the Drizzle schema, the migrations, the
 wishes repository and the seed, with a README of its own. The API handlers

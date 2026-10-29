@@ -1,7 +1,7 @@
 <template>
   <div
     :role="tone === 'danger' ? 'alert' : 'status'"
-    class="bg-primary-solid text-primary-on-solid rounded-component-sm flex w-72 max-w-[calc(100vw_-_2*var(--magic-toast-padding-x))] gap-3 px-4 py-3.5 shadow-lg"
+    class="bg-surface-base text-surface rounded-component-sm flex w-72 max-w-[calc(100vw-2*var(--magic-toast-padding-x))] gap-3 px-4 py-3.5 shadow-sm"
     @click="emit('remove')"
   >
     <svg
@@ -12,7 +12,7 @@
       stroke-linecap="round"
       stroke-linejoin="round"
       aria-hidden="true"
-      class="mt-0.5 size-4 shrink-0"
+      class="text-surface-muted mt-0.5 size-4 shrink-0"
     >
       <circle cx="8" cy="8" r="6.5" />
       <path v-if="tone === 'success'" d="m5.25 8.25 1.75 1.75 3.75-4" />
@@ -23,7 +23,7 @@
     </svg>
     <div class="space-y-0.5">
       <p>{{ message }}</p>
-      <p v-if="reason" class="opacity-70">{{ reason }}</p>
+      <p v-if="reason" class="text-surface-muted">{{ reason }}</p>
     </div>
   </div>
 </template>
