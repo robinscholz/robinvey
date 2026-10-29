@@ -1,0 +1,22 @@
+{
+  "app": {
+    "dimension": {
+      "component": {
+        "border": {
+          "default": {
+            "$value": "1px",
+            "$type": "dimension"
+          }
+        },
+        "outline": {
+          "focus": {
+            "default": {
+              "$value": "0.125rem",
+              "$type": "dimension"
+            }
+          }
+        }
+      }
+    }
+  }
+}

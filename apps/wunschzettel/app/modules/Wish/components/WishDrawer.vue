@@ -2,48 +2,51 @@
   <dialog
     ref="dialog"
     aria-label="Edit wish"
-    class="border-line text-ink fixed inset-y-0 right-0 left-auto m-0 h-dvh max-h-none w-full max-w-none translate-x-full overflow-y-auto overscroll-contain border-l bg-white transition-[translate,overlay,display] transition-discrete duration-200 ease-[cubic-bezier(0.32,0.72,0,1)] backdrop:bg-white/0 backdrop:transition-[background-color,overlay,display] backdrop:transition-discrete backdrop:duration-200 open:translate-x-0 open:duration-300 open:backdrop:bg-white/70 open:backdrop:duration-300 motion-reduce:transition-none motion-reduce:backdrop:transition-none sm:w-lg starting:open:translate-x-full starting:open:backdrop:bg-white/0"
+    class="border-surface text-surface bg-surface-low fixed inset-y-0 right-0 left-auto m-0 h-dvh max-h-none w-full max-w-none translate-x-full overflow-y-auto overscroll-contain border-l transition-[translate,overlay,display] transition-discrete duration-200 ease-[cubic-bezier(0.32,0.72,0,1)] backdrop:bg-transparent backdrop:transition-[background-color,overlay,display] backdrop:transition-discrete backdrop:duration-200 open:translate-none open:duration-300 open:backdrop:bg-[color-mix(in_oklab,var(--mirror-bg-surface-low)_70%,transparent)] open:backdrop:duration-300 motion-reduce:transition-none motion-reduce:backdrop:transition-none sm:w-lg starting:open:translate-x-full starting:open:backdrop:bg-transparent"
+    @cancel="onCancel"
     @close="close"
     @pointerdown="onPointerdown"
     @click="onClick"
   >
     <div class="min-h-full px-6 pt-8 pb-24 md:px-12 md:pt-12">
       <p class="text-right">
-        <button
-          type="button"
-          class="text-muted hover:text-ink cursor-pointer"
-          @click="close"
-        >
-          Close
-        </button>
+        <WishButton @click="close">Close</WishButton>
       </p>
       <form class="mt-20 md:mt-32" @submit.prevent="submit">
         <fieldset :disabled="pending !== null">
           <div class="flex flex-col gap-y-3">
             <WishFields v-model="draft" />
           </div>
-          <p class="mt-16 flex items-baseline justify-between gap-x-6">
-            <button
-              v-if="complete || pending === 'load'"
-              type="submit"
-              class="link cursor-pointer disabled:cursor-default"
-            >
-              {{ pending === 'save' ? 'Saving …' : 'Save' }}
-            </button>
-            <span v-else class="text-muted"
-              >Title and link are still missing.</span
-            >
-            <button
-              type="button"
-              class="text-muted enabled:hover:text-ink cursor-pointer disabled:cursor-default"
-              @click="discard"
+          <p class="mt-16 flex items-baseline justify-end gap-x-8">
+            <WishButton
+              ref="removeButton"
+              variant="danger"
+              :loading="pending === 'remove'"
+              @click="removing = true"
             >
               {{ pending === 'remove' ? 'Removing …' : 'Remove' }}
-            </button>
+            </WishButton>
+            <WishButton
+              v-if="complete || pending === 'load'"
+              variant="success"
+              type="submit"
+              :loading="pending === 'save'"
+            >
+              {{ pending === 'save' ? 'Saving …' : 'Save' }}
+            </WishButton>
+            <span v-else class="text-surface-muted"
+              >Title and link are still missing.</span
+            >
           </p>
         </fieldset>
-        <p v-if="notice" class="text-muted">{{ notice }}</p>
+        <p v-if="notice" class="text-surface-muted">{{ notice }}</p>
       </form>
+      <WishRemoveDialog
+        v-model:open="removing"
+        :title="draft.title.trim()"
+        :final-focus="() => removeButtonRef?.$el ?? null"
+        @confirm="discard"
+      />
     </div>
   </dialog>
 </template>
@@ -58,6 +61,10 @@ const { draft, pending, failed, complete, submit, discard } = useWishEditorForm(
 )
 
 const dialogRef = useTemplateRef('dialog')
+const removeButtonRef = useTemplateRef('removeButton')
+
+// Asking before a remove.
+const removing = shallowRef(false)
 
 // Set on press, so a text selection dragged out of a field keeps it open.
 let pressedOutside = false
@@ -86,8 +93,16 @@ function isOutside(event: MouseEvent): boolean {
   return x < left || x > right || y < top || y > bottom
 }
 
+// While the alert asks, Escape answers it and leaves the drawer open.
+function onCancel(event: Event) {
+  if (removing.value) {
+    event.preventDefault()
+    removing.value = false
+  }
+}
+
 function onPointerdown(event: PointerEvent) {
-  pressedOutside = isOutside(event)
+  pressedOutside = !removing.value && isOutside(event)
 }
 
 function onClick(event: MouseEvent) {
@@ -103,6 +118,7 @@ watch(
     if (active) {
       dialogRef.value?.showModal()
     } else {
+      removing.value = false
       dialogRef.value?.close()
     }
   }

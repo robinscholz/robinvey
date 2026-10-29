@@ -9,7 +9,7 @@
       </template>
     </WishCard>
   </ul>
-  <p v-else class="text-muted">Nothing right now.</p>
+  <p v-else class="text-surface-muted">Nothing right now.</p>
 </template>
 
 <script setup lang="ts">

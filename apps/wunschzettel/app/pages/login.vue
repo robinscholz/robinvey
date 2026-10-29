@@ -4,7 +4,7 @@
     <p v-if="available" class="mt-6">
       <a href="/auth/github" class="link">Sign in with GitHub</a>
     </p>
-    <p v-if="notice" class="text-muted mt-6">{{ notice }}</p>
+    <p v-if="notice" class="text-surface-muted mt-6">{{ notice }}</p>
   </main>
 </template>
 

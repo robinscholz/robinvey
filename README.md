@@ -22,7 +22,8 @@ pnpm install
 pnpm dev
 ```
 
-`dev` builds the tokens in `packages/base` first, then starts the site on
+`dev` builds the mirror tokens in `packages/base` and `apps/wunschzettel`
+first, then starts the site on
 port 3000 and the Wunschzettel on port 3001; `pnpm dev:web` and
 `pnpm dev:wunschzettel` start one of them. `/cv.pdf` renders on every request in development.
 The Wunschzettel applies pending migrations to its local D1 database first,
@@ -318,8 +319,16 @@ site sets that dash the same way with `UiRange`.
 
 `apps/wunschzettel` is a wish list for the family: a grid of things, each a
 link to a shop in Germany with a fair price and an easy return. It stands
-apart from the site’s layer: a white page in the system font, one size of
-type, a grid of pictures with a caption under each, no dark mode. It runs as
+apart from the site’s layer: mirror v2 with the stock tokens and none of the
+`robinvey` theme, a white page in the system font, one size of type with a
+smaller one for the Edit buttons, a grid of pictures with a caption under
+each, no dark mode. The local tokens in `apps/wunschzettel/tokens` merge over
+the stock tree: `config.json` points the grey palette at neutral, so
+surface, primary and secondary carry no blue, and `application.json` halves
+the focus line and its halo, to 1px and 2px. The colours, radii and focus
+ring are mirror utilities, fields are underlined, and every button is
+`WishButton`, mirror’s `Button` as a ghost that fills in on hover: success
+for Save, danger for Remove. It runs as
 a Cloudflare Worker: the pages and `/api` come from one Nitro server, the
 wishes live in a D1 database and the pictures in an R2 bucket. Everyone can
 read; adding, editing and removing is behind a GitHub sign-in. It is not for
@@ -390,10 +399,11 @@ copy of the code: after a change, drag the link again.
 
 Signed in, hover a card on the list and click Edit: a drawer slides in
 from the right with the wish’s fields, read afresh from the database.
-Save keeps the changes, Remove deletes the wish and its picture, Escape or
-a click beside the drawer closes it. The id stays when the title changes,
+Save keeps the changes, Remove asks first, in mirror’s `AlertDialog`, then
+deletes the wish and its picture. Escape or a click beside the drawer closes
+it; while the alert asks, Escape answers the alert alone. The id stays when the title changes,
 and so does the day the wish was added; a new picture address fetches the
-picture again. On a touch screen the Edit links show without hovering.
+picture again. On a touch screen the Edit buttons show without hovering.
 
 ### Sign in
 

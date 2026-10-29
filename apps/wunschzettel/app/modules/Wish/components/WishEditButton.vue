@@ -1,11 +1,7 @@
 <template>
-  <button
-    type="button"
-    class="text-muted hover:text-ink cursor-pointer bg-white py-1 pl-2"
-    @click="edit(wish.id)"
-  >
+  <WishButton size="sm" :flush="false" @click="edit(wish.id)">
     Edit<span class="sr-only">: {{ wish.title }}</span>
-  </button>
+  </WishButton>
 </template>
 
 <script setup lang="ts">

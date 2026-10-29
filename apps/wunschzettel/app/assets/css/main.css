@@ -1,34 +1,45 @@
 @import 'tailwindcss';
+@import '../../../.maas/tailwind.preset.css';
 
 @source '../../';
 
 @theme {
   --font-sans:
     -apple-system, BlinkMacSystemFont, system-ui, 'Helvetica Neue', sans-serif;
-  --color-*: initial;
-  --color-white: #ffffff;
-  --color-ink: #111111;
-  --color-muted: #8a8a8a;
-  --color-line: #e5e5e5;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@utility focus-inline {
+  @apply rounded-component-compact-sm focus-visible:focus-shadow outline-hidden;
+  padding: 0.125em 0.25em;
+  margin-inline: -0.25em;
 }
 
 @utility link {
+  @apply focus-inline;
   text-decoration-line: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 0.2em;
 }
 
+@utility field-underline {
+  box-shadow: inset 0 calc(var(--app-dimension-border-thin) * -1) 0
+    var(--app-color-surface-border);
+}
+
+@utility focus-underline {
+  box-shadow:
+    inset 0 calc(var(--app-dimension-border) * -1) 0
+      var(--app-color-focus-border),
+    0 var(--app-dimension-outline-focus) 0 var(--app-color-focus-outline);
+}
+
 @layer base {
   body {
-    @apply text-ink bg-white text-sm;
+    @apply bg-surface-low text-surface text-sm;
   }
 
   :root:has(dialog[open]) {
     overflow: hidden;
-  }
-
-  :focus-visible {
-    outline: 1px solid currentColor;
-    outline-offset: 3px;
   }
 }

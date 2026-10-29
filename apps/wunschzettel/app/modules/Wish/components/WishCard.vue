@@ -1,6 +1,13 @@
 <template>
   <li class="group relative">
-    <a :href="wish.url" target="_blank" rel="noreferrer" class="block">
+    <!-- The card’s padding is pulled back, so picture and title line up with
+         the page while the focus ring has room around them. -->
+    <a
+      :href="wish.url"
+      target="_blank"
+      rel="noreferrer"
+      class="rounded-component-sm focus-visible:focus-shadow -m-3 block p-3 outline-hidden"
+    >
       <div class="aspect-square">
         <MagicImage
           v-if="wish.image"
@@ -8,16 +15,16 @@
           :provider="preview ? 'none' : undefined"
           :modifiers="modifiers"
           alt=""
-          class="block h-full w-full object-contain transition-opacity duration-300 group-hover:opacity-75"
+          class="block h-full w-full object-contain transition-[scale] duration-250 ease-out motion-safe:group-hover:scale-102"
         />
       </div>
       <p class="mt-5">{{ wish.title }}</p>
-      <p v-if="wish.caption" class="text-muted">{{ wish.caption }}</p>
-      <p v-if="wish.note" class="text-muted">{{ wish.note }}</p>
+      <p v-if="wish.caption" class="text-surface-muted">{{ wish.caption }}</p>
+      <p v-if="wish.note" class="text-surface-muted">{{ wish.note }}</p>
     </a>
     <div
       v-if="$slots.actions"
-      class="absolute top-0 right-0 opacity-0 transition-opacity duration-150 group-focus-within:opacity-100 group-hover:opacity-100 [@media(hover:none)]:opacity-100"
+      class="absolute -top-1.5 -right-1.5 opacity-0 transition-opacity duration-150 group-focus-within:opacity-100 group-hover:opacity-100 [@media(hover:none)]:opacity-100"
     >
       <slot name="actions" />
     </div>

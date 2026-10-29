@@ -12,7 +12,7 @@
           <form class="flex flex-col gap-y-3" @submit.prevent="submit">
             <WishFields v-model="draft" />
           </form>
-          <p class="text-muted mt-8">
+          <p class="text-surface-muted mt-8">
             Compare prices:
             <template v-for="(comparison, index) in comparisons" :key="index"
               ><template v-if="index">, </template
@@ -26,20 +26,19 @@
             >
           </p>
           <p class="mt-16">
-            <button
+            <WishButton
               v-if="complete"
-              type="button"
-              class="link cursor-pointer disabled:cursor-wait"
-              :disabled="saving"
+              variant="success"
+              :loading="saving"
               @click="submit"
             >
               {{ saving ? 'Saving …' : 'Save' }}
-            </button>
-            <span v-else class="text-muted"
+            </WishButton>
+            <span v-else class="text-surface-muted"
               >Title and link are still missing.</span
             >
           </p>
-          <p v-if="failed" class="text-muted">Saving did not work.</p>
+          <p v-if="failed" class="text-surface-muted">Saving did not work.</p>
         </div>
       </div>
       <WishBookmarklet v-else />
@@ -52,13 +51,7 @@
           class="flex items-baseline gap-x-6"
         >
           <span class="min-w-0 flex-1">{{ entry.title }}</span>
-          <button
-            type="button"
-            class="text-muted hover:text-ink cursor-pointer"
-            @click="remove(entry.id)"
-          >
-            Remove
-          </button>
+          <WishButton @click="remove(entry.id)">Remove</WishButton>
         </li>
       </ul>
     </section>

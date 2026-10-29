@@ -1,0 +1,134 @@
+{
+  "config": {
+    "color": {
+      "palette": {
+        "grey": {
+          "solid": {
+            "1": {
+              "$value": "{config.color.palette.neutral.solid.1}",
+              "$type": "color"
+            },
+            "2": {
+              "$value": "{config.color.palette.neutral.solid.2}",
+              "$type": "color"
+            },
+            "3": {
+              "$value": "{config.color.palette.neutral.solid.3}",
+              "$type": "color"
+            },
+            "4": {
+              "$value": "{config.color.palette.neutral.solid.4}",
+              "$type": "color"
+            },
+            "5": {
+              "$value": "{config.color.palette.neutral.solid.5}",
+              "$type": "color"
+            },
+            "6": {
+              "$value": "{config.color.palette.neutral.solid.6}",
+              "$type": "color"
+            },
+            "7": {
+              "$value": "{config.color.palette.neutral.solid.7}",
+              "$type": "color"
+            },
+            "8": {
+              "$value": "{config.color.palette.neutral.solid.8}",
+              "$type": "color"
+            },
+            "9": {
+              "$value": "{config.color.palette.neutral.solid.9}",
+              "$type": "color"
+            },
+            "10": {
+              "$value": "{config.color.palette.neutral.solid.10}",
+              "$type": "color"
+            },
+            "11": {
+              "$value": "{config.color.palette.neutral.solid.11}",
+              "$type": "color"
+            },
+            "12": {
+              "$value": "{config.color.palette.neutral.solid.12}",
+              "$type": "color"
+            },
+            "13": {
+              "$value": "{config.color.palette.neutral.solid.13}",
+              "$type": "color"
+            },
+            "14": {
+              "$value": "{config.color.palette.neutral.solid.14}",
+              "$type": "color"
+            },
+            "15": {
+              "$value": "{config.color.palette.neutral.solid.15}",
+              "$type": "color"
+            }
+          },
+          "translucent": {
+            "1": {
+              "$value": "{config.color.palette.neutral.translucent.1}",
+              "$type": "color"
+            },
+            "2": {
+              "$value": "{config.color.palette.neutral.translucent.2}",
+              "$type": "color"
+            },
+            "3": {
+              "$value": "{config.color.palette.neutral.translucent.3}",
+              "$type": "color"
+            },
+            "4": {
+              "$value": "{config.color.palette.neutral.translucent.4}",
+              "$type": "color"
+            },
+            "5": {
+              "$value": "{config.color.palette.neutral.translucent.5}",
+              "$type": "color"
+            },
+            "6": {
+              "$value": "{config.color.palette.neutral.translucent.6}",
+              "$type": "color"
+            },
+            "7": {
+              "$value": "{config.color.palette.neutral.translucent.7}",
+              "$type": "color"
+            },
+            "8": {
+              "$value": "{config.color.palette.neutral.translucent.8}",
+              "$type": "color"
+            },
+            "9": {
+              "$value": "{config.color.palette.neutral.translucent.9}",
+              "$type": "color"
+            },
+            "10": {
+              "$value": "{config.color.palette.neutral.translucent.10}",
+              "$type": "color"
+            },
+            "11": {
+              "$value": "{config.color.palette.neutral.translucent.11}",
+              "$type": "color"
+            },
+            "12": {
+              "$value": "{config.color.palette.neutral.translucent.12}",
+              "$type": "color"
+            },
+            "13": {
+              "$value": "{config.color.palette.neutral.translucent.13}",
+              "$type": "color"
+            },
+            "14": {
+              "$value": "{config.color.palette.neutral.translucent.14}",
+              "$type": "color"
+            },
+            "15": {
+              "$value": "{config.color.palette.neutral.translucent.15}",
+              "$type": "color"
+            }
+          }
+        }
+      }
+    }
+  }
+}

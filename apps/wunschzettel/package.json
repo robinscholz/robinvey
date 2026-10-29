@@ -10,10 +10,11 @@
     }
   ],
   "scripts": {
-    "dev": "pnpm db:migrate && pnpm db:pull && nuxt dev",
-    "build": "nuxt build",
+    "dev": "pnpm tokens && pnpm db:migrate && pnpm db:pull && nuxt dev",
+    "build": "pnpm tokens && nuxt build",
     "start": "pnpm db:migrate && pnpm db:pull && wrangler dev",
     "deploy": "wrangler d1 migrations apply DB --remote && wrangler deploy",
+    "tokens": "mirror tokens && mirror css",
     "db:migrate": "wrangler d1 migrations apply DB --local",
     "db:pull": "node scripts/pull-database.mjs",
     "lint": "eslint .",
@@ -21,6 +22,7 @@
   },
   "dependencies": {
     "@maas/magic-image": "^1.0.2",
+    "@maas/mirror": "^2.0.0-beta.4",
     "@nuxt/image": "^2.1.0",
     "@nuxt/kit": "^4.6.0",
     "@robinscholz/database": "workspace:*",

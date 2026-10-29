@@ -1,11 +1,11 @@
 <template>
   <label class="flex items-baseline gap-x-6">
-    <span class="text-muted w-[10ch] shrink-0">{{ label }}</span>
+    <span class="text-surface-muted w-[10ch] shrink-0">{{ label }}</span>
     <input
       v-model="model"
       :type="type"
       :placeholder="placeholder"
-      class="border-line placeholder:text-muted/50 focus:border-ink min-w-0 flex-1 border-b bg-transparent py-1 focus:outline-none"
+      class="field-underline placeholder:text-surface-subtle focus-visible:focus-underline min-w-0 flex-1 bg-transparent py-1 outline-hidden"
       autocomplete="off"
       spellcheck="false"
     />

@@ -5,7 +5,12 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
   telemetry: false,
 
-  modules: ['@maas/magic-image', 'nuxt-auth-utils', '~~/app/modules/Wish'],
+  modules: [
+    '@maas/mirror/nuxt',
+    '@maas/magic-image',
+    'nuxt-auth-utils',
+    '~~/app/modules/Wish',
+  ],
 
   // Pictures are cut out and resized by Cloudflare Images on the production
   // zone, from the copies the Worker keeps in its bucket.
@@ -27,7 +32,8 @@ export default defineNuxtConfig({
     },
   },
 
-  css: ['~/assets/css/main.css'],
+  // Light mode only: the dark theme file is left out.
+  css: ['~~/.maas/tokens/css/application.css', '~/assets/css/main.css'],
 
   vite: {
     plugins: [tailwindcss()],
