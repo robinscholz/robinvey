@@ -441,6 +441,14 @@ dragged the grid renders the order a drop would leave, and dnd-kit slides
 each card to its new place. The page loads the sortable grid only for a
 signed-in visitor, so nobody else downloads dnd-kit.
 
+### Not found
+
+An address the Worker has no page for renders `app/error.vue` on the server,
+in the same layout as every page: the header, then a single empty card where
+the list’s first one would be, a dashed square with the status under it and a
+link back to the list. Other errors get the same card with “Something went
+wrong”.
+
 ### Sign in
 
 `/add` and every write to `/api` need a session; the list and every `GET`
