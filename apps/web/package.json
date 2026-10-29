@@ -20,8 +20,10 @@
     "@jasy/pdf": "1.0.0-beta.3",
     "@nuxt/content": "^3.16.1",
     "@nuxt/kit": "^4.6.0",
+    "@resvg/resvg-js": "^2.6.2",
     "@robinscholz/base": "workspace:*",
     "nuxt": "^4.6.0",
+    "satori": "^0.63.2",
     "vue": "^3.5.43"
   },
   "devDependencies": {

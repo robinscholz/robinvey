@@ -2,7 +2,7 @@
   "name": "@robinscholz/base",
   "private": true,
   "type": "module",
-  "description": "Nuxt layer for robinvey: mirror v2, vue-equipment and magic-image wiring, the ABC Areal token theme, the type system, the Ui module and the garden under the page",
+  "description": "Nuxt layer for robinvey: mirror v2 and vue-equipment wiring, the ABC Areal token theme and its fonts, the type system, the Ui module and the garden under the page",
   "contributors": [
     {
       "name": "Robin Vey",
@@ -19,17 +19,16 @@
   },
   "dependencies": {
     "@floating-ui/vue": "^1.1.10",
-    "@maas/magic-image": "^1.0.2",
+    "@iconify/vue": "^5.0.4",
     "@maas/mirror": "^2.0.0-beta.1",
     "@maas/vue-autosize": "^1.8.0",
     "@maas/vue-equipment": "^1.0.0-beta.84",
     "@maas/vue-primitive": "^1.4.0",
+    "@nuxt/fonts": "^1.2.0",
     "@nuxt/icon": "^2.5.1",
-    "@nuxt/image": "^2.1.0",
     "@nuxt/kit": "^4.6.0",
     "@nuxtjs/color-mode": "^3.5.2",
     "@tailwindcss/vite": "^4.3.3",
-    "@unlazy/nuxt": "^2.0.1",
     "@vueuse/core": "^14.4.0",
     "defu": "^6.1.7",
     "focus-trap": "^7.8.0",
