@@ -4,11 +4,13 @@
     :class="[
       'flex items-baseline gap-x-[1.5ch] md:gap-x-[2ch]',
       {
-        'hover:**:text-(--ui-hue) data-pinned:**:text-(--ui-hue)': interactive,
+        'group hover:**:text-(--ui-hue) data-pinned:**:text-(--ui-hue)':
+          interactive,
       },
     ]"
     :style="hue > 0 ? { '--ui-hue': color(hue) } : undefined"
     :data-pinned="hue > 0 || undefined"
+    :data-hue="interactive || null"
     @pointerenter="interactive && advance()"
   >
     <span
@@ -20,7 +22,7 @@
       <slot />
     </component>
     <span
-      class="text-surface-muted w-[1em] shrink-0 transition-opacity duration-300 ease-out data-pending:opacity-0 data-pending:transition-none"
+      class="text-surface-muted w-[1em] shrink-0 transition-[opacity,color] duration-150 ease-out group-hover:duration-0 data-pending:opacity-0 data-pending:transition-none"
       :class="{ 'max-md:hidden': !$slots.mark }"
       aria-hidden="true"
       :data-pending="pending || null"

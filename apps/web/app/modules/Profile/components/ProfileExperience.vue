@@ -22,7 +22,10 @@
                   />
                   <template #meta><UiRange :value="entry.years" /></template>
                   <template #mark>
-                    <UiIcon :name="viewActive ? 'minus' : 'plus'" />
+                    <!-- Both marks are in the HTML, so the first click waits
+                         for no icon. -->
+                    <UiIcon name="plus" :class="{ hidden: viewActive }" />
+                    <UiIcon name="minus" :class="{ hidden: !viewActive }" />
                   </template>
                 </UiRow>
               </button>

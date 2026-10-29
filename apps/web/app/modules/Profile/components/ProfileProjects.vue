@@ -23,7 +23,10 @@
                 <UiMarquee :playing="viewActive">{{ project.name }}</UiMarquee>
                 <template #meta>{{ project.year }}</template>
                 <template #mark>
-                  <UiIcon :name="viewActive ? 'minus' : 'plus'" />
+                  <!-- Both marks are in the HTML, so the first click waits
+                       for no icon. -->
+                  <UiIcon name="plus" :class="{ hidden: viewActive }" />
+                  <UiIcon name="minus" :class="{ hidden: !viewActive }" />
                 </template>
               </UiRow>
             </button>
@@ -35,13 +38,7 @@
               class="text-surface-muted pt-1 pb-[1lh]"
             >
               <p>{{ project.description }}</p>
-              <MagicImage
-                v-if="project.image"
-                :src="project.image.src"
-                :alt="project.image.alt"
-                class="mt-[1lh] block w-full"
-              />
-              <p v-if="project.url" :class="{ 'mt-[1lh]': project.image }">
+              <p v-if="project.url">
                 <UiLink :to="project.url">{{ project.link }}</UiLink>
               </p>
             </UiRow>

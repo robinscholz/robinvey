@@ -4,6 +4,7 @@
     type="button"
     class="cursor-pointer underline decoration-1 underline-offset-[0.2em] hover:text-(--ui-hue)"
     :aria-label="`Typeface: ${label}`"
+    data-hue
     @pointerenter="advance"
     @click="toggle(buttonRef)"
   >

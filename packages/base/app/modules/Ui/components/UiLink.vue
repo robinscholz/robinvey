@@ -7,6 +7,7 @@
     :target="remote ? '_blank' : undefined"
     :class="classes"
     :data-held="held || null"
+    :data-hue="underline || null"
     @pointerenter="underline && advance()"
   >
     <slot :held="held" />

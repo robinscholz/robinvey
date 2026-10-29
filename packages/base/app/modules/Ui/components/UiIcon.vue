@@ -3,13 +3,16 @@
 </template>
 
 <script setup lang="ts">
+import { iconName } from '../utils/icon'
+import type { IconWeight } from '../utils/icon'
+
 interface UiIconProps {
   name: string
-  weight?: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900
+  weight?: IconWeight
   prefix?: string
 }
 
-const { name, weight = 300, prefix = 'maas' } = defineProps<UiIconProps>()
+const { name, weight, prefix } = defineProps<UiIconProps>()
 
-const icon = computed(() => `${prefix}:${name}-${weight}`)
+const icon = computed(() => iconName({ name, weight, prefix }))
 </script>
