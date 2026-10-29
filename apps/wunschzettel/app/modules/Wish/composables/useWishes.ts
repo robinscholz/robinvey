@@ -25,10 +25,26 @@ export async function useWishes() {
     await refresh()
   }
 
+  // The list takes the new order at once; if the server refuses it, the
+  // stored order comes back.
+  async function reorder(ids: Array<string>) {
+    const places = new Map(ids.map((id, index) => [id, index]))
+    data.value = [...wishes.value].sort(
+      (a, b) => (places.get(a.id) ?? -1) - (places.get(b.id) ?? -1)
+    )
+    try {
+      await $fetch('/api/order', { method: 'PUT', body: { ids } })
+    } catch (error) {
+      await refresh()
+      throw error
+    }
+  }
+
   return {
     wishes,
     save,
     remove,
+    reorder,
   }
 }
 

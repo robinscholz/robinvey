@@ -14,8 +14,11 @@ wish came in, an ISO timestamp; older rows hold just the day, which sorts
 before any time that day), and the picture as `image_source`, its address on
 the shop, with `image_version`, a number that changes whenever the source
 does, and `image_transparent`, whether the stored copy came with transparency
-(null until it is checked). The picture itself lives in the app’s R2 bucket
-under the id; see the app’s README.
+(null until it is checked). `position` is the wish’s place once the owner has
+dragged the list into an order, counted from 1; a wish nobody has placed yet
+holds 0. The list sorts by `position`, then newest first, so new wishes come
+first until the next drag numbers them in. The picture itself lives in the
+app’s R2 bucket under the id; see the app’s README.
 
 ## Where the database lives
 

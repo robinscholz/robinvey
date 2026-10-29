@@ -15,6 +15,13 @@
       "when": 1793258650300,
       "tag": "0001_image_transparent",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1793280174994,
+      "tag": "0002_position",
+      "breakpoints": true
     }
   ]
 }

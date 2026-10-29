@@ -4,6 +4,7 @@ export { wishes } from './src/schema'
 export {
   listUncheckedImages,
   listWishes,
+  orderWishes,
   readWish,
   removeWish,
   setImageTransparency,

@@ -1,10 +1,12 @@
 <template>
   <main class="pt-20 md:pt-32">
-    <WishGrid :wishes="wishes">
-      <template v-if="editable" #actions="{ wish }">
+    <!-- Only the owner gets the cards to drag, and with them dnd-kit. -->
+    <LazyWishSortableGrid v-if="editable" :wishes="wishes">
+      <template #actions="{ wish }">
         <WishEditButton :wish="wish" />
       </template>
-    </WishGrid>
+    </LazyWishSortableGrid>
+    <WishGrid v-else :wishes="wishes" />
     <WishDrawer v-if="editable" />
   </main>
 </template>

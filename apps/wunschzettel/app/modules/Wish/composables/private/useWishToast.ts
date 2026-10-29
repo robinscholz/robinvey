@@ -22,6 +22,11 @@ function isServerRefusal(error: unknown): error is ServerRefusal {
   )
 }
 
+interface FailurePayload {
+  message: string
+  error: unknown
+}
+
 export function useWishToast() {
   const { add } = useMagicToast(ToastIds.Wish)
 
@@ -31,6 +36,18 @@ export function useWishToast() {
       component: WishToast,
       props: { message, tone: 'success' },
       options: { duration: 3000 },
+    })
+  }
+
+  function announceFailure({ message, error }: FailurePayload) {
+    add({
+      component: WishToast,
+      props: {
+        message,
+        tone: 'danger',
+        reason: isServerRefusal(error) ? error.data.message : '',
+      },
+      options: { duration: 8000 },
     })
   }
 
@@ -44,21 +61,18 @@ export function useWishToast() {
   }
 
   function announceSaveFailure(error: unknown) {
-    add({
-      component: WishToast,
-      props: {
-        message: 'The wish could not be saved.',
-        tone: 'danger',
-        reason: isServerRefusal(error) ? error.data.message : '',
-      },
-      options: { duration: 8000 },
-    })
+    announceFailure({ message: 'The wish could not be saved.', error })
+  }
+
+  function announceOrderFailure(error: unknown) {
+    announceFailure({ message: 'The new order could not be saved.', error })
   }
 
   return {
     announceAdded,
     announceSaved,
     announceSaveFailure,
+    announceOrderFailure,
   }
 }
 

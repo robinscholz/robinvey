@@ -3,11 +3,11 @@
     v-if="wishes.length"
     class="grid grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 md:gap-x-12 md:gap-y-24 xl:grid-cols-3"
   >
-    <WishCard v-for="wish in wishes" :key="wish.id" :wish="wish">
-      <template v-if="$slots.actions" #actions>
-        <slot name="actions" :wish="wish" />
-      </template>
-    </WishCard>
+    <template v-for="(wish, index) in wishes" :key="wish.id">
+      <slot :wish="wish" :index="index">
+        <WishCard :wish="wish" />
+      </slot>
+    </template>
   </ul>
   <p v-else class="text-surface-muted">Nothing right now.</p>
 </template>
@@ -20,6 +20,6 @@ interface WishGridProps {
 const { wishes } = defineProps<WishGridProps>()
 
 defineSlots<{
-  actions?: (props: { wish: Wish }) => unknown
+  default?: (props: { wish: Wish; index: number }) => unknown
 }>()
 </script>

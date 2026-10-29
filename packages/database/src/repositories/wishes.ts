@@ -1,14 +1,16 @@
 import { and, asc, desc, eq, isNull, ne } from 'drizzle-orm'
+import { runBatch } from '../client'
 import { wishes } from '../schema'
 import type { AppDatabase } from '../client'
 import type { WishInsert, WishRecord } from '../schema'
 
-// Newest first, then by title.
+// In the owner’s order; wishes not placed yet come first, newest first,
+// then by title.
 export function listWishes(database: AppDatabase): Promise<Array<WishRecord>> {
   return database
     .select()
     .from(wishes)
-    .orderBy(desc(wishes.added), asc(wishes.title))
+    .orderBy(asc(wishes.position), desc(wishes.added), asc(wishes.title))
     .all()
 }
 
@@ -56,6 +58,23 @@ export async function setImageTransparency(
     .set({ imageTransparent: transparent })
     .where(eq(wishes.id, id))
     .run()
+}
+
+// Every wish in the list gets its place in one batch, so the order is
+// stored whole or not at all.
+export async function orderWishes(
+  database: AppDatabase,
+  ids: Array<string>
+): Promise<void> {
+  await runBatch(
+    database,
+    ids.map((id, index) =>
+      database
+        .update(wishes)
+        .set({ position: index + 1 })
+        .where(eq(wishes.id, id))
+    )
+  )
 }
 
 export async function removeWish(

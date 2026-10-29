@@ -343,7 +343,9 @@ wishes repository and the seed, with a README of its own. The API handlers
 in `apps/wunschzettel/server/api/wishes` are thin: `GET` lists, `GET /:id`
 reads one, `PUT /:id` upserts after `toWishForStorage` in
 `shared/utils/transformers.ts` has shaped the body, `DELETE /:id` removes the
-wish and its picture. The list page reads them through `useWishes`, rendered
+wish and its picture. `PUT /api/order` takes the ids in their new order and
+numbers them in one batch; it sits outside `/api/wishes`, where a wish could
+be called `order`. The list page reads them through `useWishes`, rendered
 on the server, and `wishTransformer` turns a row into what a card shows.
 
 | Field              | Shown as                                                       |
@@ -356,6 +358,7 @@ on the server, and `wishTransformer` turns a row into what a card shows.
 | `imageTransparent` | Whether the picture came cut out, so it skips Cloudflare’s cut |
 | `note`             | A line under the caption: size, colour, anything               |
 | `added`            | When it came in, an ISO timestamp; newest first                |
+| `position`         | Its place once dragged, from 1; 0 puts it first                |
 
 ### Pictures
 
@@ -410,6 +413,24 @@ deletes the wish and its picture. Escape or a click beside the drawer closes
 it; while the alert asks, Escape answers the alert alone. The id stays when the title changes,
 and so does the time the wish was added; a new picture address fetches the
 picture again. On a touch screen the Edit buttons show without hovering.
+
+### Sorting
+
+Signed in, drag a card to another place on the list. The mouse has to move a
+little before the card comes up, so a click still opens the shop; on a phone
+a finger rests on the card first, so a swipe still scrolls. With the
+keyboard, Space picks up the focused card, the arrow keys move it and Space
+drops it. The picture lifts with a shadow, the other cards slide out of its
+way, and on release it settles into its place. The order is saved at once,
+for everyone; a save that fails puts the old order back and says so in a
+toast.
+
+`WishSortableGrid` wraps `WishGrid` in dnd-kit’s `DragDropProvider`
+([`@dnd-kit/vue`](https://dndkit.com/vue/quickstart)), and each card is a
+`WishSortableCard` with the card’s link as its handle. While a card is
+dragged the grid renders the order a drop would leave, and dnd-kit slides
+each card to its new place. The page loads the sortable grid only for a
+signed-in visitor, so nobody else downloads dnd-kit.
 
 ### Sign in
 

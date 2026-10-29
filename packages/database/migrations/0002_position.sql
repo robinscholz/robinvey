@@ -1,0 +1,1 @@
+ALTER TABLE `wishes` ADD `position` integer DEFAULT 0 NOT NULL;
