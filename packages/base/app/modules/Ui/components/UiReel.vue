@@ -22,6 +22,8 @@
 interface UiReelProps {
   symbol: string
   symbols?: Array<string>
+  // Spins once on mount, for a page the intro does not play on.
+  autoplay?: boolean
 }
 
 // A reel lands at the time its order gives it, whatever it has to pass, so
@@ -30,7 +32,7 @@ const MIN_COUNT = 6
 const MAX_COUNT = 20
 
 // The reel spins past its symbols on the way to the one it lands on.
-const { symbol, symbols = [] } = defineProps<UiReelProps>()
+const { symbol, symbols = [], autoplay = false } = defineProps<UiReelProps>()
 
 const { on, off } = useUiEmitter()
 
@@ -70,6 +72,12 @@ function stop() {
 }
 
 on('beforeIntro', spin)
+
+onMounted(() => {
+  if (autoplay) {
+    spin()
+  }
+})
 
 onScopeDispose(() => {
   off('beforeIntro', spin)

@@ -257,7 +257,17 @@ Visitors who prefer reduced motion find the garden still.
 Each species is a function in
 `packages/base/app/modules/Garden/utils/plants.ts` that draws one plant from a
 size and a height. `grow.ts` lays the rows out, `wind.ts` sets the gusts and
-`compose.ts` lays every plant into the grid at its current lean.
+`compose.ts` lays every plant into the grid at its current lean. `GardenPlot`
+grows the plants and keeps them swaying in whatever box it fills; `GardenBed`
+puts it behind the page and adds the tray’s parts, the reveal, the shadow and
+the click that closes it.
+
+An address that leads nowhere gets the garden out in the open, with no page
+over it: `apps/web/app/error.vue` sets a header in the page’s grid over a
+`GardenPlot` that fills the rest of the viewport, with the wind blowing from
+the start. Its emoji spins through the flowers and lands on a wilted one. The
+static build’s `404.html` boots the app in the browser, which finds no page and
+shows the error page; `not_found_handling` in `wrangler.jsonc` serves it.
 
 ## Titles on phones
 
