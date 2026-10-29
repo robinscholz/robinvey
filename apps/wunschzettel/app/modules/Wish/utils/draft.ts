@@ -19,7 +19,7 @@ export function draftTransformer(draft: WishDraft): Wish {
   const price = parsePrice(draft.price)
   return {
     id: 'draft',
-    title: draft.title.trim() || 'Ohne Titel',
+    title: draft.title.trim() || 'Untitled',
     url: draft.url.trim(),
     caption: formatCaption({
       shop: draft.shop.trim() || formatHost(draft.url.trim()),

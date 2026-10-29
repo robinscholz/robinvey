@@ -7,14 +7,14 @@ function today(): string {
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')
   if (!id) {
-    throw createError({ statusCode: 400, statusMessage: 'ID fehlt' })
+    throw createError({ statusCode: 400, statusMessage: 'ID missing' })
   }
   const body = await readBody<Record<string, unknown>>(event)
   const wish = toWishForStorage({ ...body, id })
   if (!wish.title || !wish.url) {
     throw createError({
       statusCode: 422,
-      statusMessage: 'Titel und Link fehlen noch',
+      statusMessage: 'Title and link are still missing',
     })
   }
 

@@ -46,7 +46,7 @@ const gate = defineEventHandler(async (event) => {
   }
 
   if (pathname.startsWith('/api/')) {
-    throw createError({ statusCode: 401, statusMessage: 'Nicht angemeldet' })
+    throw createError({ statusCode: 401, statusMessage: 'Not signed in' })
   }
 
   return sendRedirect(

@@ -1,8 +1,8 @@
 <template>
   <main class="pt-20 md:pt-32">
-    <p>Zum Hinzufügen bitte anmelden.</p>
+    <p>Sign in to add things.</p>
     <p v-if="available" class="mt-6">
-      <a href="/auth/github" class="link">Mit GitHub anmelden</a>
+      <a href="/auth/github" class="link">Sign in with GitHub</a>
     </p>
     <p v-if="notice" class="text-muted mt-6">{{ notice }}</p>
   </main>
@@ -16,17 +16,17 @@ const available = computed(() => route.query.error !== 'unavailable')
 const notice = computed(() => {
   switch (route.query.error) {
     case 'denied':
-      return `Dieses GitHub-Konto ist hier nicht freigeschaltet. Seine ID: ${route.query.id}`
+      return `This GitHub account is not allowed here. Its ID: ${route.query.id}`
     case 'failed':
-      return 'Die Anmeldung hat nicht geklappt. Versuch es noch einmal.'
+      return 'Signing in did not work. Try again.'
     case 'unavailable':
-      return 'Die Anmeldung ist auf diesem Server noch nicht eingerichtet.'
+      return 'Signing in is not set up on this server yet.'
     default:
       return ''
   }
 })
 
 useSeoMeta({
-  title: 'Anmelden',
+  title: 'Sign in',
 })
 </script>

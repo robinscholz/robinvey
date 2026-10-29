@@ -352,14 +352,14 @@ from the local bucket.
 
 ### Adding a wish
 
-Open `/add` and drag the 🎁 Wünschen link into the bookmarks bar. On a
+Open `/add` and drag the 🎁 Wish link into the bookmarks bar. On a
 shop’s product page, click it: it reads the product from the page’s JSON-LD
 and Open Graph tags, name, brand, picture and price, strips tracking
 parameters from the address and opens `/add` with the wish in the hash, so
 nothing is sent anywhere until you save. Check the preview, fix what the
-shop got wrong, compare prices on idealo or Geizhals, then click Speichern:
+shop got wrong, compare prices on idealo or Geizhals, then click Save:
 the wish is on the list at once. `/add` without a product lists every wish
-with an Entfernen link.
+with a Remove link.
 
 The bookmarklet is `apps/wunschzettel/app/modules/Wish/bookmarklet/index.ts`,
 a script in TypeScript. The Wish module minifies it with esbuild at build

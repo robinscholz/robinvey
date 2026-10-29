@@ -10,23 +10,23 @@
         </ul>
         <div class="xl:col-span-2 xl:max-w-xl">
           <form class="flex flex-col gap-y-3" @submit.prevent="submit">
-            <WishField v-model="draft.title" label="Titel" />
+            <WishField v-model="draft.title" label="Title" />
             <WishField v-model="draft.url" label="Link" type="url" />
             <WishField
               v-model="draft.shop"
               label="Shop"
               :placeholder="formatHost(draft.url)"
             />
-            <WishField v-model="draft.price" label="Preis" placeholder="0,00" />
-            <WishField v-model="draft.image" label="Bild" type="url" />
+            <WishField v-model="draft.price" label="Price" placeholder="0,00" />
+            <WishField v-model="draft.image" label="Picture" type="url" />
             <WishField
               v-model="draft.note"
-              label="Notiz"
-              placeholder="Größe, Farbe …"
+              label="Note"
+              placeholder="Size, colour …"
             />
           </form>
           <p class="text-muted mt-8">
-            Preise vergleichen:
+            Compare prices:
             <template v-for="(comparison, index) in comparisons" :key="index"
               ><template v-if="index">, </template
               ><a
@@ -46,11 +46,13 @@
               :disabled="saving"
               @click="submit"
             >
-              {{ saving ? 'Speichern …' : 'Speichern' }}
+              {{ saving ? 'Saving …' : 'Save' }}
             </button>
-            <span v-else class="text-muted">Titel und Link fehlen noch.</span>
+            <span v-else class="text-muted"
+              >Title and link are still missing.</span
+            >
           </p>
-          <p v-if="failed" class="text-muted">Speichern hat nicht geklappt.</p>
+          <p v-if="failed" class="text-muted">Saving did not work.</p>
         </div>
       </div>
       <WishBookmarklet v-else />
@@ -68,7 +70,7 @@
             class="text-muted hover:text-ink cursor-pointer"
             @click="remove(entry.id)"
           >
-            Entfernen
+            Remove
           </button>
         </li>
       </ul>
@@ -82,6 +84,6 @@ const { draft, received, saving, failed, wish, complete, comparisons, submit } =
   useWishDraft({ save })
 
 useSeoMeta({
-  title: 'Wunsch hinzufügen',
+  title: 'Add a wish',
 })
 </script>

@@ -5,25 +5,25 @@ import { readWish } from '@robinscholz/database'
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')
   if (!id) {
-    throw createError({ statusCode: 404, statusMessage: 'Kein Bild' })
+    throw createError({ statusCode: 404, statusMessage: 'No picture' })
   }
 
   let image = await readImage(id)
   if (!image) {
     const wish = await readWish(useDatabase(), id)
     if (!wish?.imageSource) {
-      throw createError({ statusCode: 404, statusMessage: 'Kein Bild' })
+      throw createError({ statusCode: 404, statusMessage: 'No picture' })
     }
     if (!(await storeImage({ id, source: wish.imageSource }))) {
       throw createError({
         statusCode: 502,
-        statusMessage: 'Das Bild ist beim Shop nicht zu bekommen',
+        statusMessage: 'The shop did not hand out the picture',
       })
     }
     image = await readImage(id)
   }
   if (!image) {
-    throw createError({ statusCode: 404, statusMessage: 'Kein Bild' })
+    throw createError({ statusCode: 404, statusMessage: 'No picture' })
   }
 
   setHeaders(event, {

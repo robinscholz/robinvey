@@ -1,5 +1,5 @@
 export const LIST = {
   title: 'Wunschzettel',
   description:
-    'Ein paar Dinge, über die ich mich freuen würde, jedes mit Link zu einem Shop.',
+    'A few things I would be happy about, each with a link to a shop.',
 }

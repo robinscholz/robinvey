@@ -64,7 +64,7 @@ export default defineNuxtConfig({
   // A wish list for the family, not for search engines.
   app: {
     head: {
-      htmlAttrs: { lang: 'de' },
+      htmlAttrs: { lang: 'en' },
       link: [{ rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' }],
       meta: [{ name: 'robots', content: 'noindex' }],
     },

@@ -5,7 +5,7 @@
   >
     <WishCard v-for="wish in wishes" :key="wish.id" :wish="wish" />
   </ul>
-  <p v-else class="text-muted">Gerade nichts.</p>
+  <p v-else class="text-muted">Nothing right now.</p>
 </template>
 
 <script setup lang="ts">
