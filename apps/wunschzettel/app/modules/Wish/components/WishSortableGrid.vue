@@ -5,8 +5,8 @@
     @drag-end="onDragEnd"
   >
     <WishGrid :wishes="ordered">
-      <template #default="{ wish, index }">
-        <WishSortableCard :wish="wish" :index="index">
+      <template #default="{ wish, index, preload }">
+        <WishSortableCard :wish="wish" :index="index" :preload="preload">
           <template v-if="$slots.actions" #actions>
             <slot name="actions" :wish="wish" />
           </template>

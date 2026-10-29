@@ -2,9 +2,7 @@
   <NuxtLayout>
     <main class="pt-20 md:pt-32">
       <!-- A card with nothing in it, where the list’s first one would be. -->
-      <div
-        class="grid grid-cols-1 gap-x-8 sm:grid-cols-2 md:gap-x-12 xl:grid-cols-3"
-      >
+      <div class="grid-wishes">
         <div>
           <div
             class="border-surface aspect-square border border-dashed"

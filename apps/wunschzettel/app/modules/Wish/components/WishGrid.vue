@@ -1,11 +1,8 @@
 <template>
-  <ul
-    v-if="wishes.length"
-    class="grid grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 md:gap-x-12 md:gap-y-24 xl:grid-cols-3"
-  >
+  <ul v-if="wishes.length" class="grid-wishes">
     <template v-for="(wish, index) in wishes" :key="wish.id">
-      <slot :wish="wish" :index="index">
-        <WishCard :wish="wish" />
+      <slot :wish="wish" :index="index" :preload="index < PRELOADED">
+        <WishCard :wish="wish" :preload="index < PRELOADED" />
       </slot>
     </template>
   </ul>
@@ -17,9 +14,13 @@ interface WishGridProps {
   wishes: Array<Wish>
 }
 
+// The first row at its widest, whose pictures come with the page instead of
+// waiting until they scroll into view.
+const PRELOADED = 4
+
 const { wishes } = defineProps<WishGridProps>()
 
 defineSlots<{
-  default?: (props: { wish: Wish; index: number }) => unknown
+  default?: (props: { wish: Wish; index: number; preload: boolean }) => unknown
 }>()
 </script>

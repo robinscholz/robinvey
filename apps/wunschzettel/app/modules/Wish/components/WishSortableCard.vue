@@ -1,5 +1,11 @@
 <template>
-  <WishCard ref="card" :wish="wish" sortable :lifted="isDragging">
+  <WishCard
+    ref="card"
+    :wish="wish"
+    sortable
+    :lifted="isDragging"
+    :preload="preload"
+  >
     <template v-if="$slots.actions" #actions>
       <slot name="actions" />
     </template>
@@ -14,9 +20,10 @@ import { useSortable } from '@dnd-kit/vue/sortable'
 interface WishSortableCardProps {
   wish: Wish
   index: number
+  preload?: boolean
 }
 
-const { wish, index } = defineProps<WishSortableCardProps>()
+const { wish, index, preload = false } = defineProps<WishSortableCardProps>()
 
 const cardRef = useTemplateRef('card')
 

@@ -73,12 +73,28 @@ export default defineNuxtConfig({
     },
   },
 
-  // A wish list for the family, not for search engines.
+  // A wish list for the family, not for search engines. The icons come from
+  // scripts/icons.swift: Safari takes no SVG icon, so the PNG draws the same
+  // emoji for it, and the touch icon sets it on white for the home screen,
+  // where a wish list for the family ends up.
   app: {
     head: {
       htmlAttrs: { lang: 'en' },
-      link: [{ rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' }],
-      meta: [{ name: 'robots', content: 'noindex' }],
+      link: [
+        { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' },
+        {
+          rel: 'icon',
+          href: '/favicon.png',
+          type: 'image/png',
+          sizes: '96x96',
+        },
+        { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
+      ],
+      meta: [
+        { name: 'robots', content: 'noindex' },
+        // The page is white, and so is the browser’s frame around it.
+        { name: 'theme-color', content: '#fff' },
+      ],
     },
   },
 

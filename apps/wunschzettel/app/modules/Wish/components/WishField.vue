@@ -1,5 +1,7 @@
 <template>
-  <label class="flex items-baseline gap-x-6">
+  <label class="flex items-baseline gap-x-6 pointer-coarse:text-base">
+    <!-- iOS zooms into a field set under 16px, so on a touch screen the row
+         takes the base size. -->
     <span class="text-surface-muted w-[10ch] shrink-0">{{ label }}</span>
     <input
       v-model="model"

@@ -18,13 +18,27 @@
           { 'drop-shadow-lifted motion-safe:scale-104': lifted },
         ]"
       >
+        <!-- A picture fades in once it has loaded. One that comes with the
+             page is asked for at the size the grid shows it; the others
+             measure themselves when their turn comes. -->
         <MagicImage
           v-if="wish.image"
           :src="wish.image"
           :provider="preview ? 'none' : undefined"
           :modifiers="modifiers"
+          :sizes="SIZES"
+          :preload="preload"
+          :lazyload="!preload"
+          :auto-sizes="!preload"
           alt=""
-          class="block h-full w-full object-contain transition-[scale] duration-250 ease-out motion-safe:group-hover:scale-102"
+          class="block h-full w-full object-contain opacity-0 transition-[opacity,scale] duration-250 ease-out data-[loaded=true]:opacity-100 motion-safe:group-hover:scale-102"
+        />
+        <!-- Without a picture, the square the error page draws for an empty
+             card, so the grid keeps its shape. -->
+        <div
+          v-else
+          class="border-surface size-full border border-dashed"
+          aria-hidden="true"
         />
       </div>
       <p class="mt-5">{{ wish.title }}</p>
@@ -53,13 +67,21 @@ interface WishCardProps {
   sortable?: boolean
   // Picked up and following the pointer.
   lifted?: boolean
+  // In the first row: the picture comes with the page.
+  preload?: boolean
 }
+
+// The picture’s share of the screen at each width, as the grid lays the
+// cards out (see grid-wishes in main.css), so the browser asks for the size
+// it shows.
+const SIZES = 'xs:100vw sm:50vw lg:50vw xl:33vw 2xl:25vw'
 
 const {
   wish,
   preview = false,
   sortable = false,
   lifted = false,
+  preload = false,
 } = defineProps<WishCardProps>()
 
 const linkRef = useTemplateRef('link')
