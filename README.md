@@ -25,9 +25,16 @@ pnpm dev
 `dev` builds the tokens in `packages/base` first, then starts the site on
 port 3000 and the Wunschzettel on port 3001; `pnpm dev:web` and
 `pnpm dev:wunschzettel` start one of them. `/cv.pdf` renders on every request in development.
-The Wunschzettel applies pending migrations to its local D1 database first;
-Nuxt then emulates the Cloudflare bindings through wrangler, and the first
-API request seeds an empty database with the wishes in
+The Wunschzettel applies pending migrations to its local D1 database first,
+then replaces the local wishes with the ones in production
+(`apps/wunschzettel/scripts/pull-database.mjs`, also `pnpm db:pull` from
+`apps/wunschzettel`), so a local run shows the list as it is online. It reads
+them with a plain query, since `wrangler d1 export` holds up the live
+database while it runs, and drops the local copy of any picture whose address
+changed. Offline or signed out of wrangler, it keeps the local wishes and the
+run goes on. Saves, edits and removals in development stay local and are gone
+at the next pull. Nuxt then emulates the Cloudflare bindings through wrangler,
+and the first API request seeds an empty database with the wishes in
 `packages/database/seed`. Wrangler keeps that database and the local bucket
 under `apps/wunschzettel/.wrangler/state`, ignored by git; `pnpm db:studio`
 opens the database in drizzle-kit studio.

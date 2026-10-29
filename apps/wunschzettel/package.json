@@ -10,11 +10,12 @@
     }
   ],
   "scripts": {
-    "dev": "pnpm db:migrate && nuxt dev",
+    "dev": "pnpm db:migrate && pnpm db:pull && nuxt dev",
     "build": "nuxt build",
-    "start": "pnpm db:migrate && wrangler dev",
+    "start": "pnpm db:migrate && pnpm db:pull && wrangler dev",
     "deploy": "wrangler d1 migrations apply DB --remote && wrangler deploy",
     "db:migrate": "wrangler d1 migrations apply DB --local",
+    "db:pull": "node scripts/pull-database.mjs",
     "lint": "eslint .",
     "typecheck": "nuxt typecheck"
   },
