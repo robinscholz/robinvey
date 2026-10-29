@@ -5,6 +5,15 @@ export default defineNuxtConfig({
 
   content: {
     experimental: { sqliteConnector: 'native' },
+    // A link in markdown is a link like any other on the page: NuxtLink sets
+    // the rel of an outbound one, instead of the nofollow the parser would.
+    build: {
+      markdown: {
+        rehypePlugins: {
+          'rehype-external-links': { options: { rel: [] } },
+        },
+      },
+    },
   },
 
   // NUXT_PUBLIC_SITE_URL overrides the origin for previews. `updatedAt` is
@@ -22,13 +31,29 @@ export default defineNuxtConfig({
   nitro: {
     preset: 'static',
     prerender: {
-      routes: ['/', '/cv.pdf'],
+      routes: ['/', '/cv.pdf', '/og.png'],
     },
   },
 
+  // The static 404 page boots the app in the browser. Until it has, the
+  // template stands in for the error page.
+  spaLoadingTemplate: 'spa-loading-template.html',
+
   app: {
     head: {
-      link: [{ rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' }],
+      link: [
+        { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' },
+        // Safari takes no SVG icon, so the PNG draws the same emoji for it,
+        // and the touch icon sets it on the paper for the home screen. Both
+        // come from scripts/icons.swift.
+        {
+          rel: 'icon',
+          href: '/favicon.png',
+          type: 'image/png',
+          sizes: '96x96',
+        },
+        { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
+      ],
     },
   },
 

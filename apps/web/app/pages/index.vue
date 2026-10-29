@@ -79,7 +79,11 @@ useSeoMeta({
   ogDescription: () => page.value.description,
   ogType: 'website',
   ogUrl: siteUrl,
-  twitterCard: 'summary',
+  ogImage: `${siteUrl}/og.png`,
+  ogImageWidth: 1200,
+  ogImageHeight: 630,
+  ogImageAlt: title,
+  twitterCard: 'summary_large_image',
 })
 
 useHead({

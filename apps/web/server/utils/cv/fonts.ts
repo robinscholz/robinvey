@@ -17,26 +17,16 @@ export const CV_FONT = [PROPORTIONAL, SEMI_MONO]
 // 0.03em below the baseline instead of hanging a fifth of an em below it.
 export const CV_EMOJI_FONT = EMOJI
 
-async function readFont(fileName: string): Promise<Uint8Array> {
-  const bytes = await useStorage('assets:server').getItemRaw(
-    `fonts:${fileName}`
-  )
-  if (!(bytes instanceof Uint8Array)) {
-    throw createError({
-      statusCode: 500,
-      statusMessage: `${fileName} is missing from server/assets/fonts`,
-    })
-  }
-  return bytes
-}
+// The Semi Mono instance the CV and the preview image share: cut from the
+// variable font at 400, with its space narrowed by `scripts/cv-font.py`.
+export const SEMI_MONO_FILE = 'ABCArealSemiMonoRegular.ttf'
 
 // The PDF engine embeds static faces, so both are instances cut from the
-// variable font at 400, the CV’s only weight: Semi Mono at MONO 50, with its
-// space narrowed by `scripts/cv-font.py`, and the proportional one at MONO 0,
-// subset to the round and square brackets.
+// variable font at 400, the CV’s only weight: Semi Mono at MONO 50, and the
+// proportional one at MONO 0, subset to the round and square brackets.
 export async function loadCvFonts(): Promise<Record<string, FontFamily>> {
   const [semiMono, proportional, emoji] = await Promise.all([
-    readFont('ABCArealSemiMonoRegular.ttf'),
+    readFont(SEMI_MONO_FILE),
     readFont('ABCArealProportional.ttf'),
     readFont('NotoColorEmoji.ttf'),
   ])
