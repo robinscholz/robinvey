@@ -1,9 +1,5 @@
 import { readWish, upsertWish } from '@robinscholz/database'
 
-function today(): string {
-  return new Date().toISOString().slice(0, 10)
-}
-
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')
   if (!id) {
@@ -36,7 +32,7 @@ export default defineEventHandler(async (event) => {
 
   return upsertWish(database, {
     ...wish,
-    added: wish.added || stored?.added || today(),
+    added: wish.added || stored?.added || new Date().toISOString(),
     imageVersion: changed ? Date.now() : (stored?.imageVersion ?? 0),
     imageTransparent,
   })

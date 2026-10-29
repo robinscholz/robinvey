@@ -355,7 +355,7 @@ on the server, and `wishTransformer` turns a row into what a card shows.
 | `imageSource`      | The picture’s address on the shop                              |
 | `imageTransparent` | Whether the picture came cut out, so it skips Cloudflare’s cut |
 | `note`             | A line under the caption: size, colour, anything               |
-| `added`            | A day, `YYYY-MM-DD`; newest first                              |
+| `added`            | When it came in, an ISO timestamp; newest first                |
 
 ### Pictures
 
@@ -389,7 +389,7 @@ and Open Graph tags, name, brand, picture and price, strips tracking
 parameters from the address and opens `/add` with the wish in the hash, so
 nothing is sent anywhere until you save. Check the preview, fix what the
 shop got wrong, compare prices on idealo or Geizhals, then click Save:
-the wish is on the list at once, with a toast that says so. A save that
+the wish is first on the list at once, with a toast that says so. A save that
 fails says so too, with the server’s reason when it gave one, such as a
 lapsed sign-in. `/add` without a product lists every wish
 with a Remove link.
@@ -408,7 +408,7 @@ Save keeps the changes and closes the drawer with a toast; a failed save
 leaves it open and says so in one. Remove asks first, in mirror’s `AlertDialog`, then
 deletes the wish and its picture. Escape or a click beside the drawer closes
 it; while the alert asks, Escape answers the alert alone. The id stays when the title changes,
-and so does the day the wish was added; a new picture address fetches the
+and so does the time the wish was added; a new picture address fetches the
 picture again. On a touch screen the Edit buttons show without hovering.
 
 ### Sign in

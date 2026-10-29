@@ -9,12 +9,13 @@ it from the `DB` binding.
 ## The table
 
 `wishes` holds one row per wish: `id` (the slug of the title, also the
-picture’s name), `title`, `url`, `shop`, `price`, `note`, `added` (a day,
-`YYYY-MM-DD`), and the picture as `image_source`, its address on the shop,
-with `image_version`, a number that changes whenever the source does, and
-`image_transparent`, whether the stored copy came with transparency (null
-until it is checked). The picture itself lives in the app’s R2 bucket under
-the id; see the app’s README.
+picture’s name), `title`, `url`, `shop`, `price`, `note`, `added` (when the
+wish came in, an ISO timestamp; older rows hold just the day, which sorts
+before any time that day), and the picture as `image_source`, its address on
+the shop, with `image_version`, a number that changes whenever the source
+does, and `image_transparent`, whether the stored copy came with transparency
+(null until it is checked). The picture itself lives in the app’s R2 bucket
+under the id; see the app’s README.
 
 ## Where the database lives
 

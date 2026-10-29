@@ -17,13 +17,6 @@ const COMPARISONS = [
   { label: 'Google Shopping', url: 'https://www.google.de/search?tbm=shop&q=' },
 ]
 
-function today(): string {
-  const now = new Date()
-  const month = String(now.getMonth() + 1).padStart(2, '0')
-  const day = String(now.getDate()).padStart(2, '0')
-  return `${now.getFullYear()}-${month}-${day}`
-}
-
 export function useWishDraft({ save }: UseWishDraftOptions) {
   const route = useRoute()
   const { announceAdded, announceSaveFailure } = useWishToast()
@@ -64,10 +57,16 @@ export function useWishDraft({ save }: UseWishDraftOptions) {
   }
 
   // Public functions
+  // The time, not just the day, so the wish comes first even among others
+  // added the same day.
   async function submit() {
     saving.value = true
     try {
-      await save({ id: id.value, ...draftToPayload(draft), added: today() })
+      await save({
+        id: id.value,
+        ...draftToPayload(draft),
+        added: new Date().toISOString(),
+      })
       announceAdded()
       await navigateTo('/')
     } catch (error) {
