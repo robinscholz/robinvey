@@ -1,12 +1,6 @@
-import { scramble, ScrambleSelector } from '../utils/scramble'
-
 // Set on <html>; ABC Areal’s MONO axis follows it, from Semi Mono at 50 to
 // the Regular cut at 0, the font’s default.
 export const TypefaceAttribute = 'data-typeface'
-
-// Set on <html> while the face changes; the page fades out, and back in once
-// the new face is in place.
-export const TypefaceFadeAttribute = 'data-typeface-fade'
 
 // Set on <html> for the instant the face changes. With reduced motion every
 // property eases over a hair of a millisecond, which would hold the new face
@@ -20,8 +14,6 @@ export const Typefaces = ['semi-mono', 'regular'] as const
 
 export type Typeface = (typeof Typefaces)[number]
 
-type TypefaceFade = 'out' | 'in'
-
 interface TypefaceChangePayload {
   next: Typeface
   anchor?: Element | null
@@ -32,33 +24,14 @@ const LABELS = {
   regular: 'Regular',
 } satisfies Record<Typeface, string>
 
-// The page scrambles in plain sight for 250ms and then fades out over 90ms
-// (both in main.css); the hold outlasts the two, so the face changes while
-// the page is hidden. After the 100ms fade back in, the run settles over the
-// same 250ms the page scrambled before it faded.
-const HOLD = 360
-const DURATION = 350
-
 export function useTypeface() {
-  const { emit } = useUiEmitter()
-
-  // Private state
-  const switching = useState('ui-typeface-switching', () => false)
+  const { run } = useSwitch()
 
   // Public state
   const typeface = useState<Typeface>('ui-typeface', () => 'semi-mono')
   const label = computed(() => LABELS[typeface.value])
 
   // Private functions
-  function fade(direction?: TypefaceFade) {
-    const html = document.documentElement
-    if (!direction) {
-      html.removeAttribute(TypefaceFadeAttribute)
-      return
-    }
-    html.setAttribute(TypefaceFadeAttribute, direction)
-  }
-
   // The text above the anchor rewraps in the new face. Scrolling by the
   // difference keeps the anchor where it was on screen, which Safari does not
   // do on its own.
@@ -73,32 +46,11 @@ export function useTypeface() {
   }
 
   // Public functions
-  // The page scrambles and fades out, changes face while it is hidden, and
-  // fades back in as noise before the text settles into the new face.
-  // Without motion, the face simply changes.
+  // The page switches face the way every switch changes it: scrambled,
+  // hidden while it changes, and settling back in.
   async function toggle(anchor?: Element | null) {
-    if (switching.value) {
-      return
-    }
     const next = typeface.value === 'semi-mono' ? 'regular' : 'semi-mono'
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      await change({ next, anchor })
-      return
-    }
-    switching.value = true
-    fade('out')
-    await scramble({
-      roots: [...document.querySelectorAll(ScrambleSelector)],
-      duration: DURATION,
-      hold: HOLD,
-      onProgress: (progress) => emit('scrambleProgress', progress),
-      swap: async () => {
-        await change({ next, anchor })
-        fade('in')
-      },
-    })
-    fade()
-    switching.value = false
+    await run(() => change({ next, anchor }))
   }
 
   return {

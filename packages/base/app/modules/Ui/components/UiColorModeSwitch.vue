@@ -23,6 +23,7 @@
                 : 'text-surface-muted data-[active=true]:text-(--ui-hue)',
             ]"
             :aria-label="`Colour mode: ${current.label}`"
+            :data-hue="variant === 'plain' || null"
             @pointerenter="variant === 'plain' && advance()"
           >
             <UiIcon :name="current.icon" />
@@ -64,9 +65,13 @@
 </template>
 
 <script setup lang="ts">
+import { loadIcons } from '@iconify/vue'
 import { MenuIds, MenuViewIds } from '../utils/enums'
+import { iconName } from '../utils/icon'
 
 type ColorModePreference = 'system' | 'light' | 'dark'
+
+type ColorModeValue = Exclude<ColorModePreference, 'system'>
 
 type ColorModeMenuPlacement = 'top-start' | 'bottom-end'
 
@@ -92,6 +97,12 @@ const options: Array<ColorModeOption> = [
   { value: 'light', label: 'Light', icon: 'sun' },
   SYSTEM,
 ]
+
+// The menu’s icons, fetched as soon as the switch is on the page, so the
+// menu opens with them in place and the trigger changes without a gap.
+const ICONS = [...options.map((option) => option.icon), 'check', 'spacer'].map(
+  (name) => iconName({ name })
+)
 
 // Each placement is its own instance on the page, so each needs its own menu.
 const MENUS = {
@@ -121,6 +132,7 @@ const menu = computed(() => MENUS[placement])
 
 const colorMode = useColorMode()
 const { advance } = useHue()
+const { run } = useSwitch()
 
 const preference = computed<ColorModePreference>(
   () =>
@@ -132,7 +144,27 @@ const current = computed(
   () => options.find((entry) => entry.value === preference.value) ?? SYSTEM
 )
 
-function select(value: ColorModePreference) {
-  colorMode.preference = value
+function systemValue(): ColorModeValue {
+  return matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 }
+
+// The page changes mode the way it changes face: scrambled, hidden while
+// it changes, and settling back in. A choice that leaves the page as it
+// is, such as System on a system already in the mode shown, is kept
+// without the switch.
+function select(value: ColorModePreference) {
+  const next = value === 'system' ? systemValue() : value
+  if (next === colorMode.value) {
+    colorMode.preference = value
+    return
+  }
+  run(async () => {
+    colorMode.preference = value
+    await nextTick()
+  })
+}
+
+onMounted(() => {
+  loadIcons(ICONS)
+})
 </script>

@@ -24,7 +24,10 @@
         <UiLink to="/">{{ host }}</UiLink>
       </p>
     </header>
-    <GardenPlot active class="flex-1" />
+    <!-- Loaded with the page, as nothing covers the garden here; lazy all
+         the same, so the plot stays its own chunk and the home page can
+         leave it until it is idle. -->
+    <LazyGardenPlot active class="flex-1" />
   </div>
 </template>
 
@@ -49,4 +52,7 @@ const title = computed(() =>
 const host = new URL(siteUrl).host
 
 useSeoMeta({ title })
+
+// The frame around the page is dark with it, whatever the visitor chose.
+useThemeColor({ mode: 'dark' })
 </script>

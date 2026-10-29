@@ -18,6 +18,11 @@ export default defineNuxtModule({
       { name: 'useHue', from: resolver.resolve('./composables/useHue') },
       { name: 'useRule', from: resolver.resolve('./composables/useRule') },
       { name: 'useIntro', from: resolver.resolve('./composables/useIntro') },
+      { name: 'useSwitch', from: resolver.resolve('./composables/useSwitch') },
+      {
+        name: 'useThemeColor',
+        from: resolver.resolve('./composables/useThemeColor'),
+      },
       {
         name: 'useTypeface',
         from: resolver.resolve('./composables/useTypeface'),
