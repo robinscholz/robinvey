@@ -1,4 +1,4 @@
-import { readWish } from '@robinscholz/database'
+import { readWish, setImageTransparency } from '@robinscholz/database'
 
 // The copy in the bucket, fetched from the shop on first request when the
 // save could not get it. The version in the address only tells caches apart.
@@ -10,16 +10,22 @@ export default defineEventHandler(async (event) => {
 
   let image = await readImage(id)
   if (!image) {
-    const wish = await readWish(useDatabase(), id)
+    const database = useDatabase()
+    const wish = await readWish(database, id)
     if (!wish?.imageSource) {
       throw createError({ statusCode: 404, statusMessage: 'No picture' })
     }
-    if (!(await storeImage({ id, source: wish.imageSource }))) {
+    const copy = await storeImage({ id, source: wish.imageSource })
+    if (!copy) {
       throw createError({
         statusCode: 502,
         statusMessage: 'The shop did not hand out the picture',
       })
     }
+    await setImageTransparency(database, {
+      id,
+      transparent: copy.transparent,
+    })
     image = await readImage(id)
   }
   if (!image) {

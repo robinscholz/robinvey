@@ -1,4 +1,4 @@
-import { asc, desc, eq } from 'drizzle-orm'
+import { and, asc, desc, eq, isNull, ne } from 'drizzle-orm'
 import { wishes } from '../schema'
 import type { AppDatabase } from '../client'
 import type { WishInsert, WishRecord } from '../schema'
@@ -29,6 +29,33 @@ export function upsertWish(
     .onConflictDoUpdate({ target: wishes.id, set: record })
     .returning()
     .get()
+}
+
+// Wishes with a picture whose copy nobody has checked for transparency yet.
+export function listUncheckedImages(
+  database: AppDatabase
+): Promise<Array<{ id: string }>> {
+  return database
+    .select({ id: wishes.id })
+    .from(wishes)
+    .where(and(ne(wishes.imageSource, ''), isNull(wishes.imageTransparent)))
+    .all()
+}
+
+interface ImageTransparencyPayload {
+  id: string
+  transparent: boolean
+}
+
+export async function setImageTransparency(
+  database: AppDatabase,
+  { id, transparent }: ImageTransparencyPayload
+): Promise<void> {
+  await database
+    .update(wishes)
+    .set({ imageTransparent: transparent })
+    .where(eq(wishes.id, id))
+    .run()
 }
 
 export async function removeWish(

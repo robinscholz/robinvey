@@ -334,15 +334,16 @@ reads one, `PUT /:id` upserts after `toWishForStorage` in
 wish and its picture. The list page reads them through `useWishes`, rendered
 on the server, and `wishTransformer` turns a row into what a card shows.
 
-| Field         | Shown as                                                      |
-| ------------- | ------------------------------------------------------------- |
-| `title`       | The caption; its slug is the id and the picture’s name        |
-| `url`         | Where the card links; its host, `bergzeit.de`, names the shop |
-| `shop`        | The shop’s name, in place of the host                         |
-| `price`       | A number in euro, printed as `63,20 €`                        |
-| `imageSource` | The picture’s address on the shop                             |
-| `note`        | A line under the caption: size, colour, anything              |
-| `added`       | A day, `YYYY-MM-DD`; newest first                             |
+| Field              | Shown as                                                       |
+| ------------------ | -------------------------------------------------------------- |
+| `title`            | The caption; its slug is the id and the picture’s name         |
+| `url`              | Where the card links; its host, `bergzeit.de`, names the shop  |
+| `shop`             | The shop’s name, in place of the host                          |
+| `price`            | A number in euro, printed as `63,20 €`                         |
+| `imageSource`      | The picture’s address on the shop                              |
+| `imageTransparent` | Whether the picture came cut out, so it skips Cloudflare’s cut |
+| `note`             | A line under the caption: size, colour, anything               |
+| `added`            | A day, `YYYY-MM-DD`; newest first                              |
 
 ### Pictures
 
@@ -357,6 +358,16 @@ production zone, which cuts the product out of its backdrop with
 unique transformations a month, and since the pictures come from the zone
 itself no other origin has to be allowed. In development they come straight
 from the local bucket.
+
+A picture the shop already cut out skips that cut. Cloudflare would ignore
+its transparency and cut again from the colours under the transparent
+pixels, where a shop may have left whatever it retouched away, and the soft
+shadow would turn into a hard edge. When the Worker stores a copy it reads
+from the file’s header whether the picture has transparency, a PNG, WebP,
+AVIF or GIF with an alpha channel, and keeps that as `imageTransparent`
+(`server/utils/transparency.ts`). Copies stored before, or seeded, are read
+once per Worker isolate before the first API request. A picture with an
+alpha channel but a solid backdrop keeps its backdrop.
 
 ### Adding a wish
 

@@ -6,7 +6,7 @@
           v-if="wish.image"
           :src="wish.image"
           :provider="preview ? 'none' : undefined"
-          :modifiers="preview ? undefined : MODIFIERS"
+          :modifiers="modifiers"
           alt=""
           class="block h-full w-full object-contain transition-opacity duration-300 group-hover:opacity-75"
         />
@@ -31,11 +31,21 @@ interface WishCardProps {
   preview?: boolean
 }
 
-// Cloudflare cuts the product out of the shop’s backdrop; `segment` is its
-// own option, beyond the modifiers Nuxt Image names.
-const MODIFIERS = { format: 'auto', segment: 'foreground' }
-
 const { wish, preview = false } = defineProps<WishCardProps>()
+
+// Cloudflare cuts the product out of the shop’s backdrop; `segment` is its
+// own option, beyond the modifiers Nuxt Image names. A picture that comes
+// cut out keeps its own edges: the cut would redraw them from the colours
+// under its transparent pixels.
+const modifiers = computed(() => {
+  if (preview) {
+    return undefined
+  }
+  if (wish.imageTransparent) {
+    return { format: 'auto' }
+  }
+  return { format: 'auto', segment: 'foreground' }
+})
 
 defineSlots<{
   actions?: () => unknown

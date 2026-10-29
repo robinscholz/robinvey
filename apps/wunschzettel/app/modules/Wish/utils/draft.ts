@@ -72,6 +72,7 @@ export function draftTransformer(draft: WishDraft): Wish {
       price: price === null ? '' : formatPrice(price),
     }),
     image: draft.image.trim(),
+    imageTransparent: false,
     note: draft.note.trim(),
   }
 }

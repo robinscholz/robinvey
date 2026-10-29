@@ -20,6 +20,7 @@ export function wishTransformer(item: WishRecord) {
     url: item.url,
     caption: formatCaption({ shop, price }),
     image: item.imageSource ? `/images/${item.id}/${item.imageVersion}` : '',
+    imageTransparent: item.imageTransparent === true,
     note: item.note,
   }
 }

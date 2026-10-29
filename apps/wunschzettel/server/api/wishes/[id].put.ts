@@ -21,19 +21,23 @@ export default defineEventHandler(async (event) => {
   const database = useDatabase()
   const stored = await readWish(database, id)
   const changed = wish.imageSource !== (stored?.imageSource ?? '')
-  const record = {
+
+  // A new picture replaces the copy at once, while the shop still has it,
+  // and is checked for transparency on the way in. One the shop does not
+  // hand out yet is checked when the image route fetches it.
+  let imageTransparent = stored?.imageTransparent ?? null
+  if (changed) {
+    await deleteImage(id)
+    const copy = wish.imageSource
+      ? await storeImage({ id, source: wish.imageSource })
+      : null
+    imageTransparent = copy?.transparent ?? null
+  }
+
+  return upsertWish(database, {
     ...wish,
     added: wish.added || stored?.added || today(),
     imageVersion: changed ? Date.now() : (stored?.imageVersion ?? 0),
-  }
-
-  // A new picture replaces the copy at once, while the shop still has it.
-  if (changed) {
-    await deleteImage(id)
-    if (record.imageSource) {
-      await storeImage({ id, source: record.imageSource })
-    }
-  }
-
-  return upsertWish(database, record)
+    imageTransparent,
+  })
 })
