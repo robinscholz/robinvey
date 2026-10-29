@@ -36,12 +36,90 @@
     0 var(--app-dimension-outline-focus) 0 var(--app-color-focus-outline);
 }
 
+/* The list: one card to a row on a phone, two from sm, three from xl and
+   four from 2xl. The page is capped in layouts/default.vue at the width
+   where a card in four columns is as wide as the widest one in three. */
+@utility grid-wishes {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: --spacing(8);
+  row-gap: --spacing(16);
+
+  @variant sm {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @variant md {
+    column-gap: --spacing(12);
+    row-gap: --spacing(24);
+  }
+
+  @variant xl {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  @variant 2xl {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
 @layer base {
+  /* The drawer locks the page; the gutter stays, so nothing moves when it
+     opens. */
+  :root {
+    scrollbar-gutter: stable;
+  }
+
   body {
     @apply bg-surface-low text-surface text-sm;
   }
 
+  p {
+    text-wrap: pretty;
+  }
+
   :root:has(dialog[open]) {
     overflow: hidden;
+  }
+
+  /* The add page comes with the bookmarklet and the list in its HTML.
+     Arriving with a product, an inline script marks the page before it
+     paints, and the form takes their place (see pages/add.vue). */
+  [data-wish-received] [data-wish-bookmarklet] {
+    display: none;
+  }
+}
+
+/* The alert fades in over the drawer with a touch of lift, and the backdrop
+   fades with it. */
+.wish-alert-enter-active,
+.wish-alert-leave-active {
+  transition:
+    opacity 150ms var(--ease-out),
+    scale 150ms var(--ease-out);
+}
+
+.wish-alert-enter-from,
+.wish-alert-leave-to {
+  opacity: 0;
+  scale: 0.98;
+}
+
+.wish-alert-backdrop-enter-active,
+.wish-alert-backdrop-leave-active {
+  transition: opacity 150ms var(--ease-out);
+}
+
+.wish-alert-backdrop-enter-from,
+.wish-alert-backdrop-leave-to {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wish-alert-enter-active,
+  .wish-alert-leave-active,
+  .wish-alert-backdrop-enter-active,
+  .wish-alert-backdrop-leave-active {
+    transition-duration: 0ms;
   }
 }

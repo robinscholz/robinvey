@@ -56,10 +56,10 @@
 import { useWishEditorForm } from '../composables/private/useWishEditorForm'
 import { WishDrawerAttribute } from '../utils/enums'
 
-const { save, remove } = await useWishes()
+const { wishes, save, remove } = await useWishes()
 const { id, close } = useWishEditor()
 const { draft, pending, failed, complete, submit, discard } = useWishEditorForm(
-  { save, remove }
+  { wishes, save, remove }
 )
 
 const dialogRef = useTemplateRef('dialog')

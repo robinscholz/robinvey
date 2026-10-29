@@ -60,6 +60,18 @@ export function draftToPayload(draft: WishDraft) {
   }
 }
 
+// What the list already shows of a wish, to fill the form before its record
+// arrives.
+export function wishToDraft(
+  wish: Wish
+): Pick<WishDraft, 'title' | 'url' | 'note'> {
+  return {
+    title: wish.title,
+    url: wish.url,
+    note: wish.note,
+  }
+}
+
 // The preview shows the shop’s picture itself, before the Worker has a copy.
 export function draftTransformer(draft: WishDraft): Wish {
   const price = parsePrice(draft.price)

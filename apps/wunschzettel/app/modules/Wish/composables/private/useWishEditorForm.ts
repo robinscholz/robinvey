@@ -1,4 +1,9 @@
-import { draftToPayload, emptyDraft, recordToDraft } from '../../utils/draft'
+import {
+  draftToPayload,
+  emptyDraft,
+  recordToDraft,
+  wishToDraft,
+} from '../../utils/draft'
 import { useWishToast } from './useWishToast'
 import type { WishInsert, WishRecord } from '@robinscholz/database'
 import type { WishDraft } from '../../utils/draft'
@@ -6,6 +11,7 @@ import type { WishDraft } from '../../utils/draft'
 type WishEditorTask = 'load' | 'save' | 'remove'
 
 interface UseWishEditorFormOptions {
+  wishes: Readonly<Ref<Array<Wish>>>
   save: (wish: WishInsert) => Promise<unknown>
   remove: (id: string) => Promise<unknown>
 }
@@ -17,7 +23,11 @@ interface RunPayload {
   onError?: (error: unknown) => void
 }
 
-export function useWishEditorForm({ save, remove }: UseWishEditorFormOptions) {
+export function useWishEditorForm({
+  wishes,
+  save,
+  remove,
+}: UseWishEditorFormOptions) {
   const { id, close } = useWishEditor()
   const { announceSaved, announceSaveFailure } = useWishToast()
 
@@ -50,12 +60,14 @@ export function useWishEditorForm({ save, remove }: UseWishEditorFormOptions) {
     }
   }
 
-  // Each opening reads the stored wish afresh.
+  // Each opening reads the stored wish afresh. What the list already shows
+  // of it fills the form at once; the rest comes with the record.
   async function load(wishId: string | null) {
     if (!wishId) {
       return
     }
-    Object.assign(draft, emptyDraft())
+    const known = wishes.value.find((wish) => wish.id === wishId)
+    Object.assign(draft, emptyDraft(), known ? wishToDraft(known) : {})
     await run({
       task: 'load',
       action: async () => {

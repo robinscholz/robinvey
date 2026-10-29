@@ -68,11 +68,16 @@ export function useWishToast() {
     announceFailure({ message: 'The new order could not be saved.', error })
   }
 
+  function announceRemoveFailure(error: unknown) {
+    announceFailure({ message: 'The wish could not be removed.', error })
+  }
+
   return {
     announceAdded,
     announceSaved,
     announceSaveFailure,
     announceOrderFailure,
+    announceRemoveFailure,
   }
 }
 

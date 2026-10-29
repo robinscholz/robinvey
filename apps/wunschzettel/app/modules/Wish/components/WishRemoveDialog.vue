@@ -1,7 +1,11 @@
 <template>
   <MAlertDialogRoot
     v-model:open="open"
-    :options="{ keyListener: { close: false } }"
+    :options="{
+      keyListener: { close: false },
+      scrollLock: false,
+      transition: { content: 'wish-alert', backdrop: 'wish-alert-backdrop' },
+    }"
   >
     <MAlertDialogBackdrop
       class="fixed inset-0 bg-[color-mix(in_oklab,var(--mirror-bg-surface-low)_70%,transparent)]"
@@ -26,7 +30,9 @@
 import type { AlertDialogFocusTarget } from '@maas/mirror/vue/AlertDialog'
 
 // Escape is left to the caller: inside the drawer, the native dialog answers
-// it and closes this alert first.
+// it and closes this alert first. The page is not locked for the alert: the
+// drawer under it already holds the page still, and the list is short. The
+// transitions are in main.css.
 interface WishRemoveDialogProps {
   title: string
   finalFocus?: AlertDialogFocusTarget
