@@ -52,7 +52,6 @@ export default defineContentConfig({
         description: z.string(),
         year: z.number(),
         url: z.string().optional(),
-        image: z.object({ src: z.string(), alt: z.string() }).optional(),
       }),
     }),
     sites: defineCollection({

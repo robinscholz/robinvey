@@ -10,11 +10,6 @@ import type {
   WritingCollectionItem,
 } from '@nuxt/content'
 
-interface ProjectTransformerPayload {
-  item: ProjectsCollectionItem
-  siteUrl: string
-}
-
 // The document itself stays whole, since ContentRenderer is what reads it.
 export function pageTransformer(item: PagesCollectionItem | null) {
   return {
@@ -56,12 +51,7 @@ export function experienceTransformer(item: ExperienceCollectionItem) {
   }
 }
 
-// Images live under public/ and go out through img.maas.earth, which fetches
-// them by their public URL.
-export function projectTransformer({
-  item,
-  siteUrl,
-}: ProjectTransformerPayload) {
+export function projectTransformer(item: ProjectsCollectionItem) {
   return {
     id: item.id,
     name: item.name,
@@ -69,9 +59,6 @@ export function projectTransformer({
     year: String(item.year),
     url: item.url ?? '',
     link: item.url ? formatLink(item.url) : '',
-    image: item.image
-      ? { src: new URL(item.image.src, siteUrl).href, alt: item.image.alt }
-      : null,
   }
 }
 

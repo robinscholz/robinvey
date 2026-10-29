@@ -1,5 +1,5 @@
 export async function useProfile() {
-  const { siteUrl, updatedAt } = useRuntimeConfig().public
+  const { updatedAt } = useRuntimeConfig().public
 
   const { data } = await useAsyncData('profile', async () => {
     const [page, contact, profile, experience, sites, projects, writing] =
@@ -22,7 +22,7 @@ export async function useProfile() {
       profile: profileTransformer(profile),
       experience: experience.map(experienceTransformer),
       sites: sites.map(siteTransformer),
-      projects: projects.map((item) => projectTransformer({ item, siteUrl })),
+      projects: projects.map(projectTransformer),
       writing: writing.map(writingTransformer),
     }
   })
