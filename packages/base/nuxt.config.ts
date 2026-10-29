@@ -13,8 +13,8 @@ export default defineNuxtConfig({
   modules: [
     '@maas/mirror/nuxt',
     '@maas/vue-equipment/nuxt',
-    '@maas/magic-image',
     '@nuxtjs/color-mode',
+    '@nuxt/fonts',
     '@nuxt/icon',
     join(currentDir, 'app/modules/Ui'),
     join(currentDir, 'app/modules/Garden'),
@@ -24,16 +24,28 @@ export default defineNuxtConfig({
     plugins: ['MagicAccordion', 'MagicMarquee', 'MagicMenu', 'MagicTray'],
   },
 
-  magicImage: {
-    image: {
-      provider: 'maas',
-    },
+  // The face is the file in public/fonts, named with its weight range so the
+  // local provider reads it as one variable face. Nuxt Fonts declares it,
+  // preloads it and reads its metrics to set fallbacks after it that take up
+  // the same room, so the text holds still when the face arrives.
+  fonts: {
+    families: [
+      {
+        name: 'ABC Areal',
+        provider: 'local',
+        weights: ['400 700'],
+        styles: ['normal'],
+      },
+    ],
   },
 
+  // Icons are inlined while the pages prerender; a slow answer from the
+  // endpoint must not leave a mark out of the HTML.
   icon: {
     mode: 'svg',
     componentName: 'NuxtIcon',
     iconifyApiEndpoint: 'https://symbols.maas.earth',
+    fetchTimeout: 5000,
   },
 
   colorMode: {

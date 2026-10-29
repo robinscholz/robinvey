@@ -3,8 +3,14 @@
 
 @source '../../';
 
+/* The face is named in plain words rather than through the tokens, so Nuxt
+   Fonts finds it, declares it and sets metric-matched fallbacks after it.
+   Static, so the variable is always written out for main.css to read. */
+@theme static {
+  --font-mono: 'ABC Areal', system-ui, sans-serif;
+}
+
 @theme inline {
-  --font-mono: var(--app-font-family-surface-body), system-ui, sans-serif;
   --default-font-family: var(--font-mono);
   --default-mono-font-family: var(--font-mono);
   --font-weight-*: initial;

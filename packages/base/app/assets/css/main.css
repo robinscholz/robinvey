@@ -1,13 +1,9 @@
 @reference './tailwind.css';
 
-@font-face {
-  font-family: 'ABC Areal';
-  src: url('../fonts/ABCArealSuperfamilyVariable.woff2') format('woff2');
-  font-weight: 400 700;
-  font-style: oblique 0deg 12deg;
-  font-display: swap;
-}
-
+/* The face itself is declared by Nuxt Fonts, from the file in public/fonts,
+   with metric-matched fallbacks after it (see nuxt.config.ts). Semi Mono sets
+   round and square brackets in wide cells, which opens gaps around them, so
+   those come from a proportional cut, set before the face. */
 @font-face {
   font-family: 'ABC Areal Brackets';
   src: url('../fonts/ABCArealProportional.woff2') format('woff2');
@@ -30,10 +26,13 @@
 
   html {
     -webkit-text-size-adjust: 100%;
+    color-scheme: light;
   }
 
+  /* The browser's own parts, scrollbars and form controls, follow the mode. */
   [data-color-mode='dark'] {
     --axis-dark: 1;
+    color-scheme: dark;
   }
 
   [data-typeface='regular'] {
@@ -41,7 +40,7 @@
   }
 
   [data-typeface='regular'] body {
-    font-family: --theme(--font-mono);
+    font-family: var(--font-mono);
     word-spacing: normal;
   }
 
@@ -52,18 +51,18 @@
     transition: none !important;
   }
 
-  [data-typeface-fade] [data-scramble] {
+  [data-switch-fade] [data-scramble] {
     transition: opacity 100ms ease-out;
   }
 
-  [data-typeface-fade='out'] [data-scramble] {
+  [data-switch-fade='out'] [data-scramble] {
     opacity: 0;
     transition: opacity 90ms ease-in 250ms;
   }
 
   body {
     margin: 0;
-    font-family: 'ABC Areal Brackets', --theme(--font-mono);
+    font-family: 'ABC Areal Brackets', var(--font-mono);
     font-kerning: normal;
     word-spacing: -0.1em;
     overflow-x: clip;
@@ -85,6 +84,17 @@
       var(--ui-selection-hue) 40%,
       transparent
     );
+  }
+
+  /* The hover hue lands at once and lets go gently. */
+  [data-hue],
+  [data-hue] * {
+    transition: color 150ms ease-out;
+  }
+
+  [data-hue]:hover,
+  [data-hue]:hover * {
+    transition-duration: 0s;
   }
 
   [data-scramble][aria-busy='true'] {
