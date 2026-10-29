@@ -23,6 +23,10 @@
     @apply text-ink bg-white text-sm;
   }
 
+  :root:has(dialog[open]) {
+    overflow: hidden;
+  }
+
   :focus-visible {
     outline: 1px solid currentColor;
     outline-offset: 3px;

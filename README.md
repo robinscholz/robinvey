@@ -315,16 +315,17 @@ apart from the site’s layer: a white page in the system font, one size of
 type, a grid of pictures with a caption under each, no dark mode. It runs as
 a Cloudflare Worker: the pages and `/api` come from one Nitro server, the
 wishes live in a D1 database and the pictures in an R2 bucket. Everyone can
-read; adding and removing is behind a GitHub sign-in. It is not for search
-engines: `robots.txt` disallows everything and every page carries `noindex`.
+read; adding, editing and removing is behind a GitHub sign-in. It is not for
+search engines: `robots.txt` disallows everything and every page carries
+`noindex`.
 
 The database is `packages/database`: the Drizzle schema, the migrations, the
 wishes repository and the seed, with a README of its own. The API handlers
-in `apps/wunschzettel/server/api/wishes` are thin: `GET` lists, `PUT /:id`
-upserts after `toWishForStorage` in `shared/utils/transformers.ts` has shaped
-the body, `DELETE /:id` removes the wish and its picture. The list page reads
-them through `useWishes`, rendered on the server, and `wishTransformer` turns
-a row into what a card shows.
+in `apps/wunschzettel/server/api/wishes` are thin: `GET` lists, `GET /:id`
+reads one, `PUT /:id` upserts after `toWishForStorage` in
+`shared/utils/transformers.ts` has shaped the body, `DELETE /:id` removes the
+wish and its picture. The list page reads them through `useWishes`, rendered
+on the server, and `wishTransformer` turns a row into what a card shows.
 
 | Field         | Shown as                                                      |
 | ------------- | ------------------------------------------------------------- |
@@ -367,12 +368,24 @@ time, and the add page links it with the site’s origin filled in, so a
 preview build’s bookmarklet opens the preview. The bookmark carries its own
 copy of the code: after a change, drag the link again.
 
+### Editing a wish
+
+Signed in, hover a card on the list and click Edit: a drawer slides in
+from the right with the wish’s fields, read afresh from the database.
+Save keeps the changes, Remove deletes the wish and its picture, Escape or
+a click beside the drawer closes it. The id stays when the title changes,
+and so does the day the wish was added; a new picture address fetches the
+picture again. On a touch screen the Edit links show without hovering.
+
 ### Sign in
 
-`/add` and every write to `/api` need a session; the list and `GET
-/api/wishes` stay open. Signing in works with GitHub through
+`/add` and every write to `/api` need a session; the list and every `GET`
+under `/api/wishes` stay open. The server reads the session while it renders
+the list, so only a signed-in visitor gets the Edit links. Signing in works
+with GitHub through
 [`nuxt-auth-utils`](https://github.com/atinux/nuxt-auth-utils), and a
-session lasts 90 days. `nuxt dev` stays open.
+session lasts 90 days. `nuxt dev` stays open and shows the Edit links to
+everyone.
 
 Create an OAuth app under GitHub → Settings → Developer settings → OAuth
 apps, with `https://wunschzettel.robinvey.com/auth/github` as the callback

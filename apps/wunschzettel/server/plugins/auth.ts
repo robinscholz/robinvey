@@ -25,7 +25,7 @@ function reportSignInSettings(event: H3Event, missing: Array<string>) {
   }
 }
 
-// The list is for everyone; adding and removing is for the owner.
+// The list is for everyone; adding, editing and removing is for the owner.
 function isPrivate(pathname: string, method: string): boolean {
   if (pathname === '/add' || pathname.startsWith('/add/')) {
     return true

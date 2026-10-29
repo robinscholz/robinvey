@@ -1,4 +1,4 @@
-import { draftTransformer, parsePrice } from '../utils/draft'
+import { draftToPayload, draftTransformer, emptyDraft } from '../utils/draft'
 import { slugify } from '../utils/slug'
 import type { WishInsert } from '@robinscholz/database'
 import type { WishDraft } from '../utils/draft'
@@ -27,14 +27,7 @@ export function useWishDraft({ save }: UseWishDraftOptions) {
   const route = useRoute()
 
   // Public state
-  const draft = reactive<WishDraft>({
-    title: '',
-    url: '',
-    shop: '',
-    price: '',
-    image: '',
-    note: '',
-  })
+  const draft = reactive<WishDraft>(emptyDraft())
   const received = shallowRef(false)
   const saving = shallowRef(false)
   const failed = shallowRef(false)
@@ -74,16 +67,7 @@ export function useWishDraft({ save }: UseWishDraftOptions) {
     saving.value = true
     failed.value = false
     try {
-      await save({
-        id: id.value,
-        title: draft.title.trim(),
-        url: draft.url.trim(),
-        shop: draft.shop.trim(),
-        price: parsePrice(draft.price),
-        imageSource: draft.image.trim(),
-        note: draft.note.trim(),
-        added: today(),
-      })
+      await save({ id: id.value, ...draftToPayload(draft), added: today() })
       await navigateTo('/')
     } catch {
       failed.value = true

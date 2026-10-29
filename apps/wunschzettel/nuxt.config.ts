@@ -33,10 +33,11 @@ export default defineNuxtConfig({
     plugins: [tailwindcss()],
   },
 
-  // Only the owner signs in, to add and remove wishes; everyone else reads,
-  // so no page ever asks for a session.
+  // Only the owner signs in, to add, edit and remove wishes. The server
+  // reads the session cookie while it renders, so the owner’s edit links are
+  // in the first HTML and nobody else’s browser asks for a session.
   auth: {
-    loadStrategy: 'none',
+    loadStrategy: 'server-first',
   },
 
   // NUXT_PUBLIC_SITE_URL overrides the origin for previews; the bookmarklet

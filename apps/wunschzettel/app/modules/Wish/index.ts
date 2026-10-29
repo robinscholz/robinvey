@@ -25,6 +25,10 @@ export default defineNuxtModule({
         name: 'useWishDraft',
         from: resolver.resolve('./composables/useWishDraft'),
       },
+      {
+        name: 'useWishEditor',
+        from: resolver.resolve('./composables/useWishEditor'),
+      },
       { name: 'useWishes', from: resolver.resolve('./composables/useWishes') },
     ])
 

@@ -10,20 +10,7 @@
         </ul>
         <div class="xl:col-span-2 xl:max-w-xl">
           <form class="flex flex-col gap-y-3" @submit.prevent="submit">
-            <WishField v-model="draft.title" label="Title" />
-            <WishField v-model="draft.url" label="Link" type="url" />
-            <WishField
-              v-model="draft.shop"
-              label="Shop"
-              :placeholder="formatHost(draft.url)"
-            />
-            <WishField v-model="draft.price" label="Price" placeholder="0,00" />
-            <WishField v-model="draft.image" label="Picture" type="url" />
-            <WishField
-              v-model="draft.note"
-              label="Note"
-              placeholder="Size, colour …"
-            />
+            <WishFields v-model="draft" />
           </form>
           <p class="text-muted mt-8">
             Compare prices:
