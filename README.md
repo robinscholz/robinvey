@@ -452,16 +452,19 @@ the GitHub redirect URI has one origin to match. Each is its own Workers
 Builds project, and Workers Builds deploys every push to `main`. Both builds
 run from the repository root:
 
-| Setting        | Site                  | Wunschzettel                                     |
-| -------------- | --------------------- | ------------------------------------------------ |
-| Root directory | `/`                   | `/`                                              |
-| Build command  | `pnpm build`          | `pnpm --filter @robinscholz/wunschzettel build`  |
-| Deploy command | `npx wrangler deploy` | `pnpm --filter @robinscholz/wunschzettel deploy` |
+| Setting        | Site                  | Wunschzettel                                         |
+| -------------- | --------------------- | ---------------------------------------------------- |
+| Root directory | `/`                   | `/`                                                  |
+| Build command  | `pnpm build`          | `pnpm --filter @robinscholz/wunschzettel build`      |
+| Deploy command | `npx wrangler deploy` | `pnpm --filter @robinscholz/wunschzettel run deploy` |
 
 The Wunschzettel’s `deploy` script applies pending migrations to the
 deployed database with `wrangler d1 migrations apply DB --remote`, then
 uploads the Worker; `pnpm deploy:wunschzettel` does the same from a
-checkout, after a build. Set the Worker up once, from `apps/wunschzettel`:
+checkout, after a build. The `run` matters: without it, pnpm starts its own
+`deploy` command instead. For the migrations, the build’s API token needs D1
+edit access on top of what Workers Builds gives it. Set the Worker up once,
+from `apps/wunschzettel`:
 
 ```sh
 pnpm exec wrangler login
