@@ -1,0 +1,30 @@
+@import 'tailwindcss';
+
+@source '../../';
+
+@theme {
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, system-ui, 'Helvetica Neue', sans-serif;
+  --color-*: initial;
+  --color-white: #ffffff;
+  --color-ink: #111111;
+  --color-muted: #8a8a8a;
+  --color-line: #e5e5e5;
+}
+
+@utility link {
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+@layer base {
+  body {
+    @apply text-ink bg-white text-sm;
+  }
+
+  :focus-visible {
+    outline: 1px solid currentColor;
+    outline-offset: 3px;
+  }
+}

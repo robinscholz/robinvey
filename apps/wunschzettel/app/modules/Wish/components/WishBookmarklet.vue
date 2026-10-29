@@ -1,21 +1,14 @@
 <template>
   <p>Zieh diesen Link in die Lesezeichenleiste:</p>
-  <p class="mt-[1lh]">
-    <a
-      :href="href"
-      class="underline decoration-1 underline-offset-[0.2em] hover:text-(--ui-hue)"
-      @click.prevent
-      @pointerenter="advance"
-      >🎁 Wünschen</a
-    >
+  <p class="mt-6">
+    <a :href="href" class="link" @click.prevent>🎁 Wünschen</a>
   </p>
-  <p class="text-surface-muted mt-[1lh]">
-    Auf einer Produktseite angeklickt, liest es Titel, Bild und Preis aus und
-    öffnet diese Seite mit dem Wunsch.
+  <p class="text-muted mt-6">
+    Auf einer Produktseite angeklickt, bringt es Titel, Bild und Preis hierher.
+    <a href="/auth/logout" class="link">Abmelden</a>
   </p>
 </template>
 
 <script setup lang="ts">
 const { href } = useBookmarklet()
-const { advance } = useHue()
 </script>

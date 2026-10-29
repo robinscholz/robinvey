@@ -1,17 +1,19 @@
 # robinvey
 
 Robin Vey’s personal website and CV, and a Wunschzettel for the family. Two
-Nuxt 4 apps on one layer, mirror v2, vue-equipment and Nuxt Content, each
-generated as a static site. The CV is the same content as the site rendered to
-`/cv.pdf` at build time.
+Nuxt 4 apps: the site, generated as a static site from Nuxt Content on a
+layer with mirror v2 and vue-equipment, and the Wunschzettel, a Cloudflare
+Worker with a D1 database and an R2 bucket behind it. The CV is the same
+content as the site rendered to `/cv.pdf` at build time.
 
 ## Apps and packages
 
-| Path                | Package                     | Contents                                                                                                  |
-| ------------------- | --------------------------- | --------------------------------------------------------------------------------------------------------- |
-| `apps/web`          | `@robinscholz/web`          | The one-page site, the content collections, the Profile module and the `/cv.pdf` route                    |
-| `apps/wunschzettel` | `@robinscholz/wunschzettel` | The wish list: the wishes, the Wish module, the add page and the bookmarklet                              |
-| `packages/base`     | `@robinscholz/base`         | Nuxt layer: mirror, vue-equipment and magic-image wiring, the token theme, type system, Ui and the garden |
+| Path                | Package                     | Contents                                                                                                             |
+| ------------------- | --------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `apps/web`          | `@robinscholz/web`          | The one-page site, the content collections, the Profile module and the `/cv.pdf` route                               |
+| `apps/wunschzettel` | `@robinscholz/wunschzettel` | The wish list: the Wish module, the pages, the API, the picture store, the sign-in gate and the bookmarklet          |
+| `packages/base`     | `@robinscholz/base`         | The site’s Nuxt layer: mirror, vue-equipment and magic-image wiring, the token theme, type system, Ui and the garden |
+| `packages/database` | `@robinscholz/database`     | The Wunschzettel’s D1 database: Drizzle schema, migrations, the wishes repository and the seed                       |
 
 ## Setup
 
@@ -21,8 +23,14 @@ pnpm dev
 ```
 
 `dev` builds the tokens in `packages/base` first, then starts the site on
-port 3000 and the Wunschzettel on port 3001; `pnpm --filter @robinscholz/web
-dev` starts one of them. `/cv.pdf` renders on every request in development.
+port 3000 and the Wunschzettel on port 3001; `pnpm dev:web` and
+`pnpm dev:wunschzettel` start one of them. `/cv.pdf` renders on every request in development.
+The Wunschzettel applies pending migrations to its local D1 database first;
+Nuxt then emulates the Cloudflare bindings through wrangler, and the first
+API request seeds an empty database with the wishes in
+`packages/database/seed`. Wrangler keeps that database and the local bucket
+under `apps/wunschzettel/.wrangler/state`, ignored by git; `pnpm db:studio`
+opens the database in drizzle-kit studio.
 
 ```sh
 pnpm build
@@ -30,9 +38,12 @@ pnpm preview
 ```
 
 `build` writes the static site to `apps/web/.output/public`, `cv.pdf`
-included, and the Wunschzettel to `apps/wunschzettel/.output/public`.
-`preview` serves them the way Cloudflare does, with the same cache headers and
-404 page, on ports 8787 and 8788. Canonical URLs, the links printed on the CV
+included, and the Wunschzettel’s Worker to `apps/wunschzettel/.output`.
+`preview` serves the site the way Cloudflare does, with the same cache
+headers and 404 page, on port 8787. `pnpm start:wunschzettel` runs the
+Wunschzettel’s production build in workerd, the runtime Cloudflare uses, on
+port 3001 against the same local database, sign-in gate included. Canonical
+URLs, the links printed on the CV
 and image sources all start from `https://robinvey.com`, and the Wunschzettel’s
 from `https://wunschzettel.robinvey.com`. Set another origin for a preview
 deploy:
@@ -299,41 +310,45 @@ site sets that dash the same way with `UiRange`.
 ## Wunschzettel
 
 `apps/wunschzettel` is a wish list for the family: a grid of things, each a
-link to a shop in Germany with a fair price and an easy return. It extends the
-same base layer as the site, so it is set in the same face on the same paper,
-with the same rules and hover hues, and is generated the same way. It is not
-for search engines: `robots.txt` disallows everything and every page carries
-`noindex`.
+link to a shop in Germany with a fair price and an easy return. It stands
+apart from the site’s layer: a white page in the system font, one size of
+type, a grid of pictures with a caption under each, no dark mode. It runs as
+a Cloudflare Worker: the pages and `/api` come from one Nitro server, the
+wishes live in a D1 database and the pictures in an R2 bucket. Everyone can
+read; adding and removing is behind a GitHub sign-in. It is not for search
+engines: `robots.txt` disallows everything and every page carries `noindex`.
 
-Every wish is a YAML file in `apps/wunschzettel/content/wishes`. The grid
-shows them newest first by `added`, then in file order.
+The database is `packages/database`: the Drizzle schema, the migrations, the
+wishes repository and the seed, with a README of its own. The API handlers
+in `apps/wunschzettel/server/api/wishes` are thin: `GET` lists, `PUT /:id`
+upserts after `toWishForStorage` in `shared/utils/transformers.ts` has shaped
+the body, `DELETE /:id` removes the wish and its picture. The list page reads
+them through `useWishes`, rendered on the server, and `wishTransformer` turns
+a row into what a card shows.
 
-```yaml
-title: 'Petzl Actik Core Stirnlampe'
-url: 'https://www.bergzeit.de/p/petzl-actik-core-stirnlampe/5064106/'
-price: 63.2
-image: 'https://static.bergzeit.com/product_gallery_regular/5064106-002_pic1.jpg'
-note: 'Farbe egal'
-added: '2026-10-28'
-```
+| Field         | Shown as                                                      |
+| ------------- | ------------------------------------------------------------- |
+| `title`       | The caption; its slug is the id and the picture’s name        |
+| `url`         | Where the card links; its host, `bergzeit.de`, names the shop |
+| `shop`        | The shop’s name, in place of the host                         |
+| `price`       | A number in euro, printed as `63,20 €`                        |
+| `imageSource` | The picture’s address on the shop                             |
+| `note`        | A line under the caption: size, colour, anything              |
+| `added`       | A day, `YYYY-MM-DD`; newest first                             |
 
-| Field   | Required | Shown as                                                      |
-| ------- | -------- | ------------------------------------------------------------- |
-| `title` | yes      | The caption                                                   |
-| `url`   | yes      | Where the card links; its host, `bergzeit.de`, names the shop |
-| `shop`  | no       | The shop’s name, in place of the host                         |
-| `price` | no       | A number in euro, printed as `63,20 €`                        |
-| `image` | no       | The picture, by its address on the shop                       |
-| `note`  | no       | A line under the caption: size, colour, anything              |
-| `added` | yes      | A day, `'YYYY-MM-DD'`, quoted                                 |
+### Pictures
 
-`content/index.yml` holds the title, the name and the intro. The three wishes
-in the repository are examples; delete them.
-
-Pictures go out through magic-image and the MaaS image CDN, which fetches
-them from the shop by their address, resizes them for the grid and caches
-them. Each multiplies onto the light paper, so a shop’s white backdrop
-disappears; in dark mode the paper comes along as a tile.
+When a wish is saved, the Worker fetches the picture from the shop and keeps
+a copy in the bucket under the wish’s id (`server/utils/images.ts`), so the
+list no longer depends on the shop keeping it. `/images/<id>/<version>`
+serves that copy; if the save could not get it, the first request fetches it.
+The version changes whenever the source does, so caches let go of a replaced
+picture. In production the cards go through Cloudflare Images on the
+production zone, which cuts the product out of its backdrop with
+`segment=foreground` and resizes it for the grid; the Free plan covers 5,000
+unique transformations a month, and since the pictures come from the zone
+itself no other origin has to be allowed. In development they come straight
+from the local bucket.
 
 ### Adding a wish
 
@@ -341,38 +356,92 @@ Open `/add` and drag the 🎁 Wünschen link into the bookmarks bar. On a
 shop’s product page, click it: it reads the product from the page’s JSON-LD
 and Open Graph tags, name, brand, picture and price, strips tracking
 parameters from the address and opens `/add` with the wish in the hash, so
-nothing is sent anywhere. Check the preview, fix what the shop got wrong,
-compare prices on idealo or Geizhals, then click Auf GitHub anlegen: GitHub
-opens a new file under `content/wishes`, named after the title, with the YAML
-filled in. Commit it to `main`, and Workers Builds deploys the list a minute
-later. YAML kopieren puts the same file on the clipboard instead.
+nothing is sent anywhere until you save. Check the preview, fix what the
+shop got wrong, compare prices on idealo or Geizhals, then click Speichern:
+the wish is on the list at once. `/add` without a product lists every wish
+with an Entfernen link.
 
 The bookmarklet is `apps/wunschzettel/app/modules/Wish/bookmarklet/index.ts`,
 a script in TypeScript. The Wish module minifies it with esbuild at build
 time, and the add page links it with the site’s origin filled in, so a
-preview build’s bookmarklet opens the preview.
+preview build’s bookmarklet opens the preview. The bookmark carries its own
+copy of the code: after a change, drag the link again.
+
+### Sign in
+
+`/add` and every write to `/api` need a session; the list and `GET
+/api/wishes` stay open. Signing in works with GitHub through
+[`nuxt-auth-utils`](https://github.com/atinux/nuxt-auth-utils), and a
+session lasts 90 days. `nuxt dev` stays open.
+
+Create an OAuth app under GitHub → Settings → Developer settings → OAuth
+apps, with `https://wunschzettel.robinvey.com/auth/github` as the callback
+URL, then generate a client secret. Set the values on the Worker as secrets,
+with `pnpm exec wrangler secret put <NAME>` from `apps/wunschzettel`, or in
+`apps/wunschzettel/.env` for `wrangler dev`:
+
+```sh
+NUXT_SESSION_PASSWORD=<32 random characters or more>
+NUXT_OAUTH_GITHUB_CLIENT_ID=…
+NUXT_OAUTH_GITHUB_CLIENT_SECRET=…
+NUXT_ALLOWED_GITHUB_IDS=…
+```
+
+The allow list holds your numeric GitHub ID, not your login, since a login
+can be renamed and then claimed by someone else. Find it at
+`https://api.github.com/users/<login>`, or sign in once: the login page then
+shows the ID that has to go on the list. Until the secrets are set, `/add`
+says the sign-in is not set up yet.
 
 ## Deploy
 
-Each app is a Cloudflare Worker that serves only static files: the site from
-`wrangler.jsonc` at the root, the Wunschzettel from
-`apps/wunschzettel/wrangler.jsonc`. Each is its own Workers Builds project.
-Workers Builds deploys every push to `main`, and every other branch gets a
-preview URL. Both builds run from the repository root:
+The site is a Cloudflare Worker that serves only static files, from
+`wrangler.jsonc` at the root. The Wunschzettel is a Worker with a server,
+from `apps/wunschzettel/wrangler.jsonc`: it names the Worker `wunschzettel`,
+binds the D1 database `wunschzettel` as `DB`, the R2 bucket
+`wunschzettel-images` as `IMAGES` and the built files as `ASSETS`, and sets
+`wunschzettel.robinvey.com` as its Custom Domain; `workers_dev` is off, so
+the GitHub redirect URI has one origin to match. Each is its own Workers
+Builds project, and Workers Builds deploys every push to `main`. Both builds
+run from the repository root:
 
-| Setting        | Site                  | Wunschzettel                                                    |
-| -------------- | --------------------- | --------------------------------------------------------------- |
-| Root directory | `/`                   | `/`                                                             |
-| Build command  | `pnpm build`          | `pnpm build`                                                    |
-| Deploy command | `npx wrangler deploy` | `npx wrangler deploy --config apps/wunschzettel/wrangler.jsonc` |
+| Setting        | Site                  | Wunschzettel                                     |
+| -------------- | --------------------- | ------------------------------------------------ |
+| Root directory | `/`                   | `/`                                              |
+| Build command  | `pnpm build`          | `pnpm --filter @robinscholz/wunschzettel build`  |
+| Deploy command | `npx wrangler deploy` | `pnpm --filter @robinscholz/wunschzettel deploy` |
 
-Each app’s `public/_headers` caches the hashed files in `/_nuxt` for a year.
-Everything else, the pages and `cv.pdf` included, revalidates on every
-request, so a deploy shows up at once.
+The Wunschzettel’s `deploy` script applies pending migrations to the
+deployed database with `wrangler d1 migrations apply DB --remote`, then
+uploads the Worker; `pnpm deploy:wunschzettel` does the same from a
+checkout, after a build. Set the Worker up once, from `apps/wunschzettel`:
 
-The Nitro preset is pinned to `static`. On Cloudflare’s build machines Nitro
-would otherwise switch to a Worker preset, and its generated config would take
-over `wrangler deploy`.
+```sh
+pnpm exec wrangler login
+pnpm exec wrangler r2 bucket create wunschzettel-images
+pnpm exec wrangler secret put NUXT_SESSION_PASSWORD
+```
+
+The D1 database exists and its id is in `wrangler.jsonc`. R2 has to be
+enabled once in the Cloudflare dashboard before the bucket can be created.
+Put every variable from “Sign in” the same way as `NUXT_SESSION_PASSWORD`,
+and enable transformations for the `robinvey.com` zone under Images,
+Transformations, so the pictures get their cut-out.
+
+The site’s `public/_headers` caches the hashed files in `/_nuxt` for a year;
+Nitro writes the same for the Wunschzettel. Everything else, the pages and
+`cv.pdf` included, revalidates on every request, so a deploy shows up at
+once.
+
+The site’s Nitro preset is pinned to `static`: on Cloudflare’s build
+machines Nitro would otherwise switch to a Worker preset, and its generated
+config would take over `wrangler deploy`. The Wunschzettel’s is
+`cloudflare-module`, and its `wrangler.jsonc` is written by hand, since the
+generated one would know neither the database nor the bucket.
+
+D1 keeps 30 days of point-in-time history. Roll the database back with
+`wrangler d1 time-travel restore wunschzettel --timestamp=<time>`, or write a
+dump with `wrangler d1 export wunschzettel --remote --output=wishes.sql`.
 
 ## Fonts
 
@@ -387,4 +456,5 @@ repository private.
 - [`@jasy/pdf`](https://www.npmjs.com/package/@jasy/pdf) for the CV
 - [`@nuxt/icon`](https://github.com/nuxt/icon) with the Symbols collection
 - ESLint and Prettier presets from `@maas/config`
-- [Cloudflare Workers](https://developers.cloudflare.com/workers/static-assets/) with static assets, deployed by Workers Builds
+- [Drizzle](https://orm.drizzle.team) on [Cloudflare D1](https://developers.cloudflare.com/d1/), [nuxt-auth-utils](https://github.com/atinux/nuxt-auth-utils) for the Wunschzettel
+- [Cloudflare Workers](https://developers.cloudflare.com/workers/) with static assets, D1 and R2, deployed by Workers Builds

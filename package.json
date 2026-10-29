@@ -1,7 +1,7 @@
 {
   "name": "@robinscholz/robinvey",
   "private": true,
-  "description": "Robin Vey’s personal website and CV, and a Wunschzettel for the family: two Nuxt apps on mirror v2, vue-equipment and Nuxt Content, generated as static sites with the CV at /cv.pdf",
+  "description": "Robin Vey’s personal website and CV, and a Wunschzettel for the family: two Nuxt apps generated as static sites from Nuxt Content, the site on mirror v2 and vue-equipment with the CV at /cv.pdf",
   "contributors": [
     {
       "name": "Robin Vey",
@@ -11,11 +11,17 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
+    "dev:web": "turbo run dev --filter=@robinscholz/web",
+    "dev:wunschzettel": "turbo run dev --filter=@robinscholz/wunschzettel",
+    "start:wunschzettel": "turbo run start --filter=@robinscholz/wunschzettel",
+    "deploy:wunschzettel": "turbo run deploy --filter=@robinscholz/wunschzettel",
     "preview": "turbo run preview",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint -- --fix",
     "typecheck": "turbo run typecheck",
     "format": "prettier --write \"**/*.{ts,mjs,vue,css,json,jsonc,md,yml}\"",
+    "db:generate": "pnpm --filter @robinscholz/database generate",
+    "db:studio": "pnpm --filter @robinscholz/database studio",
     "preinstall": "npx only-allow pnpm",
     "uninstall": "pnpm dlx rimraf --glob ./**/node_modules --glob ./**/pnpm-lock.yaml",
     "update:deps": "pnpm dlx taze -r -w",

@@ -1,10 +1,11 @@
 import { draftTransformer, parsePrice } from '../utils/draft'
 import { slugify } from '../utils/slug'
-import { serializeWish } from '../utils/yaml'
+import type { WishInsert } from '@robinscholz/database'
 import type { WishDraft } from '../utils/draft'
 
-// Where a wish is committed, from the repository root.
-const WISHES_DIR = 'apps/wunschzettel/content/wishes'
+interface UseWishDraftOptions {
+  save: (wish: WishInsert) => Promise<unknown>
+}
 
 const COMPARISONS = [
   {
@@ -22,8 +23,8 @@ function today(): string {
   return `${now.getFullYear()}-${month}-${day}`
 }
 
-export function useWishDraft() {
-  const { repoUrl } = useRuntimeConfig().public
+export function useWishDraft({ save }: UseWishDraftOptions) {
+  const route = useRoute()
 
   // Public state
   const draft = reactive<WishDraft>({
@@ -35,34 +36,14 @@ export function useWishDraft() {
     note: '',
   })
   const received = shallowRef(false)
+  const saving = shallowRef(false)
+  const failed = shallowRef(false)
 
   const wish = computed(() => draftTransformer(draft))
   const complete = computed(() =>
     Boolean(draft.title.trim() && draft.url.trim())
   )
-  const filename = computed(() => `${slugify(draft.title) || 'wunsch'}.yml`)
-
-  const yaml = computed(() =>
-    serializeWish({
-      title: draft.title.trim(),
-      url: draft.url.trim(),
-      shop: draft.shop.trim(),
-      price: parsePrice(draft.price),
-      image: draft.image.trim(),
-      note: draft.note.trim(),
-      added: today(),
-    })
-  )
-
-  // GitHub’s new file page takes the name and the content from the address
-  // and commits straight to main.
-  const commitUrl = computed(() => {
-    const params = new URLSearchParams({
-      filename: filename.value,
-      value: yaml.value,
-    })
-    return `${repoUrl}/new/main/${WISHES_DIR}?${params}`
-  })
+  const id = computed(() => slugify(draft.title) || 'wunsch')
 
   const comparisons = computed(() => {
     const query = encodeURIComponent(draft.title.trim())
@@ -72,11 +53,12 @@ export function useWishDraft() {
     }))
   })
 
-  // Public functions
+  // Private functions
   // The bookmarklet hands the product over in the hash, so it never leaves
-  // the browser.
-  function read() {
-    const params = new URLSearchParams(location.hash.slice(1))
+  // the browser. The router has decoded the hash once by the time it is read
+  // here, which undoes the bookmarklet’s outer encoding.
+  function read(hash: string) {
+    const params = new URLSearchParams(hash.slice(1))
     if (!params.has('url')) {
       return
     }
@@ -87,21 +69,43 @@ export function useWishDraft() {
     received.value = true
   }
 
-  async function copy() {
-    await navigator.clipboard.writeText(yaml.value)
+  // Public functions
+  async function submit() {
+    saving.value = true
+    failed.value = false
+    try {
+      await save({
+        id: id.value,
+        title: draft.title.trim(),
+        url: draft.url.trim(),
+        shop: draft.shop.trim(),
+        price: parsePrice(draft.price),
+        imageSource: draft.image.trim(),
+        note: draft.note.trim(),
+        added: today(),
+      })
+      await navigateTo('/')
+    } catch {
+      failed.value = true
+    } finally {
+      saving.value = false
+    }
   }
+
+  // The hash never reaches the server, so the draft is read once the router
+  // has the real address in the browser.
+  watch(() => route.hash, read, { immediate: true })
 
   return {
     draft,
     received,
+    saving,
+    failed,
     wish,
     complete,
-    filename,
-    yaml,
-    commitUrl,
+    id,
     comparisons,
-    read,
-    copy,
+    submit,
   }
 }
 

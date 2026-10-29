@@ -153,6 +153,9 @@ function largestImage(): string {
 }
 
 function absolute(url: string): string {
+  if (!url) {
+    return ''
+  }
   try {
     return new URL(url, location.href).href
   } catch {
@@ -205,5 +208,12 @@ if (location.origin !== ORIGIN) {
     image: absolute(image),
     price: amount(found),
   })
-  window.open(`${ORIGIN}/add/#${params}`, '_blank')
+  // Encoded once more, as the router on the other side decodes the hash once
+  // and would otherwise split a shop address on its own ampersands.
+  const target = `${ORIGIN}/add/#${encodeURIComponent(String(params))}`
+  // Safari’s popup blocker tends to refuse a new tab from the bookmarks bar;
+  // the shop page then gives way to the wish instead.
+  if (!window.open(target, '_blank')) {
+    location.assign(target)
+  }
 }

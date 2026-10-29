@@ -2,7 +2,7 @@
   "name": "@robinscholz/wunschzettel",
   "private": true,
   "type": "module",
-  "description": "Robin’s Wunschzettel: a grid of wishes from Nuxt Content, each linking to a shop, and the bookmarklet that adds to it",
+  "description": "Robin’s Wunschzettel: a grid of wishes from a D1 database, each linking to a shop, with the pictures in R2, the add page and the bookmarklet",
   "contributors": [
     {
       "name": "Robin Vey",
@@ -10,25 +10,34 @@
     }
   ],
   "scripts": {
-    "dev": "nuxt dev",
-    "build": "nuxt generate",
-    "preview": "wrangler dev --port 8788",
+    "dev": "pnpm db:migrate && nuxt dev",
+    "build": "nuxt build",
+    "start": "pnpm db:migrate && wrangler dev",
+    "deploy": "wrangler d1 migrations apply DB --remote && wrangler deploy",
+    "db:migrate": "wrangler d1 migrations apply DB --local",
     "lint": "eslint .",
     "typecheck": "nuxt typecheck"
   },
   "dependencies": {
-    "@nuxt/content": "^3.16.1",
+    "@maas/magic-image": "^1.0.2",
+    "@nuxt/image": "^2.1.0",
     "@nuxt/kit": "^4.6.0",
-    "@robinscholz/base": "workspace:*",
+    "@robinscholz/database": "workspace:*",
+    "@unlazy/nuxt": "^2.0.1",
     "nuxt": "^4.6.0",
+    "nuxt-auth-utils": "^0.5.30",
     "vue": "^3.5.43"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261013.1",
     "@maas/config": "^1.16.1",
+    "@tailwindcss/vite": "^4.3.3",
     "esbuild": "^0.28.2",
     "eslint": "^10.9.1",
+    "tailwindcss": "^4.3.3",
     "typescript": "^5.9.3",
     "vue-tsc": "^3.3.12",
+    "wrangler": "^4.149.0",
     "zod": "^4.6.5"
   }
 }

@@ -1,27 +1,41 @@
 import { formatCaption, formatHost, formatPrice } from './format'
-import type { ListCollectionItem, WishesCollectionItem } from '@nuxt/content'
+import type { WishInsert, WishRecord } from '@robinscholz/database'
 
-export function listTransformer(item: ListCollectionItem | null) {
-  return {
-    title: item?.title ?? 'Wunschzettel',
-    name: item?.name ?? '',
-    description: item?.description ?? '',
-    intro: item?.intro ?? '',
-  }
+function text(value: unknown): string {
+  return typeof value === 'string' ? value.trim() : ''
 }
 
-export function wishTransformer(item: WishesCollectionItem) {
-  const shop = item.shop ?? formatHost(item.url)
-  const price = item.price === undefined ? '' : formatPrice(item.price)
+function amount(value: unknown): number | null {
+  return typeof value === 'number' && Number.isFinite(value) ? value : null
+}
+
+// Pictures are served from the Worker’s own copy; the version in the address
+// changes with the source, so caches let go of a replaced picture.
+export function wishTransformer(item: WishRecord) {
+  const shop = item.shop || formatHost(item.url)
+  const price = item.price === null ? '' : formatPrice(item.price)
   return {
     id: item.id,
     title: item.title,
     url: item.url,
     caption: formatCaption({ shop, price }),
-    image: item.image ?? '',
-    note: item.note ?? '',
+    image: item.imageSource ? `/images/${item.id}/${item.imageVersion}` : '',
+    note: item.note,
   }
 }
 
-export type List = ReturnType<typeof listTransformer>
+// What the server stores from whatever the add page sends.
+export function toWishForStorage(raw: Record<string, unknown>): WishInsert {
+  return {
+    id: text(raw.id),
+    title: text(raw.title),
+    url: text(raw.url),
+    shop: text(raw.shop),
+    price: amount(raw.price),
+    imageSource: text(raw.imageSource),
+    note: text(raw.note),
+    added: text(raw.added),
+  }
+}
+
 export type Wish = ReturnType<typeof wishTransformer>

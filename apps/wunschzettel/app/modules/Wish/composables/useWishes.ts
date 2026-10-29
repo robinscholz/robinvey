@@ -1,30 +1,34 @@
+import type { WishInsert, WishRecord } from '@robinscholz/database'
+
 export async function useWishes() {
-  const { updatedAt } = useRuntimeConfig().public
-
-  const { data } = await useAsyncData('wishes', async () => {
-    const [list, wishes] = await Promise.all([
-      queryCollection('list').first(),
-      queryCollection('wishes')
-        .order('added', 'DESC')
-        .order('stem', 'ASC')
-        .all(),
-    ])
-
-    return {
-      list: listTransformer(list),
-      wishes: wishes.map(wishTransformer),
-    }
+  const { data, refresh } = await useFetch('/api/wishes', {
+    key: 'wishes',
+    transform: (rows: Array<WishRecord>) => rows.map(wishTransformer),
   })
 
   // Public state
-  const list = computed(() => data.value?.list ?? listTransformer(null))
-  const wishes = computed(() => data.value?.wishes ?? [])
-  const updated = computed(() => formatLongMonth(updatedAt))
+  const wishes = computed(() => data.value ?? [])
+
+  // Public functions
+  // Every page shares the list under one key, so it is refreshed here, right
+  // after a change, instead of being left to the next full load.
+  async function save(wish: WishInsert) {
+    await $fetch(`/api/wishes/${encodeURIComponent(wish.id)}`, {
+      method: 'PUT',
+      body: wish,
+    })
+    await refresh()
+  }
+
+  async function remove(id: string) {
+    await $fetch(`/api/wishes/${encodeURIComponent(id)}`, { method: 'DELETE' })
+    await refresh()
+  }
 
   return {
-    list,
     wishes,
-    updated,
+    save,
+    remove,
   }
 }
 

@@ -14,6 +14,7 @@ export function parsePrice(text: string): number | null {
   return normalized && Number.isFinite(value) ? value : null
 }
 
+// The preview shows the shop’s picture itself, before the Worker has a copy.
 export function draftTransformer(draft: WishDraft): Wish {
   const price = parsePrice(draft.price)
   return {

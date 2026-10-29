@@ -1,9 +1,49 @@
 {
-  "$schema": "../../node_modules/wrangler/config-schema.json",
-  "name": "wunschzettel",
-  "compatibility_date": "2026-10-10",
-  "assets": {
-    "directory": "./.output/public",
-    "not_found_handling": "404-page",
-  },
+	"$schema": "../../node_modules/wrangler/config-schema.json",
+	"name": "wunschzettel",
+	"main": ".output/server/index.mjs",
+	"compatibility_date": "2026-10-10",
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+	// One origin, so the GitHub redirect URI and the session cookie match.
+	"routes": [
+		{
+			"pattern": "wunschzettel.robinvey.com",
+			"custom_domain": true
+		}
+	],
+	"workers_dev": false,
+	"assets": {
+		"directory": ".output/public",
+		"binding": "ASSETS",
+	},
+	// Local runs use preview_database_id, so the local database keeps its file
+	// now that database_id is filled in.
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "wunschzettel",
+			"database_id": "ac0f66a0-09e4-40e5-a929-e76bf2eb00a0",
+			"preview_database_id": "wunschzettel-local",
+			"migrations_dir": "../../packages/database/migrations",
+		},
+	],
+	"r2_buckets": [
+		{
+			"binding": "IMAGES",
+			"bucket_name": "wunschzettel-images",
+		},
+		{
+			"bucket_name": "wunschzettel-images",
+			"binding": "wunschzettel",
+			"remote": true
+		},
+	],
+	"observability": {
+		"enabled": true,
+	},
+	"dev": {
+		"port": 3001,
+	},
 }
