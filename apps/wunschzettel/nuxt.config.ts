@@ -7,10 +7,15 @@ export default defineNuxtConfig({
 
   modules: [
     '@maas/mirror/nuxt',
+    '@maas/vue-equipment/nuxt',
     '@maas/magic-image',
     'nuxt-auth-utils',
     '~~/app/modules/Wish',
   ],
+
+  vueEquipment: {
+    plugins: ['MagicToast'],
+  },
 
   // Pictures are cut out and resized by Cloudflare Images on the production
   // zone, from the copies the Worker keeps in its bucket.

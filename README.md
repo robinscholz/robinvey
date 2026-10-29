@@ -328,7 +328,10 @@ surface, primary and secondary carry no blue, and `application.json` halves
 the focus line and its halo, to 1px and 2px. The colours, radii and focus
 ring are mirror utilities, fields are underlined, and every button is
 `WishButton`, mirror’s `Button` as a ghost that fills in on hover: success
-for Save, danger for Remove. It runs as
+for Save, danger for Remove. A save answers with a toast at the top right,
+from vue-equipment’s MagicToast, lined up with the page edge and the header
+line; while the drawer is open the toaster moves into it, since a modal
+dialog leaves the rest of the page below it and inert. It runs as
 a Cloudflare Worker: the pages and `/api` come from one Nitro server, the
 wishes live in a D1 database and the pictures in an R2 bucket. Everyone can
 read; adding, editing and removing is behind a GitHub sign-in. It is not for
@@ -386,7 +389,9 @@ and Open Graph tags, name, brand, picture and price, strips tracking
 parameters from the address and opens `/add` with the wish in the hash, so
 nothing is sent anywhere until you save. Check the preview, fix what the
 shop got wrong, compare prices on idealo or Geizhals, then click Save:
-the wish is on the list at once. `/add` without a product lists every wish
+the wish is on the list at once, with a toast that says so. A save that
+fails says so too, with the server’s reason when it gave one, such as a
+lapsed sign-in. `/add` without a product lists every wish
 with a Remove link.
 
 The bookmarklet is `apps/wunschzettel/app/modules/Wish/bookmarklet/index.ts`,
@@ -399,7 +404,8 @@ copy of the code: after a change, drag the link again.
 
 Signed in, hover a card on the list and click Edit: a drawer slides in
 from the right with the wish’s fields, read afresh from the database.
-Save keeps the changes, Remove asks first, in mirror’s `AlertDialog`, then
+Save keeps the changes and closes the drawer with a toast; a failed save
+leaves it open and says so in one. Remove asks first, in mirror’s `AlertDialog`, then
 deletes the wish and its picture. Escape or a click beside the drawer closes
 it; while the alert asks, Escape answers the alert alone. The id stays when the title changes,
 and so does the day the wish was added; a new picture address fetches the

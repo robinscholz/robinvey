@@ -1,5 +1,6 @@
 import { draftToPayload, draftTransformer, emptyDraft } from '../utils/draft'
 import { slugify } from '../utils/slug'
+import { useWishToast } from './private/useWishToast'
 import type { WishInsert } from '@robinscholz/database'
 import type { WishDraft } from '../utils/draft'
 
@@ -25,12 +26,12 @@ function today(): string {
 
 export function useWishDraft({ save }: UseWishDraftOptions) {
   const route = useRoute()
+  const { announceSaved, announceSaveFailure } = useWishToast()
 
   // Public state
   const draft = reactive<WishDraft>(emptyDraft())
   const received = shallowRef(false)
   const saving = shallowRef(false)
-  const failed = shallowRef(false)
 
   const wish = computed(() => draftTransformer(draft))
   const complete = computed(() =>
@@ -65,12 +66,12 @@ export function useWishDraft({ save }: UseWishDraftOptions) {
   // Public functions
   async function submit() {
     saving.value = true
-    failed.value = false
     try {
       await save({ id: id.value, ...draftToPayload(draft), added: today() })
+      announceSaved()
       await navigateTo('/')
-    } catch {
-      failed.value = true
+    } catch (error) {
+      announceSaveFailure(error)
     } finally {
       saving.value = false
     }
@@ -84,7 +85,6 @@ export function useWishDraft({ save }: UseWishDraftOptions) {
     draft,
     received,
     saving,
-    failed,
     wish,
     complete,
     id,

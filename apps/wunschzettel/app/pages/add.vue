@@ -38,7 +38,6 @@
               >Title and link are still missing.</span
             >
           </p>
-          <p v-if="failed" class="text-surface-muted">Saving did not work.</p>
         </div>
       </div>
       <WishBookmarklet v-else />
@@ -60,7 +59,7 @@
 
 <script setup lang="ts">
 const { wishes, save, remove } = await useWishes()
-const { draft, received, saving, failed, wish, complete, comparisons, submit } =
+const { draft, received, saving, wish, complete, comparisons, submit } =
   useWishDraft({ save })
 
 useSeoMeta({

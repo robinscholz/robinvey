@@ -1,4 +1,5 @@
 import { draftToPayload, emptyDraft, recordToDraft } from '../../utils/draft'
+import { useWishToast } from './useWishToast'
 import type { WishInsert, WishRecord } from '@robinscholz/database'
 import type { WishDraft } from '../../utils/draft'
 
@@ -9,8 +10,16 @@ interface UseWishEditorFormOptions {
   remove: (id: string) => Promise<unknown>
 }
 
+interface RunPayload {
+  task: WishEditorTask
+  action: () => Promise<void>
+  // Hears of a failure even once the drawer has moved on.
+  onError?: (error: unknown) => void
+}
+
 export function useWishEditorForm({ save, remove }: UseWishEditorFormOptions) {
   const { id, close } = useWishEditor()
+  const { announceSaved, announceSaveFailure } = useWishToast()
 
   // Public state
   const draft = reactive<WishDraft>(emptyDraft())
@@ -23,13 +32,14 @@ export function useWishEditorForm({ save, remove }: UseWishEditorFormOptions) {
 
   // Private functions
   // A wish opened, closed or swapped meanwhile drops what is still running.
-  async function run(task: WishEditorTask, action: () => Promise<void>) {
+  async function run({ task, action, onError }: RunPayload) {
     const current = id.value
     pending.value = task
     failed.value = null
     try {
       await action()
-    } catch {
+    } catch (error) {
+      onError?.(error)
       if (id.value === current) {
         failed.value = task
       }
@@ -46,13 +56,16 @@ export function useWishEditorForm({ save, remove }: UseWishEditorFormOptions) {
       return
     }
     Object.assign(draft, emptyDraft())
-    await run('load', async () => {
-      const record = await $fetch<WishRecord>(
-        `/api/wishes/${encodeURIComponent(wishId)}`
-      )
-      if (id.value === wishId) {
-        Object.assign(draft, recordToDraft(record))
-      }
+    await run({
+      task: 'load',
+      action: async () => {
+        const record = await $fetch<WishRecord>(
+          `/api/wishes/${encodeURIComponent(wishId)}`
+        )
+        if (id.value === wishId) {
+          Object.assign(draft, recordToDraft(record))
+        }
+      },
     })
   }
 
@@ -64,9 +77,14 @@ export function useWishEditorForm({ save, remove }: UseWishEditorFormOptions) {
     if (!wishId || !complete.value) {
       return
     }
-    await run('save', async () => {
-      await save({ id: wishId, ...draftToPayload(draft) })
-      close()
+    await run({
+      task: 'save',
+      action: async () => {
+        await save({ id: wishId, ...draftToPayload(draft) })
+        close()
+        announceSaved()
+      },
+      onError: announceSaveFailure,
     })
   }
 
@@ -75,9 +93,12 @@ export function useWishEditorForm({ save, remove }: UseWishEditorFormOptions) {
     if (!wishId) {
       return
     }
-    await run('remove', async () => {
-      await remove(wishId)
-      close()
+    await run({
+      task: 'remove',
+      action: async () => {
+        await remove(wishId)
+        close()
+      },
     })
   }
 
