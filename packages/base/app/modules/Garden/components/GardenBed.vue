@@ -1,7 +1,7 @@
 <template>
-  <!-- Once a side is open, the garden is a drag surface for it, so the page
-       can be pulled back from anywhere on the garden; a tap closes it too. -->
-  <magic-tray-trigger :id="TrayIds.Garden" :side="opened ?? 'right'" as-child>
+  <!-- Once the garden is open, it is a drag surface for the page, so the page
+       can be pulled back from anywhere on it; a tap closes it too. -->
+  <magic-tray-trigger :id="TrayIds.Garden" side="right" as-child>
     <div
       class="bg-surface-low invisible fixed inset-0 z-0 overflow-hidden data-revealed:visible"
       :data-revealed="revealed || null"
@@ -17,7 +17,7 @@
            so the shadow costs nothing while the page moves. -->
       <div
         class="shadow-component pointer-events-none absolute inset-0 will-change-transform"
-        :style="{ transform: `translateX(${insets.left - insets.right}px)` }"
+        :style="{ transform: `translateX(${-inset}px)` }"
       />
     </div>
   </magic-tray-trigger>
@@ -27,5 +27,5 @@
 import { useGardenTray } from '../composables/private/useGardenTray'
 import { TrayIds } from '../utils/enums'
 
-const { revealed, opened, insets, close } = useGardenTray()
+const { revealed, inset, close } = useGardenTray()
 </script>

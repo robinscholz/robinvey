@@ -3,26 +3,19 @@
     <magic-tray-content
       class="z-10 [--magic-tray-display:block] [--magic-tray-drag-overshoot-outer:0px] [--magic-tray-handle-width-y:2.5rem] [--magic-tray-width:100%] md:[--magic-tray-handle-width-y:5rem]"
     >
-      <!-- The page slides with the clip by a transform of its own, which
-           follows the pull as well as the drag; the tray’s own would follow
-           the drag alone. -->
-      <div
-        class="bg-surface-base min-h-dvh"
-        :inert="opened !== undefined || undefined"
-        :style="
-          shift ? { transform: `translate3d(${shift}px, 0, 0)` } : undefined
-        "
-      >
+      <!-- The page stays where it is and the clip cuts it away, so its fixed
+           elements stay fixed. -->
+      <div class="bg-surface-base min-h-dvh" :inert="opened || undefined">
         <slot />
       </div>
-      <!-- While a side is open, the part of the page still in view is a drag
-           surface for it, so the page can be pushed shut from anywhere on
-           it; a tap closes it too. -->
-      <magic-tray-trigger v-if="opened" :side="opened" as-child>
+      <!-- While the garden is open, the part of the page still in view is a
+           drag surface for it, so the page can be pushed shut from anywhere
+           on it; a tap closes it too. -->
+      <magic-tray-trigger v-if="opened" side="right" as-child>
         <div class="absolute inset-0" @click="close" />
       </magic-tray-trigger>
-      <template #handle="{ side }">
-        <div class="size-full" @click="toggle(side)" />
+      <template #handle>
+        <div class="size-full" @click="toggle" />
       </template>
     </magic-tray-content>
   </magic-tray-provider>
@@ -37,15 +30,15 @@ import { TrayIds } from '../utils/enums'
 import { PULL } from '../utils/pull'
 import type { MagicTrayOptions } from '@maas/vue-equipment/plugins/MagicTray'
 
-// How much of the viewport an open side uncovers. Half a phone’s would leave
-// too little garden to see.
+// How much of the viewport the open garden takes. Half a phone’s would leave
+// too little of it to see.
 const OPEN = { narrow: 0.75, wide: 0.5 }
 
-// The band the right edge pulls back in, in pixels from the edge: the pull
-// begins as the cursor comes within `start` and is complete at `stop`.
+// The band the edge pulls back in, in pixels from the edge: the pull begins
+// as the cursor comes within `start` and is complete at `stop`.
 const BAND = { start: 160, stop: 48 }
 
-const { opened, engaged, shift, toggle, close } = useGardenTray()
+const { opened, toggle, close } = useGardenTray()
 useGardenPeek()
 
 const wide = useMediaQuery('(width >= 48rem)')
@@ -58,15 +51,12 @@ const magnetic = useMediaQuery(
 
 const open = computed(() => (wide.value ? OPEN.wide : OPEN.narrow))
 
-// Once one side moves, the other side’s edge cannot be dragged until the
-// first is back at rest. At rest, the right edge pulls back towards a cursor
-// nearing it, uncovering a sliver of the garden: an invitation to drag.
+// The garden opens from the right edge alone. At rest, the edge pulls back
+// towards a cursor nearing it, uncovering a sliver of the garden: an
+// invitation to drag.
 const options = computed<MagicTrayOptions>(() => ({
-  snapPoints: {
-    left: [0, open.value],
-    right: [0, open.value],
-  },
-  handles: engaged.value ? { [engaged.value]: true } : true,
+  snapPoints: { right: [0, open.value] },
+  handles: { right: true },
   threshold: { distance: 48 },
   animation: { snap: { duration: 400, easing: easeOutQuint } },
   magnetism: magnetic.value
