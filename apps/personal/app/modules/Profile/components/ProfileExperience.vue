@@ -19,7 +19,7 @@
                     :entry="entry"
                     :playing="viewActive"
                   />
-                  <template #meta><UiRange :value="entry.years" /></template>
+                  <template #meta>{{ entry.years }}</template>
                 </UiRow>
               </button>
             </magic-accordion-trigger>
@@ -38,7 +38,7 @@
         <li v-else>
           <UiRow :interactive="false">
             <ProfileExperienceTitle :entry="entry" />
-            <template #meta><UiRange :value="entry.years" /></template>
+            <template #meta>{{ entry.years }}</template>
           </UiRow>
         </li>
       </template>

@@ -308,8 +308,7 @@ python3 apps/personal/scripts/cv-font.py
 `server/utils/cv/typeset.ts` adds the optical corrections the kerning leaves: a
 comma or full stop moves in to meet an r, and the dash in a range of years gets
 a thin space either side. They apply to one-line text only, such as titles and
-dates, because the engine may break a line wherever two text runs meet. The
-site sets that dash the same way with `UiRange`.
+dates, because the engine may break a line wherever two text runs meet.
 
 ## Preview image
 

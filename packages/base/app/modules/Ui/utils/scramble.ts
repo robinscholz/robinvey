@@ -75,8 +75,8 @@ const LETTERS = [
 const SYMBOLS = [...'#$%&()*+,.:;<=>@[\\]^_{~']
 
 // Only symbols about as wide as the letter stand in for it, in em of the text,
-// so a line keeps its length in either face.
-const TOLERANCE = 0.07
+// so a line keeps its length.
+const TOLERANCE = 0.12
 
 // Each line is kept no wider than it ends up, and no more than WINDOW
 // narrower, so its right edge holds still. Symbols lose the kerning of the

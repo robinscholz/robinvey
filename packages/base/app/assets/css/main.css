@@ -29,7 +29,6 @@
 
   body {
     margin: 0;
-    font-kerning: normal;
     overflow-x: clip;
     @apply bg-surface-base text-surface text-sm;
   }
