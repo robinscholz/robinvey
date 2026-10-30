@@ -91,16 +91,16 @@ value that contains one:
 summary: 'I build interfaces and the systems underneath them: design systems …'
 ```
 
-| File               | Collection   | Used for                                                                                |
-| ------------------ | ------------ | --------------------------------------------------------------------------------------- |
-| `index.md`         | `pages`      | The intro, the meta description and the colophon                                        |
-| `contact.md`       | `contact`    | The Contact paragraph                                                                   |
-| `profile.yml`      | `profile`    | Name, role, location, email, links and the “Now” line; the CV reads its email and links |
-| `experience/*.yml` | `experience` | Work, newest first by `start`                                                           |
-| `sites/*.yml`      | `sites`      | Sites, newest first by `year`, then in file order, each with a short description        |
-| `projects/*.yml`   | `projects`   | Projects, in file order (`1.mirror.yml` comes first)                                    |
-| `writing/*.yml`    | `writing`    | Articles published elsewhere, newest first by `date`                                    |
-| `cv.yml`           | `cv`         | Everything only the PDF shows: summary, education, etc.                                 |
+| File               | Collection   | Used for                                                                         |
+| ------------------ | ------------ | -------------------------------------------------------------------------------- |
+| `index.md`         | `pages`      | The intro, the meta description and the colophon                                 |
+| `contact.md`       | `contact`    | The Contact paragraph                                                            |
+| `profile.yml`      | `profile`    | Name, role, location, email and links; the CV reads its email and links          |
+| `experience/*.yml` | `experience` | Work, newest first by `start`                                                    |
+| `sites/*.yml`      | `sites`      | Sites, newest first by `year`, then in file order, each with a short description |
+| `projects/*.yml`   | `projects`   | Projects, in file order (`1.mirror.yml` comes first)                             |
+| `writing/*.yml`    | `writing`    | Articles published elsewhere, newest first by `date`                             |
+| `cv.yml`           | `cv`         | Everything only the PDF shows: summary, education, etc.                          |
 
 Write experience and education dates as `'YYYY'` or `'YYYY-MM'`, quoted; a
 year prints as a year, so nothing claims a month nobody wrote down. Leave `end`

@@ -29,7 +29,6 @@ export function profileTransformer(item: ProfileCollectionItem | null) {
     role: item?.role ?? '',
     location: item?.location ?? '',
     email: item?.email ?? '',
-    now: item?.now ?? '',
     links: item?.links ?? [],
   }
 }

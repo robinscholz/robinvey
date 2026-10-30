@@ -5,9 +5,6 @@
       <div class="pb-12 md:pb-24">
         <ProfileCarousel />
       </div>
-      <UiSection label="Now">
-        <p>{{ profile.now }}</p>
-      </UiSection>
       <!-- The lists side by side where there is room, two from xl. -->
       <div class="grid gap-x-12 xl:grid-cols-2">
         <UiSection label="Work">

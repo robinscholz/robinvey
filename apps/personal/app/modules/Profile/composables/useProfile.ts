@@ -30,12 +30,11 @@ export async function useProfile() {
     }
 
     const summary = pageTransformer(page)
-    const person = profileTransformer(profile)
 
     return {
       page: { ...summary, colophon: hold(summary.colophon) },
       contact: contactTransformer(contact),
-      profile: { ...person, now: hold(person.now) },
+      profile: profileTransformer(profile),
       experience: companies.map((entry) => ({
         ...entry,
         company: hold(entry.company),

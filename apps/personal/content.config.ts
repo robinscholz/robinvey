@@ -27,7 +27,6 @@ export default defineContentConfig({
         role: z.string(),
         location: z.string(),
         email: z.string(),
-        now: z.string(),
         links: z.array(z.string()),
       }),
     }),
