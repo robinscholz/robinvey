@@ -1,7 +1,7 @@
 <template>
   <div
     :role="tone === 'danger' ? 'alert' : 'status'"
-    class="bg-surface-base text-surface rounded-component-sm flex w-72 max-w-[calc(100vw-2*var(--magic-toast-padding-x))] gap-3 px-4 py-3.5 shadow-sm"
+    class="bg-surface-base text-surface rounded-component-sm shadow-component flex w-72 max-w-[calc(100vw-2*var(--magic-toast-padding-x))] gap-3 px-4 py-3.5"
     @click="emit('remove')"
   >
     <svg
