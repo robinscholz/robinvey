@@ -1,19 +1,20 @@
-import { sampleEmoji } from '../../utils/sample'
-import type { EmojiSample } from '../../utils/sample'
-
 interface Deadline {
   timeRemaining: () => number
 }
 
-// Samples a turn, at most, between frames.
+type Draw = (symbol: string) => HTMLCanvasElement | undefined
+
+// Tiles a turn, at most, between frames.
 const BATCH = 8
 
-// One still for each emoji in the field, drawn a few at a time while the
+// One tile for each emoji in the field, drawn a few at a time while the
 // browser is idle, so a field of hundreds fills in without holding a frame.
-// An emoji the system cannot draw is kept as null, so it is not tried again.
-export function useGardenSamples(dots: number) {
+// The tiles are read on every frame, so the map is plain.
+export function useGardenTiles(draw: Draw) {
+  // Public state
+  const tiles = new Map<string, HTMLCanvasElement>()
+
   // Private state
-  const samples = shallowReactive(new Map<string, EmojiSample | null>())
   const queue: Array<string> = []
   const pending = new Set<string>()
   let scheduled = false
@@ -44,7 +45,10 @@ export function useGardenSamples(dots: number) {
         break
       }
       pending.delete(symbol)
-      samples.set(symbol, sampleEmoji({ symbol, dots }) ?? null)
+      const tile = draw(symbol)
+      if (tile) {
+        tiles.set(symbol, tile)
+      }
       count++
     }
     schedule()
@@ -53,7 +57,7 @@ export function useGardenSamples(dots: number) {
   // Public functions
   function request(symbols: Array<string>) {
     for (const symbol of symbols) {
-      if (!samples.has(symbol) && !pending.has(symbol)) {
+      if (!tiles.has(symbol) && !pending.has(symbol)) {
         pending.add(symbol)
         queue.push(symbol)
       }
@@ -62,9 +66,9 @@ export function useGardenSamples(dots: number) {
   }
 
   return {
-    samples,
+    tiles,
     request,
   }
 }
 
-export type UseGardenSamplesReturn = ReturnType<typeof useGardenSamples>
+export type UseGardenTilesReturn = ReturnType<typeof useGardenTiles>

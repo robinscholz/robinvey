@@ -1,12 +1,12 @@
-export interface EmojiSample {
-  // The dots each colour lights, in the order of the colours.
-  layers: Array<Array<number>>
-  colors: Array<string>
-}
-
-interface SamplePayload {
-  symbol: string
+interface TilePayload {
+  // Without a symbol the tile is a blank matrix.
+  symbol?: string
   dots: number
+  size: number
+  // Device pixels to a CSS pixel.
+  scale: number
+  // The colour of an unlit dot.
+  inactive: string
 }
 
 type Channels = [red: number, green: number, blue: number]
@@ -21,9 +21,8 @@ const CELL = 6
 const THRESHOLD = 0.35
 const FIT = 0.9
 
-// Colours are rounded to this many levels a channel, so a shaded area
-// becomes one layer.
-const LEVELS = 6
+// An unlit dot shows this much of its colour.
+const DIM = 0.35
 
 const FONT =
   '"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif'
@@ -85,26 +84,14 @@ function drawGlyph(symbol: string): HTMLCanvasElement | undefined {
   return cropped.canvas
 }
 
-function level(channel: number): number {
-  const step = 255 / (LEVELS - 1)
-  return Math.round(Math.round(channel / step) * step)
-}
-
-function toColor([red, green, blue]: Channels): string {
-  return `rgb(${level(red)} ${level(green)} ${level(blue)})`
-}
-
-// One still of the emoji on the matrix, a layer for each colour it has.
-// Nothing for an emoji the system has no glyph for.
-export function sampleEmoji({
-  symbol,
-  dots,
-}: SamplePayload): EmojiSample | undefined {
+// The colour of each dot the emoji covers, by dot index.
+function sample(symbol: string, dots: number): Map<number, Channels> {
+  const colors = new Map<number, Channels>()
   const glyph = drawGlyph(symbol)
   const side = dots * CELL
   const context = createContext(side, side)
   if (!glyph || !context) {
-    return undefined
+    return colors
   }
 
   const scale = (FIT * side) / Math.max(glyph.width, glyph.height)
@@ -119,8 +106,6 @@ export function sampleEmoji({
   )
 
   const { data } = context.getImageData(0, 0, side, side)
-  const buckets = new Map<string, Array<number>>()
-
   for (let dot = 0; dot < dots * dots; dot++) {
     const left = (dot % dots) * CELL
     const top = Math.floor(dot / dots) * CELL
@@ -136,24 +121,42 @@ export function sampleEmoji({
         total[2] += (data[offset + 2] ?? 0) * weight
       }
     }
-    if (alpha / (CELL * CELL * 255) < THRESHOLD) {
-      continue
-    }
-    const color = toColor([
-      total[0] / alpha,
-      total[1] / alpha,
-      total[2] / alpha,
-    ])
-    const layer = buckets.get(color)
-    if (layer) {
-      layer.push(dot)
-    } else {
-      buckets.set(color, [dot])
+    if (alpha / (CELL * CELL * 255) >= THRESHOLD) {
+      colors.set(dot, [total[0] / alpha, total[1] / alpha, total[2] / alpha])
     }
   }
+  return colors
+}
 
-  if (buckets.size === 0) {
+// One still of the emoji as a dot matrix, with the geometry MagicDotMatrix
+// draws: round dots three times as wide as the gaps between them.
+export function drawTile({
+  symbol,
+  dots,
+  size,
+  scale,
+  inactive,
+}: TilePayload): HTMLCanvasElement | undefined {
+  const context = createContext(size * scale, size * scale)
+  if (!context) {
     return undefined
   }
-  return { colors: [...buckets.keys()], layers: [...buckets.values()] }
+  const colors = symbol ? sample(symbol, dots) : new Map<number, Channels>()
+  const gap = size / (4 * dots - 1)
+  const dot = (size - (dots - 1) * gap) / dots
+
+  context.scale(scale, scale)
+  for (let index = 0; index < dots * dots; index++) {
+    const color = colors.get(index)
+    const x = (index % dots) * (dot + gap) + dot / 2
+    const y = Math.floor(index / dots) * (dot + gap) + dot / 2
+    context.globalAlpha = color ? 1 : DIM
+    context.fillStyle = color
+      ? `rgb(${Math.round(color[0])} ${Math.round(color[1])} ${Math.round(color[2])})`
+      : inactive
+    context.beginPath()
+    context.arc(x, y, dot / 2, 0, Math.PI * 2)
+    context.fill()
+  }
+  return context.canvas
 }
