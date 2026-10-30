@@ -17,7 +17,7 @@
       </p>
       <form class="mt-20 md:mt-32" @submit.prevent="submit">
         <fieldset :disabled="pending !== null">
-          <div class="flex flex-col gap-y-3">
+          <div class="flex flex-col gap-y-1">
             <WishFields v-model="draft" />
           </div>
           <p class="mt-16 flex items-baseline justify-end gap-x-8">

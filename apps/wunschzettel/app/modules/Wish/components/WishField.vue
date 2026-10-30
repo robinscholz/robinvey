@@ -1,5 +1,5 @@
 <template>
-  <label class="flex items-baseline gap-x-6 pointer-coarse:text-base">
+  <label class="flex items-baseline gap-x-[2ch] pointer-coarse:text-base">
     <!-- iOS zooms into a field set under 16px, so on a touch screen the row
          takes the base size. -->
     <span class="text-surface-muted w-[10ch] shrink-0">{{ label }}</span>
@@ -7,7 +7,7 @@
       v-model="model"
       :type="type"
       :placeholder="placeholder"
-      class="field-underline placeholder:text-surface-subtle focus-visible:focus-underline min-w-0 flex-1 bg-transparent py-1 outline-hidden"
+      class="field-underline placeholder:text-surface-subtle focus-visible:focus-underline min-w-0 flex-1 bg-transparent py-0.5 outline-hidden"
       autocomplete="off"
       spellcheck="false"
     />

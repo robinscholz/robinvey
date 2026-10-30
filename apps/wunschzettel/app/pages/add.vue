@@ -6,7 +6,7 @@
           <WishCard :wish="wish" preview />
         </ul>
         <div class="xl:col-span-2 xl:max-w-xl">
-          <form class="flex flex-col gap-y-3" @submit.prevent="submit">
+          <form class="flex flex-col gap-y-1" @submit.prevent="submit">
             <WishFields v-model="draft" />
           </form>
           <p class="text-surface-muted mt-8">
