@@ -29,8 +29,10 @@ type Pass = 'in' | 'out'
 // tint the sampler suggests is left out.
 const INACTIVE = '--magic-dot-matrix-inactive-color'
 
-// How long each row of a pass shows before the next.
-const PASS_INTERVAL = 30
+// A pass moves this many rows a frame, and holds each frame this long: a
+// third of a second or so for the whole matrix.
+const PASS_STEP = 2
+const PASS_INTERVAL = 20
 
 // The emoji’s motion loops from the moment it is drawn. With reduced motion
 // the emoji stands still on a full frame.
@@ -98,18 +100,20 @@ function rows(
   )
 }
 
-// The frame built up a row at a time from the bottom: each frame holds the
-// rows from the bottom up to its own, and the last holds them all.
+// The frame built up from the bottom: each frame holds the rows from the
+// bottom up to its own, and the last holds them all.
 function rise(target: DotMatrixLayeredFrame): Array<DotMatrixLayeredFrame> {
-  return Array.from({ length: dots }, (_, index) =>
-    rows(target, (row) => row >= dots - 1 - index)
+  const steps = Math.ceil(dots / PASS_STEP)
+  return Array.from({ length: steps }, (_, index) =>
+    rows(target, (row) => row >= dots - (index + 1) * PASS_STEP)
   )
 }
 
-// The frame taken down a row at a time from the top, to nothing.
+// The frame taken down from the top, to nothing.
 function fall(target: DotMatrixLayeredFrame): Array<DotMatrixLayeredFrame> {
-  return Array.from({ length: dots }, (_, index) =>
-    rows(target, (row) => row > index)
+  const steps = Math.ceil(dots / PASS_STEP)
+  return Array.from({ length: steps }, (_, index) =>
+    rows(target, (row) => row >= (index + 1) * PASS_STEP)
   )
 }
 

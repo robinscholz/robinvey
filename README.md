@@ -163,8 +163,8 @@ widths set in the `robinvey` theme.
 ## Intro
 
 The text is simply there once the font is. The dot matrix under the intro
-carries the moment: the emoji builds up a row at a time from the bottom, a
-row every 30ms, before the motion plays. `UiEmoji` does this with `boot`. When its emoji changes, as it does with
+carries the moment: the emoji builds up from the bottom, two rows a frame,
+in about a third of a second, before the motion plays. `UiEmoji` does this with `boot`. When its emoji changes, as it does with
 every click on the panel, the old picture goes first, a row at a time from
 the top, and the new one builds up after it. Visitors who prefer reduced
 motion see the emoji at rest.
