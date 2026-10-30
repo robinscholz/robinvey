@@ -23,9 +23,10 @@
                   <template #meta><UiRange :value="entry.years" /></template>
                   <template #mark>
                     <!-- Both marks are in the HTML, so the first click waits
-                         for no icon. -->
-                    <UiIcon name="plus" :class="{ hidden: viewActive }" />
-                    <UiIcon name="minus" :class="{ hidden: !viewActive }" />
+                         for no icon. v-show hides one inline, which no
+                         display class outranks. -->
+                    <UiIcon v-show="!viewActive" name="plus" />
+                    <UiIcon v-show="viewActive" name="minus" />
                   </template>
                 </UiRow>
               </button>
