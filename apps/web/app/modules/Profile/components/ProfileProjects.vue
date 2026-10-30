@@ -32,13 +32,11 @@
             </button>
           </magic-accordion-trigger>
           <magic-accordion-content>
-            <UiRow
-              as="div"
-              :interactive="false"
-              class="text-surface-muted pt-1 pb-[1lh]"
-            >
+            <!-- The description is what the row opens for, so it is set in
+                 the full ink; only the link under it steps back. -->
+            <UiRow as="div" :interactive="false" class="pt-1 pb-[1lh]">
               <p>{{ project.description }}</p>
-              <p v-if="project.url">
+              <p v-if="project.url" class="text-surface-muted">
                 <UiLink :to="project.url">{{ project.link }}</UiLink>
               </p>
             </UiRow>

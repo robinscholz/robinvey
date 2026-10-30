@@ -31,13 +31,11 @@
               </button>
             </magic-accordion-trigger>
             <magic-accordion-content>
-              <UiRow
-                as="div"
-                :interactive="false"
-                class="text-surface-muted pt-1 pb-[1lh]"
-              >
+              <!-- The summary is what the row opens for, so it is set in the
+                   full ink; only the link under it steps back. -->
+              <UiRow as="div" :interactive="false" class="pt-1 pb-[1lh]">
                 <p v-if="entry.summary">{{ entry.summary }}</p>
-                <p v-if="entry.url">
+                <p v-if="entry.url" class="text-surface-muted">
                   <UiLink :to="entry.url">{{ entry.link }}</UiLink>
                 </p>
               </UiRow>
