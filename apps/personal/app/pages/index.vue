@@ -8,9 +8,9 @@
       <UiSection label="Now">
         <p>{{ profile.now }}</p>
       </UiSection>
-      <!-- The lists side by side where there is room: two from md, four
+      <!-- The lists side by side where there is room: two from xl, four
            from 2xl. -->
-      <div class="grid gap-x-12 md:grid-cols-2 2xl:grid-cols-4">
+      <div class="grid gap-x-12 xl:grid-cols-2 2xl:grid-cols-4">
         <UiSection label="Work">
           <ProfileExperience :experience="experience" />
         </UiSection>
