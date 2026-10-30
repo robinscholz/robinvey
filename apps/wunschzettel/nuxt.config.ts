@@ -81,6 +81,19 @@ export default defineNuxtConfig({
     head: {
       htmlAttrs: { lang: 'en' },
       link: [
+        // Mirage comes from the MaaS font server, as on the site; the sheet
+        // is critical, so the face is asked for before anything else.
+        {
+          rel: 'preconnect',
+          href: 'https://fonts.maas.engineering',
+          crossorigin: 'anonymous',
+        },
+        {
+          rel: 'stylesheet',
+          href: 'https://fonts.maas.engineering/mirage/1.1.3/stylesheet.css',
+          crossorigin: 'anonymous',
+          tagPriority: 'critical',
+        },
         { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' },
         {
           rel: 'icon',
