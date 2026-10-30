@@ -10,7 +10,7 @@ import {
 } from '@jasy/pdf'
 import { CV_FONT } from './fonts'
 import { typeset } from './typeset'
-import type { JasyDocument, PDFElement, TextOptions } from '@jasy/pdf'
+import type { JasyDocument, PDFElement } from '@jasy/pdf'
 import type { TypesetPart } from './typeset'
 
 interface CvDocumentPayload {
@@ -55,10 +55,8 @@ interface ProjectEntryPayload {
   names: Array<string>
 }
 
-// The site’s ink and muted ink in sRGB: `app.color.surface.fg` and
-// `fg.muted` of the light mode, which the PDF engine takes no oklch() for.
-const INK = '#161615'
-const MUTED = '#595954'
+// Black on white, as print takes it: the page has one tone.
+const INK = '#000000'
 
 // The site’s type at the page’s scale: one size, on 1.6 leading, in a
 // measure of about 64 characters, flush left in the margin.
@@ -68,7 +66,7 @@ const MEASURE = 420
 const MARGIN = { top: 48, right: 48, bottom: 40, left: 48 }
 
 // The dates beside an entry, as on the site’s rows: a column of ten
-// characters in the muted ink, two characters from the text.
+// characters, two characters from the text.
 const META_WIDTH = 56
 const GUTTER = 10
 
@@ -78,8 +76,6 @@ const LINE = SIZE * LINE_HEIGHT
 const SECTION_SPACE = 2 * LINE
 const HEADING_SPACE = LINE / 2
 const ENTRY_GAP = 3
-
-const muted: TextOptions = { color: MUTED }
 
 const NO_BREAK_SPACE = ' '
 
@@ -106,9 +102,7 @@ function paragraphs(payload: ProsePayload): Array<PDFElement> {
 // A row of the site’s lists: the dates in the margin, the entry beside them.
 function row({ meta, children }: RowPayload): PDFElement {
   return Row({ gap: GUTTER, align: 'start' }, [
-    Box({ width: META_WIDTH }, [
-      copy({ parts: [{ text: meta, style: muted }] }),
-    ]),
+    Box({ width: META_WIDTH }, [copy({ parts: [{ text: meta }] })]),
     Expanded(Column({ gap: ENTRY_GAP }, children)),
   ])
 }
@@ -130,10 +124,10 @@ function section({ title, children }: SectionPayload): Array<PDFElement> {
   )
 }
 
-// Set like the site’s header: the name, a line, then the summary.
+// The name with the role under it, a line, then the summary.
 function header({ profile, cv, names }: HeaderPayload): PDFElement {
   return Column({ gap: LINE }, [
-    Text(profile.name, { role: 'h1' }),
+    Column([Text(profile.name, { role: 'h1' }), Text(profile.role)]),
     Text(prose({ text: cv.summary, names })),
   ])
 }
@@ -146,13 +140,12 @@ function contact(profile: Profile): PDFElement {
   return Column(entries.map(({ text, href }) => Text(text, { href })))
 }
 
-// The link under an entry, in the muted ink, as under an open row on the site.
+// The link under an entry, as under an open row on the site.
 function linkLine(entry: { url?: string; link: string }): Array<PDFElement> {
-  return entry.url ? [Text(entry.link, { ...muted, href: entry.url })] : []
+  return entry.url ? [Text(entry.link, { href: entry.url })] : []
 }
 
-// The company leads and the role follows, in the ink. The site shows the
-// summary alone; the CV carries on into the highlights, which are written
+// The company leads and the role follows. The site shows the summary alone; the CV carries on into the highlights, which are written
 // as sentences, so each role reads as one paragraph.
 function experienceEntry({ entry, names }: ExperienceEntryPayload): PDFElement {
   const head = entry.role ? `${entry.company}, ${entry.role}` : entry.company

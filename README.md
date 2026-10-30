@@ -279,13 +279,13 @@ for screen readers, every link clickable, with a document title so the
 browser tab reads “Robin Vey, CV”. The build prerenders it to a static
 `cv.pdf`.
 
-It is set like the site: the name, the summary a line below, then one
-section after another in a measure of about 64 characters, each heading half
-a line over its block, with the dates beside each entry in a margin column
-in the muted ink. Space comes in lines of text: two above a section, one
+It is set like the site, black on white: the name and role, the summary a
+line below, then one section after another in a measure of about 64
+characters, each heading half a line over its block, with the dates beside
+each entry in a margin column. Space comes in lines of text: two above a section, one
 between the entries of a section. Each role reads as one paragraph under
 its company and role, and the site a role or project links to sits under
-that in the muted ink, as under an open row on the site. Contact comes
+that, as under an open row on the site. Contact comes
 last.
 
 The PDF engine embeds static TrueType faces, reads kerning only from plain
