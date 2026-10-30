@@ -116,23 +116,22 @@ disagree.
 
 ## The look
 
-The page is set flush left, like a typed letter. Section labels sit in a margin
-column; each list is a ledger of a date or label, the entry and a mark (`+` to
-open, `↗` to leave). The grid is measured in `ch`, so every column lands on the
-same character grid. Structure comes from whitespace and typed rules: every
-section opens with a line of one glyph, set with `UiRule` at the size and weight
-of the text in the muted ink. Each page load shuffles `∗`, `–`, `+`, `×`, `#`,
-`%` and `=` across the seven rules. ABC Areal has no asterisk operator, so `∗`
-comes from the `system-ui` fallback. The server renders the rules empty, so the shuffle happens in the
-browser and differs from one visit to the next. Every rule keeps the same
-visible gap between glyphs, 0.35em of the text from ink to ink, whatever each
-glyph’s own side bearings; it fits as many whole glyphs as the width allows,
-puts the first and last on the text inset, centres the glyph on the middle of a
-capital, and measures again whenever the width or the type size changes.
+The page is set flush left in one column, like a typed letter: the name, the
+intro, then one section after another, each a heading half a line over its
+block, all in a 64ch measure. Each list is a ledger of a date and the entry; a row that leaves
+the site carries `↗` after its title, and a row in Work or Projects opens on a
+click to show its summary. Structure comes from whitespace alone. The margin is
+20px on phones, 40px from the `md` breakpoint and 64px from `lg`.
 
-Everything is set in ABC Areal Semi Mono at one size, `text-sm` on phones and
-`text-base` from the `sm` breakpoint, in two weights, regular and
-`font-medium`. Tailwind’s other sizes and weights are reset in
+Under the intro, the 🚠 emoji sits on a dot matrix 32ch wide, a dot to a
+character, drawn by vue-equipment’s MagicDotMatrix and its emoji tooling,
+which samples the system’s emoji glyph onto the grid and loops the motion it
+picks for it; a click swaps it for 🚡 and back. `UiEmoji` in the Ui module
+draws any emoji that way, at the dot count and in the box of whoever places
+it.
+
+Everything is set in ABC Areal Semi Mono at one size and weight, 15px on 24px
+leading. Tailwind’s other sizes and weights are reset in
 `packages/base/app/assets/css/tailwind.css`, so no other size can creep in.
 
 The font is the variable ABC Areal Superfamily with its `MONO` axis fixed at
@@ -183,8 +182,8 @@ keeps it until it closes, so open rows stay easy to find.
 ## Intro
 
 On load, the text scrambles through ASCII symbols and settles into place in
-reading order within half a second, while the rules type themselves out glyph
-by glyph. Each symbol is about as wide as the letter it stands in for, and
+reading order within half a second. Each symbol is about as wide as the letter
+it stands in for, and
 every line’s breaks are pinned while it runs, so nothing shifts or rewraps.
 Mark a container with `data-scramble` to include its text; anything
 `aria-hidden` is left alone.
@@ -217,8 +216,7 @@ hydrated.
 
 ## Colour mode
 
-The colour mode menu, top right from `lg` and in the colophon below that,
-offers Dark, Light and System. A choice that changes the page goes through
+The colour mode menu in the colophon offers Dark, Light and System. A choice that changes the page goes through
 the same choreography as the typeface switch: scrambled, hidden, changed,
 settled. One that leaves the page as it is, System on a system already
 showing that mode, is kept without it. The `theme-color` tags follow the
@@ -229,7 +227,7 @@ follows on `<html>`, so scrollbars and form controls match.
 
 ## Garden
 
-A garden of ASCII flowers grows underneath the page. Drag the page’s left or
+A field of emoji lies underneath the page. Drag the page’s left or
 right edge towards the middle to uncover it, or click the edge, and the page
 slides aside with it. Let go more than 48 pixels from where you started, or
 flick, and the page snaps to uncover half the viewport, or three quarters of it
@@ -252,9 +250,7 @@ and slides along with the clip by a transform of its own, which counts the
 magnetic pull as well as the drag, so a drag or a click after a pull carries on
 from where the page already is. The transform is only set while the page is
 away from rest, since a transformed ancestor pins fixed elements to the page
-instead of the viewport. The colour mode switch is sticky
-rather than fixed for the same reason, so it slides aside with the page
-wherever the page is scrolled to. The garden is a fixed layer behind the page
+instead of the viewport. The garden is a fixed layer behind the page
 on `bg-surface-low`, and always dark: it carries `data-color-mode="dark"`,
 which scopes the dark mode’s tokens to it, so it stays black with the dark hues
 whichever mode the page is in. It stays hidden until an edge moves, so it never
@@ -262,46 +258,37 @@ shows through an overscroll. The page’s shadow comes from an empty box in the
 garden layer over the part of the page in view, since the clip would cut off a
 shadow cast by the page itself.
 
-The garden is set in ABC Areal Mono, the font’s `MONO` axis at 100, where every
-ASCII glyph is 0.61em wide, so the art sits on an exact grid of cells. Each
-visit plants a new garden from a random seed, as soon as the page has loaded.
-Tall flowers stand at the back, shorter ones in front of them, then blades,
-daisies and grass, all sized to the smaller of the viewport’s width and height.
-A resize regrows the same garden to the new size. Only the seven hover hues
-colour it: each flower takes a hue for its petals, the next one for its stripes
-and a third for its eye, on green or yellow stems.
+The field is every emoji the system draws as a single code point, 1,148 of
+them, each a still on a 48px dot matrix of twelve dots a side, one every 80px,
+on a grid without an end. A cell draws its emoji from a hash of its place and a
+seed drawn for the visit, so the field is laid out afresh each time and never
+repeats. The stills are drawn in the browser: `utils/tile.ts` draws the glyph
+with the system’s emoji font onto a canvas, crops it to its ink, reads it off
+at six pixels a dot and paints the dots the way MagicDotMatrix would, round and
+three times as wide as their gaps, onto a tile. `useGardenTiles` draws the
+tiles a few at a time while the browser is idle, and the field paints the
+tiles in view onto one canvas, so hundreds of emoji cost the page nothing in
+elements.
 
-The wind blows one way for a whole visit, in gusts that travel across the
-garden. Each plant hangs on a damped spring and follows the lean the wind gives
-it at its spot, so tall plants swing slowly and lag behind a gust while short
-ones swing quickly. A flower’s head moves as a whole and its stem bends below
-it. Wherever the stem steps sideways from one row to the next, its stroke turns
-from `|` to `/` or `\`, so the stem stays joined. Grass and blades bend along
-their length and tip their strokes over in strong gusts. Sweeping the pointer
-across a plant pushes it the way the pointer moves. The wind only blows while
-the garden shows, and redraws it 30 times a second. Each plant starts at the
-lean the wind already gives it, so the garden sways from the first frame.
-Visitors who prefer reduced motion find the garden still.
+The field drifts up and to the left while it shows, a few pixels a second, and
+the wheel pans it. A cell the pointer rests on gets a matrix of its own over
+its still, `UiEmoji`, which plays the emoji’s motion through the plugin’s emoji
+tooling and loops it while the pointer stays. Visitors who prefer reduced
+motion find the field still.
 
-Each species is a function in
-`packages/base/app/modules/Garden/utils/plants.ts` that draws one plant from a
-size and a height. `grow.ts` lays the rows out, `wind.ts` sets the gusts and
-`compose.ts` lays every plant into the grid at its current lean. `GardenPlot`
-grows the plants and keeps them swaying in whatever box it fills; `GardenBed`
-puts it behind the page and adds the tray’s parts, the reveal, the shadow and
-the click that closes it.
+`GardenField` lists the cells in view, paints them and hands the pointer’s cell
+to `UiEmoji`; `GardenBed` puts the field behind the page and adds the tray’s
+parts, the reveal, the shadow and the click that closes it.
 
-An address that leads nowhere gets the garden out in the open, with no page
-over it: `apps/personal/app/error.vue` sets a header in the page’s grid over a
-`GardenPlot` that fills the rest of the viewport, with the wind blowing from
-the start. Its emoji spins through the flowers and lands on a wilted one. The
-static build’s `404.html` boots the app in the browser, which finds no page and
-shows the error page; `not_found_handling` in `wrangler.jsonc` serves it.
-Until the app has booted, `app/spa-loading-template.html` stands in with the
-dark ground and the header, so the page never flashes white. The plot is a
-lazy component: on the home page it hydrates once the browser is idle, so its
-code stays out of the intro’s way, and on the error page it loads with the
-page.
+An address that leads nowhere gets the field out in the open, with no page
+over it: `apps/personal/app/error.vue` sets a header over a `GardenField` that
+fills the rest of the viewport, drifting from the start. The static build’s
+`404.html` boots the app in the browser, which finds no page and shows the
+error page; `not_found_handling` in `wrangler.jsonc` serves it. Until the app
+has booted, `app/spa-loading-template.html` stands in with the dark ground and
+the header, so the page never flashes white. The field is a lazy component: on
+the home page it hydrates once the browser is idle, so its code stays out of
+the intro’s way, and on the error page it loads with the page.
 
 ## Titles on phones
 
@@ -315,17 +302,16 @@ From `md` up, and for visitors who prefer reduced motion, titles wrap.
 Icons come from Symbols, the MaaS icon set, served as an Iconify collection
 from `https://symbols.maas.earth`. Use `UiIcon` with the symbol’s name; it
 picks the `maas` collection and weight 300, a step lighter than the text, so
-the marks in each row stay quiet:
+the arrows after the titles stay quiet:
 
 ```vue
 <UiIcon name="arrow-n-e" />
-<UiIcon name="plus" :weight="400" />
+<UiIcon name="arrow-n-e" :weight="400" />
 ```
 
 Icons are inlined into the prerendered HTML, with five seconds for each to
-arrive at build time. Both marks of a row that opens, `plus` and `minus`, are
-in the HTML, one of them hidden, so the first click waits for no icon; the
-colour mode switch fetches its menu’s icons as soon as it is on the page.
+arrive at build time; the colour mode switch fetches its menu’s icons as soon
+as it is on the page.
 
 The favicon is the 🚠 emoji: an SVG for the browsers that draw it, and
 `favicon.png` with Apple’s art for Safari, which takes no SVG, next to
@@ -347,8 +333,8 @@ tagged for screen readers, every link clickable, with a document title
 so the browser tab reads “Robin Vey, CV”. The build prerenders it to a
 static `cv.pdf`.
 
-It follows the site: name, role and location in the margin column with the
-summary beside them, then one section after another, Contact last. Space comes
+Name, role and location sit in a margin column with the summary beside them,
+then one section after another, Contact last. Space comes
 in lines of text: one between the entries of a section, two above a section.
 Each role reads as one paragraph. Project titles link out and carry the site’s
 outbound arrow after them, which links too; company names and the contact lines
