@@ -18,7 +18,6 @@ interface CvDocumentPayload {
   experience: Array<Experience>
   projects: Array<Project>
   cv: Cv
-  updated: string
 }
 
 interface SectionPayload {
@@ -94,17 +93,10 @@ function copy({ parts }: CopyPayload): PDFElement {
 }
 
 // Running text, with the names the CV lists kept on one line and each short
-// word kept with the word after it: their spaces become no-break spaces,
-// which the engine never breaks at. Names go first: with the a in Magic as a
-// Service already held, the name would no longer match.
+// word kept with the word after it, by no-break spaces. Names go first: with
+// the a in Magic as a Service already held, the name would no longer match.
 function prose({ text, names }: ProsePayload): string {
-  return names
-    .reduce(
-      (result, name) =>
-        result.replaceAll(name, name.replaceAll(' ', NO_BREAK_SPACE)),
-      text
-    )
-    .replace(SHORT_WORD, `$1${NO_BREAK_SPACE}`)
+  return holdNames({ text, names }).replace(SHORT_WORD, `$1${NO_BREAK_SPACE}`)
 }
 
 function paragraphs(payload: ProsePayload): Array<PDFElement> {
@@ -189,7 +181,7 @@ function projectEntry({ project, names }: ProjectEntryPayload): PDFElement {
 }
 
 export function cvDocument(payload: CvDocumentPayload): JasyDocument {
-  const { profile, experience, projects, cv, updated } = payload
+  const { profile, experience, projects, cv } = payload
   const names = [
     ...experience.map((entry) => entry.company),
     ...cv.education.map((entry) => entry.institution),
@@ -220,11 +212,6 @@ export function cvDocument(payload: CvDocumentPayload): JasyDocument {
     { title: 'Contact', children: [contact(profile)] },
   ]
 
-  const footer = Padding(
-    { top: 12 },
-    Text(`Updated ${updated}`, { ...muted, align: 'right' })
-  )
-
   return Document(
     {
       font: CV_FONT,
@@ -234,7 +221,7 @@ export function cvDocument(payload: CvDocumentPayload): JasyDocument {
       meta: { title: `${profile.name}, CV`, author: profile.name },
     },
     [
-      Page({ size: 'A4', margin: MARGIN, footer }, [
+      Page({ size: 'A4', margin: MARGIN }, [
         Box({ width: MEASURE }, [
           header({ profile, cv, names }),
           ...sections.flatMap((entry) => section(entry)),

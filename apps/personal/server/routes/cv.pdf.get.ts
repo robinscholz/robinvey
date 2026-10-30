@@ -5,8 +5,6 @@ import { loadCvFonts } from '../utils/cv/fonts'
 import { withDocumentInfo } from '../utils/cv/info'
 
 export default defineEventHandler(async (event) => {
-  const { updatedAt } = useRuntimeConfig(event).public
-
   const [profile, experience, projects, cv, fonts] = await Promise.all([
     queryCollection(event, 'profile').first(),
     queryCollection(event, 'experience').order('start', 'DESC').all(),
@@ -23,7 +21,6 @@ export default defineEventHandler(async (event) => {
     experience: experience.map(experienceTransformer),
     projects: projects.map(projectTransformer),
     cv: cvTransformer(cv),
-    updated: formatLongMonth(updatedAt),
   })
 
   const rendered = await renderToBytes(document, {

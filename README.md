@@ -121,7 +121,9 @@ intro, then one section after another, each a heading half a line over its
 block, all in a 64ch measure. Each list is a ledger of a date and the entry; a row that leaves
 the site carries `↗` after its title, and a row in Work or Projects opens on a
 click to show its summary. Structure comes from whitespace alone. The margin is
-20px on phones, 40px from the `md` breakpoint and 64px from `lg`.
+20px on phones, 40px from the `md` breakpoint and 64px from `lg`. The names the
+page lists, the companies, the projects and the sites, never break across a
+line wherever they appear, and nor does a link in the prose.
 
 Under the intro, the 🚠 emoji sits on a dot matrix 32ch wide, a dot to a
 character, drawn by vue-equipment’s MagicDotMatrix and its emoji tooling,
@@ -284,7 +286,7 @@ in the muted ink. Space comes in lines of text: two above a section, one
 between the entries of a section. Each role reads as one paragraph under
 its company and role, and the site a role or project links to sits under
 that in the muted ink, as under an open row on the site. Contact comes
-last, and the footer carries the date of the build.
+last.
 
 The PDF engine embeds static TrueType faces, reads kerning only from plain
 pair-positioning lookups, which Mirage wraps in Extension lookups, and reads
