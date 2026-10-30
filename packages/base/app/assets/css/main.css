@@ -34,11 +34,7 @@
   }
 
   ::selection {
-    background-color: color-mix(
-      in oklch,
-      var(--app-color-surface-fg) 15%,
-      transparent
-    );
+    background-color: var(--app-color-accent-bg-muted);
   }
 
   @media (prefers-reduced-motion: reduce) {
