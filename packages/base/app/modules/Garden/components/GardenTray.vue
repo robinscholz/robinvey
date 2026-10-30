@@ -11,7 +11,12 @@
           <slot />
         </div>
       </magic-tray-transform>
-      <div v-if="opened" class="absolute inset-0" @click="close" />
+      <!-- While a side is open, the part of the page still in view is a drag
+           surface for it, so the page can be pushed shut from anywhere on
+           it; a tap closes it too. -->
+      <magic-tray-trigger v-if="opened" :side="opened" as-child>
+        <div class="absolute inset-0" @click="close" />
+      </magic-tray-trigger>
       <template #handle="{ side }">
         <div class="size-full" @click="toggle(side)" />
       </template>
@@ -22,6 +27,7 @@
 <script setup lang="ts">
 import { easeOutQuint } from '@maas/vue-equipment/utils'
 import { useEventListener, useMediaQuery } from '@vueuse/core'
+import { useGardenPeek } from '../composables/private/useGardenPeek'
 import { useGardenTray } from '../composables/private/useGardenTray'
 import { TrayIds } from '../utils/enums'
 import type { MagicTrayOptions } from '@maas/vue-equipment/plugins/MagicTray'
@@ -30,16 +36,31 @@ import type { MagicTrayOptions } from '@maas/vue-equipment/plugins/MagicTray'
 // too little garden to see.
 const OPEN = { narrow: 0.75, wide: 0.5 }
 
+// How far the right edge pulls back towards a cursor, in pixels, and the
+// band it does it in: the pull begins as the cursor comes within `start` of
+// the edge and is complete at `stop`.
+const PULL = 24
+const BAND = { start: 96, stop: 32 }
+
 const { opened, engaged, toggle, close } = useGardenTray()
+useGardenPeek()
 
 const wide = useMediaQuery('(width >= 48rem)')
+
+// Only a cursor can near an edge; a finger is on it or it is not. So the
+// pull is for fine pointers, and for visitors who allow motion.
+const magnetic = useMediaQuery(
+  '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)'
+)
 
 const open = computed(() => (wide.value ? OPEN.wide : OPEN.narrow))
 
 // Once one side moves, the other side’s edge cannot be dragged until the
 // first is back at rest. The page slides with the edge only while it is away
 // from rest, as a transformed ancestor would pin the page’s fixed elements to
-// the page instead of the viewport.
+// the page instead of the viewport. At rest, the right edge pulls back
+// towards a cursor nearing it, uncovering a sliver of the garden: an
+// invitation to drag.
 const options = computed<MagicTrayOptions>(() => ({
   snapPoints: {
     left: [0, open.value],
@@ -48,6 +69,9 @@ const options = computed<MagicTrayOptions>(() => ({
   handles: engaged.value ? { [engaged.value]: true } : true,
   threshold: { distance: 48 },
   animation: { snap: { duration: 400, easing: easeOutQuint } },
+  magnetism: magnetic.value
+    ? { sides: { right: { 0: 'inner' } }, radius: BAND, pull: PULL }
+    : undefined,
 }))
 
 useEventListener('keydown', (event: KeyboardEvent) => {

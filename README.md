@@ -228,9 +228,19 @@ right edge towards the middle to uncover it, or click the edge, and the page
 slides aside with it. Let go more than 48 pixels from where you started, or
 flick, and the page snaps to uncover half the viewport, or three quarters of it
 below the `md` breakpoint. Click the garden, the part of the page still showing
-or its edge, or press Escape, to close it again. While one edge is out, the
-other cannot be dragged. Once the page has come to rest open, it casts a shadow
-onto the garden, which fades as soon as the page moves again.
+or its edge, or press Escape, to close it again; the garden and that part of
+the page are drag surfaces as well, `MagicTrayTrigger`s, so the page can be
+pushed shut from anywhere on either. While one edge is out, the other cannot
+be dragged. Once the page has come to rest open, it casts a shadow onto the
+garden, which fades as soon as the page moves again.
+
+The right edge gives the garden away. With a cursor, the edge pulls back as
+the cursor comes within 96px of it, by 24px once it is within 32px, and
+settles again as the cursor leaves: MagicTray’s magnetism, for fine pointers
+that allow motion, which clips the page without moving it and uncovers a
+sliver of the garden. A finger cannot near an edge, so on a touch screen the
+page pulls back once by itself, a moment after the intro has settled, holds,
+and lets go (`useGardenPeek`). A drag takes over wherever the pull is.
 
 The page sits in vue-equipment’s MagicTray, which clips it with `clip-path`,
 and MagicTrayTransform slides it along with the clip. The transform is only set

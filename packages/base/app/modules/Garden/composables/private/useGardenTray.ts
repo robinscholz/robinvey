@@ -10,8 +10,9 @@ export function useGardenTray() {
   const { state, snapTo } = useMagicTray(TrayIds.Garden)
 
   // Public state
+  // Dragged aside, or pulled back a little, by the cursor or the peek.
   const revealed = computed(() =>
-    SIDES.some((side) => state.dragged[side] > EPSILON)
+    SIDES.some((side) => state.dragged[side] + state.magnetic[side] > EPSILON)
   )
 
   const opened = computed(() =>
