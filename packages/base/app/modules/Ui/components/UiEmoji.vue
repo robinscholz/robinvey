@@ -18,17 +18,19 @@ interface UiEmojiProps {
   symbol: string
   // Dots a side. The box is sized by whoever places the emoji.
   dots?: number
-  // Builds up row by row from the bottom before the motion plays, whenever
-  // it is drawn.
+  // Builds up row by row from the bottom before the motion plays, and when
+  // the emoji changes, takes the old one down row by row from the top first.
   boot?: boolean
 }
+
+type Pass = 'in' | 'out'
 
 // Every dot matrix on the page shares the colour of its unlit dots, so the
 // tint the sampler suggests is left out.
 const INACTIVE = '--magic-dot-matrix-inactive-color'
 
-// How long each row of the boot shows before the next comes on.
-const BOOT_INTERVAL = 30
+// How long each row of a pass shows before the next.
+const PASS_INTERVAL = 30
 
 // The emoji’s motion loops from the moment it is drawn. With reduced motion
 // the emoji stands still on a full frame.
@@ -37,28 +39,30 @@ const { symbol, dots = 12, boot = false } = defineProps<UiEmojiProps>()
 const id = useId()
 const motion = usePreferredReducedMotion()
 const { state, restart } = useMagicDotMatrix(id)
+
+// The emoji drawn, which follows the one asked for once the old one is down.
+const drawn = shallowRef(symbol)
+
 const {
   sequence,
   options: emojiOptions,
   style,
-} = useMagicDotMatrixEmoji(
-  () => symbol,
-  () => ({ cols: dots, rows: dots })
-)
+} = useMagicDotMatrixEmoji(drawn, () => ({ cols: dots, rows: dots }))
 
-const booting = shallowRef(false)
-const rising = shallowRef<Array<DotMatrixLayeredFrame>>([])
+// The frames of a pass while one plays, and which way it goes.
+const pass = shallowRef<Array<DotMatrixLayeredFrame>>()
+let direction: Pass = 'in'
 
 const still = computed(() => motion.value === 'reduce')
 
-const shown = computed(() => (booting.value ? rising.value : sequence.value))
+const shown = computed(() => pass.value ?? sequence.value)
 
 const options = computed(() =>
-  booting.value
+  pass.value
     ? {
         cols: dots,
         rows: dots,
-        interval: BOOT_INTERVAL,
+        interval: PASS_INTERVAL,
         loop: false,
         autoplay: false,
       }
@@ -85,54 +89,102 @@ const rest = computed(() => {
   )
 })
 
-// The frame built up a row at a time from the bottom: each frame of the boot
-// holds the rows of the target from the bottom up to its own, and the last
-// holds them all.
+function rows(
+  frame: DotMatrixLayeredFrame,
+  keep: (row: number) => boolean
+): DotMatrixLayeredFrame {
+  return frame.map((layer) =>
+    layer.filter((dot) => keep(Math.floor(dot / dots)))
+  )
+}
+
+// The frame built up a row at a time from the bottom: each frame holds the
+// rows from the bottom up to its own, and the last holds them all.
 function rise(target: DotMatrixLayeredFrame): Array<DotMatrixLayeredFrame> {
-  return Array.from({ length: dots }, (_, index) => {
-    const top = dots - 1 - index
-    return target.map((layer) =>
-      layer.filter((dot) => Math.floor(dot / dots) >= top)
-    )
-  })
+  return Array.from({ length: dots }, (_, index) =>
+    rows(target, (row) => row >= dots - 1 - index)
+  )
+}
+
+// The frame taken down a row at a time from the top, to nothing.
+function fall(target: DotMatrixLayeredFrame): Array<DotMatrixLayeredFrame> {
+  return Array.from({ length: dots }, (_, index) =>
+    rows(target, (row) => row > index)
+  )
+}
+
+function run(frames: Array<DotMatrixLayeredFrame>, way: Pass) {
+  pass.value = frames
+  direction = way
+  nextTick(restart)
 }
 
 // Plays the motion from its resting frame.
 function play() {
-  restart()
-  state.frame = rest.value
+  pass.value = undefined
+  nextTick(() => {
+    restart()
+    state.frame = rest.value
+  })
 }
 
-// The emoji is drawn once the component is up, and again whenever it
-// changes. The matrix resets to the first frame when frames arrive, so this
-// runs after it.
+// The drawn emoji comes in: built up from the bottom when it boots, at once
+// otherwise.
+function enter() {
+  const target = sequence.value[rest.value]
+  if (still.value) {
+    pass.value = undefined
+    state.frame = rest.value
+    return
+  }
+  if (boot && target && target.flat().length > 0) {
+    run(rise(target), 'in')
+    return
+  }
+  play()
+}
+
+// The emoji is drawn once the component is up, and again whenever the drawn
+// one changes. The matrix resets to the first frame when frames arrive, so
+// this runs after it.
+watch(sequence, enter, { flush: 'post' })
+
+// A new emoji takes the old one down first, from the frame on show, and is
+// drawn once the old one is gone. Without the boot, or motion, it is drawn
+// straight away.
 watch(
-  sequence,
-  (frames) => {
-    const target = frames[rest.value]
-    if (still.value) {
-      state.frame = rest.value
+  () => symbol,
+  (next) => {
+    if (!boot || still.value) {
+      drawn.value = next
       return
     }
-    if (boot && target && target.flat().length > 0) {
-      rising.value = rise(target)
-      booting.value = true
-      nextTick(restart)
+    const frame = shown.value[state.frame]
+    if (frame && frame.flat().length > 0) {
+      run(fall(frame), 'out')
       return
     }
-    play()
-  },
-  { flush: 'post' }
+    drawn.value = next
+  }
 )
 
-// The boot plays once and stops; the motion takes over from where it left.
+// A pass stops on its last frame. After the fall the asked emoji is drawn,
+// and its frames bring the rise; after the rise the motion takes over.
 watch(
   () => state.playing,
   (playing) => {
-    if (!playing && booting.value) {
-      booting.value = false
-      nextTick(play)
+    if (playing || !pass.value) {
+      return
     }
+    if (direction === 'out') {
+      if (drawn.value === symbol) {
+        enter()
+      } else {
+        drawn.value = symbol
+      }
+      return
+    }
+    play()
   }
 )
 </script>
