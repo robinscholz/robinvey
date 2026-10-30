@@ -146,11 +146,13 @@ Colour comes from mirror tokens. The `robinvey` theme in
 `packages/base/tokens/theme` sets the paper, the ink and the font family over
 the stock mirror-tokens tree, which is fetched from git on every token build.
 
-## Hover
+## Hover and focus
 
 A link or a row under the pointer steps back into the muted ink, and text
 selection is a 15% tint of the ink behind the text. Nothing on the page takes
-a colour of its own apart from the emoji.
+a colour of its own apart from the emoji and the focus ring, which is
+mirror’s `focus-ring` utility on `:focus-visible`: a 1px border and a 2px
+outline in the focus colour, the widths set in the `robinvey` theme.
 
 ## Intro
 
@@ -211,7 +213,8 @@ on a grid without an end. The field is tiled with blocks that each hold every
 emoji once, in an order drawn from the block’s place and a seed for the visit,
 so no emoji repeats within a block and the field is laid out afresh each time.
 Families of look-alikes, the clock faces, the speakers and the coloured
-shapes, are left out, since they would read as repeats. The stills are drawn in the browser: `utils/tile.ts` draws the glyph
+shapes, are left out, since they would read as repeats, and so is any emoji
+the system has no glyph for, which would draw as a box. The stills are drawn in the browser: `utils/tile.ts` draws the glyph
 with the system’s emoji font onto a canvas, crops it to its ink, reads it off
 at six pixels a dot and paints the dots the way MagicDotMatrix would, round and
 three times as wide as their gaps, onto a tile. `useEmojiCanvasTiles` draws the
