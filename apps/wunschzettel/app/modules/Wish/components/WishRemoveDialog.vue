@@ -15,9 +15,6 @@
       class="bg-surface-low rounded-component-sm shadow-component-high fixed inset-x-6 top-1/2 mx-auto max-w-xs -translate-y-1/2 p-6 outline-hidden"
     >
       <MAlertDialogTitle>Remove {{ title || 'this wish' }}?</MAlertDialogTitle>
-      <MAlertDialogDescription class="text-surface-muted">
-        It goes for good, with its picture.
-      </MAlertDialogDescription>
       <p class="mt-8 flex justify-end gap-x-8">
         <WishButton @click="open = false">Cancel</WishButton>
         <WishButton variant="danger" @click="confirm">Remove</WishButton>
