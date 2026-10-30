@@ -21,7 +21,6 @@
         height: `${SIZE}px`,
         transform: `translate(${hovered.col * PITCH + offset.x}px, ${hovered.row * PITCH + offset.y}px)`,
       }"
-      loop
     />
   </div>
 </template>

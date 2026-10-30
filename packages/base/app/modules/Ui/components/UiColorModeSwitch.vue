@@ -144,8 +144,8 @@ function systemValue(): ColorModeValue {
   return matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 }
 
-// The page changes mode scrambled: hidden while it changes, and settling
-// back in. A choice that leaves the page as it
+// The page changes mode through the switch: a cross-fade, where the browser
+// has one. A choice that leaves the page as it
 // is, such as System on a system already in the mode shown, is kept
 // without the switch.
 function select(value: ColorModePreference) {

@@ -1,5 +1,5 @@
 <template>
-  <div class="px-5 md:px-10 lg:px-16" data-scramble>
+  <div class="px-5 md:px-10 lg:px-16">
     <main>
       <ProfileHeader :page="page" :profile="profile" />
       <div class="pb-12 md:pb-24">

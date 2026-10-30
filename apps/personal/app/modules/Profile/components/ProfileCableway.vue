@@ -5,7 +5,7 @@
     aria-label="The other cable car"
     @click="toggle"
   >
-    <UiEmoji :symbol="symbol" :dots="DOTS" class="size-[32ch]" loop />
+    <UiEmoji :symbol="symbol" :dots="DOTS" class="size-[32ch]" boot />
   </button>
 </template>
 

@@ -20,9 +20,8 @@ const DRAW = 350
 const HOLD = 200
 const RELEASE = 400
 
-// After the intro has settled, or after a moment when it does not play.
-const PAUSE = 600
-const LATE = 2000
+// A moment after the page is up.
+const DELAY = 1500
 
 // A finger cannot near an edge the way a cursor does, so on a touch screen
 // the page pulls back once by itself, a little, and lets go: a glimpse of
@@ -30,7 +29,6 @@ const LATE = 2000
 // offset, which the page slides with, as it does for the cursor’s pull.
 export function useEmojiCanvasPeek() {
   const { state } = useMagicTray(TrayIds.EmojiCanvas)
-  const { on, off } = useUiEmitter()
   const nuxtApp = useNuxtApp()
   const touch = useMediaQuery('(hover: none)')
   const motion = usePreferredReducedMotion()
@@ -39,7 +37,6 @@ export function useEmojiCanvasPeek() {
   let frame: number | undefined
   let timer: ReturnType<typeof setTimeout> | undefined
   let hold: ReturnType<typeof setTimeout> | undefined
-  let introduced = false
 
   // Private functions
   // A drag takes over wherever the peek is; the tray folds the offset into
@@ -97,33 +94,9 @@ export function useEmojiCanvasPeek() {
     await run({ from: PULL, to: 0, duration: RELEASE, easing: easeOutQuint })
   }
 
-  function schedule(delay: number) {
-    clearTimeout(timer)
-    timer = setTimeout(peek, delay)
-  }
-
-  function introduce() {
-    introduced = true
-  }
-
-  function settle() {
-    schedule(PAUSE)
-  }
-
-  // The intro announces itself before the fallback is due; without it, the
-  // page is simply there, and the peek follows a moment later.
-  function fallback() {
-    if (!introduced) {
-      peek()
-    }
-  }
-
-  on('beforeIntro', introduce)
-  on('afterIntro', settle)
-
   if (import.meta.client) {
     nuxtApp.hook('app:suspense:resolve', () => {
-      timer = setTimeout(fallback, LATE)
+      timer = setTimeout(peek, DELAY)
     })
   }
 
@@ -136,9 +109,5 @@ export function useEmojiCanvasPeek() {
     }
   )
 
-  onScopeDispose(() => {
-    cancel()
-    off('beforeIntro', introduce)
-    off('afterIntro', settle)
-  })
+  onScopeDispose(cancel)
 }

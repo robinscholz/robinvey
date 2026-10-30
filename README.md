@@ -157,25 +157,17 @@ widths set in the `robinvey` theme.
 
 ## Intro
 
-On load, the text scrambles through ASCII symbols and settles into place in
-reading order within half a second. Each symbol is about as wide as the letter
-it stands in for, and
-every line’s breaks are pinned while it runs, so nothing shifts or rewraps.
-Mark a container with `data-scramble` to include its text; anything
-`aria-hidden` is left alone.
-
-The page is prerendered, so its final text would paint before the app
-hydrates. An inline script in the head hides everything under
-`[data-scramble]` from the first paint, and the intro reveals it once the app
-has hydrated and the font has loaded. Past 1.5 seconds the text appears
-without the scramble, and after two seconds CSS reveals it regardless.
-Visitors who prefer reduced motion, or have no JavaScript, see the text
-straight away.
+The text is simply there once the font is. The dot matrix under the intro
+carries the moment: its dots come on as noise, each settling into the emoji
+at a moment of its own, over about three quarters of a second, before the
+motion plays. `UiEmoji` does this with `boot`, and again whenever its emoji
+changes, as it does when the panel is clicked. Visitors who prefer reduced
+motion see the emoji at rest.
 
 ## Colour mode
 
-The colour mode menu in the colophon offers Dark, Light and System. A choice that changes the page scrambles the text, hides it while it changes
-and settles it back in, the choreography of `useSwitch()`. One that leaves the page as it is, System on a system already
+The colour mode menu in the colophon offers Dark, Light and System. A choice that changes the page cross-fades the old page into the new through
+the View Transitions API where the browser has it, in `useSwitch()`. One that leaves the page as it is, System on a system already
 showing that mode, is kept without it. The `theme-color` tags follow the
 mode, so the browser’s own frame takes the paper or the dark ground: one tag
 per system scheme until a choice is made, both with the choice after
@@ -197,7 +189,7 @@ The right edge gives the canvas away. With a cursor, the edge pulls back as
 the cursor comes within 160px of it, by 48px once it is within 48px, and
 settles again as the cursor leaves: MagicTray’s magnetism, for fine pointers
 that allow motion, which uncovers a sliver of the canvas. A finger cannot near an edge, so on a touch screen the
-page pulls back once by itself, a moment after the intro has settled, holds,
+page pulls back once by itself, a moment after the page is up, holds,
 and lets go (`useEmojiCanvasPeek`). A drag takes over wherever the pull is.
 
 The page sits in vue-equipment’s MagicTray, which clips it with `clip-path`.
@@ -241,7 +233,7 @@ error page; `not_found_handling` in `wrangler.jsonc` serves it. Until the app
 has booted, `app/spa-loading-template.html` stands in with the ground and the
 header, so the page never flashes. The field is a lazy component: on
 the home page it hydrates once the browser is idle, so its code stays out of
-the intro’s way, and on the error page it loads with the page.
+the page’s way, and on the error page it loads with the page.
 
 ## Titles on phones
 

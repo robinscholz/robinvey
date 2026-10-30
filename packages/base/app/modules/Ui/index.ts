@@ -15,15 +15,10 @@ export default defineNuxtModule({
     })
     addImports([
       { name: 'useHold', from: resolver.resolve('./composables/useHold') },
-      { name: 'useIntro', from: resolver.resolve('./composables/useIntro') },
       { name: 'useSwitch', from: resolver.resolve('./composables/useSwitch') },
       {
         name: 'useThemeColor',
         from: resolver.resolve('./composables/useThemeColor'),
-      },
-      {
-        name: 'useUiEmitter',
-        from: resolver.resolve('./composables/useUiEmitter'),
       },
     ])
   },

@@ -18,15 +18,6 @@
     color-scheme: dark;
   }
 
-  [data-switch-fade] [data-scramble] {
-    transition: opacity 100ms ease-out;
-  }
-
-  [data-switch-fade='out'] [data-scramble] {
-    opacity: 0;
-    transition: opacity 90ms ease-in 250ms;
-  }
-
   body {
     margin: 0;
     overflow-x: clip;
@@ -50,21 +41,6 @@
     );
   }
 
-  [data-scramble][aria-busy='true'] {
-    white-space: pre-line;
-  }
-
-  [data-scramble][aria-busy='true'],
-  [data-scramble][aria-busy='true'] * {
-    white-space-collapse: preserve-breaks;
-    text-wrap-mode: nowrap;
-  }
-
-  [data-intro] [data-scramble] {
-    visibility: hidden;
-    animation: intro-fallback 0s 2s forwards;
-  }
-
   @media (prefers-reduced-motion: reduce) {
     *,
     ::before,
@@ -72,12 +48,6 @@
       transition-duration: 0.01ms !important;
       animation-duration: 0.01ms !important;
     }
-  }
-}
-
-@keyframes intro-fallback {
-  to {
-    visibility: visible;
   }
 }
 
@@ -89,4 +59,9 @@
 .ui-color-mode-menu-enter-from,
 .ui-color-mode-menu-leave-to {
   opacity: 0;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 150ms;
 }
