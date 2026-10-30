@@ -155,12 +155,12 @@ the stock mirror-tokens tree, which is fetched from git on every token build.
 ## Hover and focus
 
 A link in the prose is underlined, and a row under the pointer underlines its
-title the same way, the dates beside it unchanged. Text selection is a 15%
-tint of the ink behind the text. Nothing on the page takes
-a colour of its own apart from the emoji and the focus ring, which is
-mirror’s `focus-shadow` utility on `:focus-visible`: a 1px inner and a 2px
-outer ring in the focus colour, drawn as a shadow so nothing moves, the
-widths set in the `robinvey` theme.
+title the same way, the dates beside it unchanged. Text selection is
+mirror’s muted accent behind the text. Nothing else on the page takes a
+colour of its own apart from the emoji and the focus ring, which is mirror’s
+`focus-shadow` utility on `:focus-visible`: a 1px inner and a 2px outer ring
+in the focus colour, drawn as a shadow so nothing moves, the widths set in
+the `robinvey` theme.
 
 ## Intro
 
