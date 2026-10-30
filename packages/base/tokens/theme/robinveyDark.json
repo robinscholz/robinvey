@@ -26,6 +26,32 @@
             "$type": "color"
           }
         }
+      },
+      "component": {
+        "shadow": {
+          "default": {
+            "$value": "oklch(0% 0 none / 0.7)",
+            "$type": "color"
+          },
+          "strong": {
+            "$value": "oklch(0% 0 none / 0.7)",
+            "$type": "color"
+          }
+        }
+      }
+    },
+    "boxShadow": {
+      "component": {
+        "default": {
+          "$value": {
+            "color": "{app.color.component.shadow.default}",
+            "offsetX": "0px",
+            "offsetY": "2rem",
+            "blur": "4rem",
+            "spread": "0px"
+          },
+          "$type": "shadow"
+        }
       }
     }
   }
