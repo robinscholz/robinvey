@@ -3,7 +3,7 @@
     <main>
       <ProfileHeader :page="page" :profile="profile" />
       <div class="pb-12 md:pb-24">
-        <ProfileCableway />
+        <ProfileCarousel />
       </div>
       <UiSection label="Now">
         <p>{{ profile.now }}</p>

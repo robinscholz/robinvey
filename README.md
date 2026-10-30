@@ -129,7 +129,7 @@ line wherever they appear, and nor does a link in the prose.
 Under the intro, the 🚠 emoji sits on a dot matrix 32ch wide, a dot to a
 character, drawn by vue-equipment’s MagicDotMatrix and its emoji tooling,
 which samples the system’s emoji glyph onto the grid and loops the motion it
-picks for it; a click swaps it for 🚡 and back. `UiEmoji` in the Ui module
+picks for it; a click moves on through 🚡, 🪂, 🎿, 🏔️ and 🚲 and round again. `UiEmoji` in the Ui module
 draws any emoji that way, at the dot count and in the box of whoever places
 it.
 
@@ -164,7 +164,7 @@ widths set in the `robinvey` theme.
 The text is simply there once the font is. The dot matrix under the intro
 carries the moment: the emoji builds up a row at a time from the bottom, a
 row every 30ms, before the motion plays. `UiEmoji` does this with `boot`, and again whenever its emoji
-changes, as it does when the panel is clicked. Visitors who prefer reduced
+changes, as it does with every click on the panel. Visitors who prefer reduced
 motion see the emoji at rest.
 
 ## Colour mode
