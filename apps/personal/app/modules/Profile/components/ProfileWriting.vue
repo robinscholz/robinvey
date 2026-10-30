@@ -4,8 +4,8 @@
       <UiLink v-slot="{ held }" :to="article.url" :underline="false" hold>
         <UiRow>
           <UiMarquee :playing="held"
-            >{{ article.title }}
-            <UiIcon name="arrow-n-e" class="text-surface-muted"
+            >{{ article.title
+            }}<UiIcon name="arrow-n-e" class="text-surface-muted ml-[0.25em]"
           /></UiMarquee>
           <template #meta>{{ article.month }}</template>
         </UiRow>
