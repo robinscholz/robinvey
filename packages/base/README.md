@@ -113,7 +113,8 @@ in the browser: `app/modules/EmojiCanvas/utils/tile.ts` draws the glyph with
 the system’s emoji font onto a canvas, crops it to its ink, reads it off at
 six pixels a dot and paints the dots the way MagicDotMatrix would, round and
 three times as wide as their gaps, onto a tile. `useEmojiCanvasTiles` draws
-the tiles a few at a time while the browser is idle, and the field paints the
+the tiles a few at a time while the browser is idle, or a batch every few
+milliseconds in Safari, which has no idle callback, and the field paints the
 tiles in view onto one canvas, so hundreds of emoji cost the page nothing in
 elements.
 

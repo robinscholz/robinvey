@@ -32,14 +32,16 @@ export function useEmojiCanvasTiles(draw: Draw) {
     }
   }
 
+  // Safari has no idle callback, so its turns come from a timeout, without
+  // a deadline, and draw a whole batch each.
+  function remaining(deadline?: Deadline): number {
+    return deadline ? deadline.timeRemaining() : Infinity
+  }
+
   function work(deadline?: Deadline) {
     scheduled = false
     let count = 0
-    while (
-      queue.length > 0 &&
-      count < BATCH &&
-      (deadline?.timeRemaining() ?? 1) > 1
-    ) {
+    while (queue.length > 0 && count < BATCH && remaining(deadline) > 1) {
       const symbol = queue.shift()
       if (symbol === undefined) {
         break
