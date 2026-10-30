@@ -8,4 +8,4 @@ I build interfaces and the foundations underneath them – design systems, compo
 
 I trained as a designer at the [Gerrit Rietveld Academie](https://rietveldacademie.nl) in Amsterdam before moving into software engineering.
 
-Away from the keyboard I’m usually with my family or in the mountains, climbing, ski touring, paragliding or on a bike.
+Away from the keyboard I’m usually with my family or in the mountains, climbing, ski touring, paragliding and cycling.
