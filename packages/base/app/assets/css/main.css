@@ -39,7 +39,8 @@
   }
 
   :focus-visible {
-    @apply focus-ring;
+    @apply focus-shadow;
+    outline: none;
   }
 
   ::selection {

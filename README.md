@@ -151,8 +151,9 @@ the stock mirror-tokens tree, which is fetched from git on every token build.
 A link or a row under the pointer steps back into the muted ink, and text
 selection is a 15% tint of the ink behind the text. Nothing on the page takes
 a colour of its own apart from the emoji and the focus ring, which is
-mirror’s `focus-ring` utility on `:focus-visible`: a 1px border and a 2px
-outline in the focus colour, the widths set in the `robinvey` theme.
+mirror’s `focus-shadow` utility on `:focus-visible`: a 1px inner and a 2px
+outer ring in the focus colour, drawn as a shadow so nothing moves, the
+widths set in the `robinvey` theme.
 
 ## Intro
 
