@@ -16,14 +16,40 @@ export async function useProfile() {
         queryCollection('writing').order('date', 'DESC').all(),
       ])
 
+    const companies = experience.map(experienceTransformer)
+    const works = projects.map(projectTransformer)
+    const places = sites.map(siteTransformer)
+
+    // The names the page lists, the companies, the projects and the sites,
+    // stay on one line wherever they appear.
+    const names = [...companies, ...works, ...places].map((entry) =>
+      'company' in entry ? entry.company : entry.name
+    )
+    function hold(text: string): string {
+      return holdNames({ text, names })
+    }
+
+    const summary = pageTransformer(page)
+    const person = profileTransformer(profile)
+
     return {
-      page: pageTransformer(page),
+      page: { ...summary, colophon: hold(summary.colophon) },
       contact: contactTransformer(contact),
-      profile: profileTransformer(profile),
-      experience: experience.map(experienceTransformer),
-      sites: sites.map(siteTransformer),
-      projects: projects.map(projectTransformer),
-      writing: writing.map(writingTransformer),
+      profile: { ...person, now: hold(person.now) },
+      experience: companies.map((entry) => ({
+        ...entry,
+        company: hold(entry.company),
+        summary: hold(entry.summary),
+      })),
+      sites: places.map((site) => ({ ...site, name: hold(site.name) })),
+      projects: works.map((project) => ({
+        ...project,
+        name: hold(project.name),
+        description: hold(project.description),
+      })),
+      writing: writing
+        .map(writingTransformer)
+        .map((article) => ({ ...article, title: hold(article.title) })),
     }
   })
 

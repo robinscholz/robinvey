@@ -8,6 +8,13 @@ interface PeriodPayload {
   end?: string
 }
 
+interface HoldPayload {
+  text: string
+  names: Array<string>
+}
+
+const NO_BREAK_SPACE = '\u00A0'
+
 const monthFormat = new Intl.DateTimeFormat('en-GB', {
   month: 'short',
   year: 'numeric',
@@ -55,4 +62,14 @@ export function formatLongMonth(isoDate: string): string {
 export function formatLink(url: string): string {
   const { host, pathname } = new URL(url)
   return `${host.replace(/^www\./, '')}${pathname}`.replace(/\/$/, '')
+}
+
+// The names in a text stay on one line: their spaces become no-break spaces,
+// which neither a browser nor the PDF engine breaks at.
+export function holdNames({ text, names }: HoldPayload): string {
+  return names.reduce(
+    (result, name) =>
+      result.replaceAll(name, name.replaceAll(' ', NO_BREAK_SPACE)),
+    text
+  )
 }
