@@ -18,7 +18,8 @@ interface UiEmojiProps {
   symbol: string
   // Dots a side. The box is sized by whoever places the emoji.
   dots?: number
-  // Lights up from noise before the motion plays, whenever it is drawn.
+  // Builds up row by row from the bottom before the motion plays, whenever
+  // it is drawn.
   boot?: boolean
 }
 
@@ -26,11 +27,8 @@ interface UiEmojiProps {
 // tint the sampler suggests is left out.
 const INACTIVE = '--magic-dot-matrix-inactive-color'
 
-// The boot: frames of noise, how long each shows, and how much of the run
-// passes before the first dot settles into place.
-const BOOT_FRAMES = 16
-const BOOT_INTERVAL = 50
-const BOOT_START = 0.25
+// How long each row of the boot shows before the next comes on.
+const BOOT_INTERVAL = 30
 
 // The emoji’s motion loops from the moment it is drawn. With reduced motion
 // the emoji stands still on a full frame.
@@ -49,11 +47,11 @@ const {
 )
 
 const booting = shallowRef(false)
-const noise = shallowRef<Array<DotMatrixLayeredFrame>>([])
+const rising = shallowRef<Array<DotMatrixLayeredFrame>>([])
 
 const still = computed(() => motion.value === 'reduce')
 
-const shown = computed(() => (booting.value ? noise.value : sequence.value))
+const shown = computed(() => (booting.value ? rising.value : sequence.value))
 
 const options = computed(() =>
   booting.value
@@ -87,34 +85,15 @@ const rest = computed(() => {
   )
 })
 
-// Noise that settles into the frame: each dot takes its own moment to
-// settle, and until then flickers at the frame’s own density, in any of
-// its colours. The last frame of noise is the frame itself.
-function scramble(target: DotMatrixLayeredFrame): Array<DotMatrixLayeredFrame> {
-  const total = dots * dots
-  const lit = new Map<number, number>()
-  target.forEach((layer, index) => {
-    layer.forEach((dot) => lit.set(dot, index))
-  })
-  const density = lit.size / total
-  const settle = Array.from(
-    { length: total },
-    () => BOOT_START + Math.random() * (1 - BOOT_START)
-  )
-  return Array.from({ length: BOOT_FRAMES }, (_, index) => {
-    const progress = (index + 1) / BOOT_FRAMES
-    const frame: DotMatrixLayeredFrame = target.map(() => [])
-    for (let dot = 0; dot < total; dot++) {
-      if (progress >= (settle[dot] ?? 1)) {
-        const layer = lit.get(dot)
-        if (layer !== undefined) {
-          frame[layer]?.push(dot)
-        }
-      } else if (Math.random() < density) {
-        frame[Math.floor(Math.random() * target.length)]?.push(dot)
-      }
-    }
-    return frame
+// The frame built up a row at a time from the bottom: each frame of the boot
+// holds the rows of the target from the bottom up to its own, and the last
+// holds them all.
+function rise(target: DotMatrixLayeredFrame): Array<DotMatrixLayeredFrame> {
+  return Array.from({ length: dots }, (_, index) => {
+    const top = dots - 1 - index
+    return target.map((layer) =>
+      layer.filter((dot) => Math.floor(dot / dots) >= top)
+    )
   })
 }
 
@@ -136,7 +115,7 @@ watch(
       return
     }
     if (boot && target && target.flat().length > 0) {
-      noise.value = scramble(target)
+      rising.value = rise(target)
       booting.value = true
       nextTick(restart)
       return
