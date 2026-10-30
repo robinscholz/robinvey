@@ -15,7 +15,9 @@
             type="button"
             :class="[
               ROW,
-              'text-surface-muted data-[active=true]:text-surface focus-inline',
+              BOX,
+              'rounded-component-compact-sm focus-visible:focus-shadow px-[1ch] py-[0.25lh] outline-hidden',
+              'hover:bg-primary-subtle-hover data-[active=true]:bg-primary-subtle-active',
             ]"
             :aria-label="`Colour mode: ${current.label}`"
           >
@@ -47,11 +49,11 @@
         </magic-menu-content>
       </magic-menu-view>
     </magic-menu-provider>
-    <!-- The server does not know the choice, so it holds the line with a
-         blank the size of the icon; an icon here would have the Worker fetch
-         it on every render. -->
+    <!-- The server does not know the choice, so it holds the button's place
+         with a blank the size of the icon and the button's padding; an icon
+         here would have the Worker fetch it on every render. -->
     <template #placeholder>
-      <span :class="[ROW, 'invisible']" aria-hidden="true">
+      <span :class="[ROW, 'invisible px-[1ch] py-[0.25lh]']" aria-hidden="true">
         <span class="inline-block size-[1em]" />
         <span>{{ SYSTEM.label }}</span>
       </span>
