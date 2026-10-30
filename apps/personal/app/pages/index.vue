@@ -11,7 +11,7 @@
       <UiSection label="Work">
         <ProfileExperience :experience="experience" />
       </UiSection>
-      <UiSection v-if="sites.length" label="Sites">
+      <UiSection v-if="sites.length" label="Built">
         <ProfileSites :sites="sites" />
       </UiSection>
       <UiSection label="Projects">
