@@ -25,7 +25,7 @@
     "@dnd-kit/vue": "^0.5.1",
     "@maas/magic-image": "^1.0.2",
     "@maas/mirror": "^2.0.0-beta.4",
-    "@maas/vue-equipment": "^1.2.0",
+    "@maas/vue-equipment": "^1.3.0",
     "@nuxt/image": "^2.1.0",
     "@nuxt/kit": "^4.6.0",
     "@robinscholz/database": "workspace:*",
