@@ -9,7 +9,12 @@ for the Edit buttons and the fields at 16px on a touch screen, where a
 smaller one would make iOS zoom in, a grid of pictures with a caption under
 each, one to a row on a phone and up to four on a wide screen, on a page
 capped at 2000px so a card in four columns is never wider than the widest in
-three, no dark mode. Its `theme-color` is the white of the page. The local
+three. In dark mode the page is black. It follows the system’s colour mode
+until the switch at its foot, `UiColorModeSwitch` with Dark, Light and
+System as on the site, is set: the choice stays in the browser, a change
+cross-fades the page where the browser can, and the `theme-color` tags
+follow, white or black. The switch renders in the browser alone and fetches
+its Symbols icons from there, so the Worker never asks for one. The local
 tokens in `tokens` merge over the stock tree: `config.json` points the grey
 palette at neutral, so surface, primary and secondary carry no blue, and
 `application.json` halves the focus line and its halo, to 1px and 2px. The
@@ -140,6 +145,26 @@ toast.
 dragged the grid renders the order a drop would leave, and dnd-kit slides
 each card to its new place. The page loads the sortable grid only for a
 signed-in visitor, so nobody else downloads dnd-kit.
+
+## Preview image
+
+`public/og.png` is the picture a shared link shows, 1200 by 630: the site’s
+emoji canvas with fewer and larger tiles, six by three dot matrices of twelve
+dots a side on white, tiled with 🎁 🎀 🎄 ⭐ 🎈 🔔 as the site’s is with its
+mountains, each in turn along a row and four on from one row to the next, so
+no two neighbours show the same. `scripts/og-canvas.swift` at the repository
+root samples the emoji from Apple’s own art as `og-tiles.swift` does for the
+site, draws the canvas and writes the picture; it is drawn there rather than
+at build time, so the Worker carries no resvg. Run it again from the root to
+change the emoji; at twelve dots a side only the ones with a strong outline
+survive, which is why these six:
+
+```sh
+swift scripts/og-canvas.swift apps/wunschzettel/public 🎁 🎀 🎄 ⭐ 🎈 🔔
+```
+
+The list page’s Open Graph tags point at it from the site’s origin, so a
+preview deploy shows its own copy.
 
 ## Not found
 

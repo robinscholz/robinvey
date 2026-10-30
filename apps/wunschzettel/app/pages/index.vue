@@ -25,7 +25,11 @@ useSeoMeta({
   ogDescription: LIST.description,
   ogType: 'website',
   ogUrl: siteUrl,
-  twitterCard: 'summary',
+  ogImage: `${siteUrl}/og.png`,
+  ogImageWidth: 1200,
+  ogImageHeight: 630,
+  ogImageAlt: 'Presents, bows, trees, stars, balloons and bells, in dots',
+  twitterCard: 'summary_large_image',
 })
 
 useHead({
