@@ -21,7 +21,13 @@ export default defineNuxtConfig({
   ],
 
   vueEquipment: {
-    plugins: ['MagicAccordion', 'MagicMarquee', 'MagicMenu', 'MagicTray'],
+    plugins: [
+      'MagicAccordion',
+      'MagicDotMatrix',
+      'MagicMarquee',
+      'MagicMenu',
+      'MagicTray',
+    ],
   },
 
   // The face is the file in public/fonts, named with its weight range so the

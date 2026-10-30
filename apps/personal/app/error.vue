@@ -9,15 +9,11 @@
       class="grid-page items-baseline gap-y-[1lh] px-5 pt-6 pb-12 md:px-10 md:pt-10 md:pb-24"
     >
       <div>
-        <h1 class="font-medium">{{ title }}</h1>
+        <h1>{{ title }}</h1>
         <p class="text-surface-muted">
-          <UiReel
-            symbol="🥀"
-            :symbols="REEL"
-            autoplay
-            class="mr-[1ch]"
-            aria-hidden="true"
-          />{{ error.statusCode }}
+          <UiEmoji symbol="🥀" autoplay class="mr-[1ch]" />{{
+            error.statusCode
+          }}
         </p>
       </div>
       <p>
@@ -37,9 +33,6 @@ import type { NuxtError } from '#app'
 interface ErrorProps {
   error: NuxtError
 }
-
-// Spun past by the emoji before it lands on the wilted one.
-const REEL = ['🌷', '🌹', '🌻', '🌼', '🌸', '💐', '🌺', '🪻']
 
 const { error } = defineProps<ErrorProps>()
 

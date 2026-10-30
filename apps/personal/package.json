@@ -23,6 +23,7 @@
     "@nuxt/kit": "^4.6.0",
     "@resvg/resvg-js": "^2.6.2",
     "@robinscholz/base": "workspace:*",
+    "@vueuse/core": "^14.4.0",
     "nuxt": "^4.6.0",
     "satori": "^0.63.2",
     "vue": "^3.5.43"

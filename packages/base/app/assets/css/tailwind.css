@@ -23,74 +23,13 @@
   --text-sm--line-height: 1.6;
 }
 
-@property --reel-angle {
-  syntax: '<angle>';
-  inherits: true;
-  initial-value: 0deg;
-}
-
-@property --reel-settle {
-  syntax: '<number>';
-  inherits: true;
-  initial-value: 0;
-}
-
-@theme inline {
-  --animate-reel: reel calc(600ms + var(--reel-order) * 150ms) both;
-
-  @keyframes reel {
-    from {
-      --reel-angle: 0deg;
-      --reel-settle: 0;
-      animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
-    }
-    60% {
-      --reel-settle: 0;
-      animation-timing-function: ease-in-out;
-    }
-    to {
-      --reel-angle: calc(var(--reel-count) * var(--reel-step));
-      --reel-settle: 1;
-    }
-  }
-}
-
-@utility reel {
-  --reel-step: 60deg;
-  --reel-radius: calc(0.5lh / sin(var(--reel-step) / 2));
-  --reel-peek: 0.75lh;
-  --reel-fade: 0.5lh;
-  position: absolute;
-  inset-inline: 0;
-  inset-block: calc(var(--reel-peek) * -1);
-  perspective: 2lh;
-  mask-image: linear-gradient(
-    transparent,
-    black var(--reel-fade),
-    black calc(100% - var(--reel-fade)),
+@utility dot-matrix {
+  --magic-dot-matrix-radius: 0.5;
+  --magic-dot-matrix-inactive-color: color-mix(
+    in oklch,
+    var(--app-color-surface-fg-subtle) 35%,
     transparent
   );
-}
-
-@utility reel-symbol {
-  position: absolute;
-  inset-inline: 0;
-  top: var(--reel-peek);
-  text-align: center;
-  backface-visibility: hidden;
-  transform: translateZ(calc(var(--reel-radius) * -1))
-    rotateX(
-      clamp(
-        -90deg,
-        calc(var(--reel-angle) - var(--reel-index) * var(--reel-step)),
-        90deg
-      )
-    )
-    translateZ(var(--reel-radius));
-
-  &:not(:last-child) {
-    opacity: calc(1 - var(--reel-settle));
-  }
 }
 
 @utility grid-page {

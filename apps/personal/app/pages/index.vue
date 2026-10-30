@@ -2,32 +2,25 @@
   <div class="px-5 md:px-10" data-scramble>
     <main>
       <ProfileHeader :page="page" :profile="profile" />
-      <UiSection label="Now" emoji="⏳" :reel="REELS.now">
+      <div class="pb-12 md:pb-24">
+        <ProfileCableway />
+      </div>
+      <UiSection label="Now" emoji="⏳">
         <p>{{ profile.now }}</p>
       </UiSection>
-      <UiSection label="Work" emoji="🌀" :reel="REELS.work">
+      <UiSection label="Work" emoji="🌀">
         <ProfileExperience :experience="experience" />
       </UiSection>
-      <UiSection
-        v-if="sites.length"
-        label="Sites"
-        emoji="🌐"
-        :reel="REELS.sites"
-      >
+      <UiSection v-if="sites.length" label="Sites" emoji="🌐">
         <ProfileSites :sites="sites" />
       </UiSection>
-      <UiSection label="Projects" emoji="🧰" :reel="REELS.projects">
+      <UiSection label="Projects" emoji="🧰">
         <ProfileProjects :projects="projects" />
       </UiSection>
-      <UiSection
-        v-if="writing.length"
-        label="Writing"
-        emoji="✍️"
-        :reel="REELS.writing"
-      >
+      <UiSection v-if="writing.length" label="Writing" emoji="✍️">
         <ProfileWriting :writing="writing" />
       </UiSection>
-      <UiSection label="Contact" emoji="🐌" :reel="REELS.contact">
+      <UiSection label="Contact" emoji="🐌">
         <ContentRenderer v-if="contact.document" :value="contact.document" />
       </UiSection>
     </main>
@@ -36,16 +29,6 @@
 </template>
 
 <script setup lang="ts">
-// Spun past by each section’s emoji before it lands.
-const REELS = {
-  now: ['⌛', '⏰', '⏱️', '🕰️', '⌚', '📅', '🗓️', '🕒'],
-  work: ['💻', '🖥️', '⌨️', '🖱️', '🏢', '📎', '🗂️', '📇'],
-  sites: ['🌍', '🌎', '🌏', '🗺️', '🧭', '🔗', '🕸️', '📡'],
-  projects: ['🔧', '🔨', '🪛', '🔩', '⚙️', '🛠️', '📐', '🧪'],
-  writing: ['📝', '✏️', '🖊️', '📖', '📚', '📜', '🗒️', '📓'],
-  contact: ['✉️', '📮', '📫', '📬', '📨', '💌', '🕊️', '📯'],
-}
-
 const {
   page,
   contact,

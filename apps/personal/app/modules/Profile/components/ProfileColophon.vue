@@ -1,6 +1,6 @@
 <template>
   <footer>
-    <UiSection label="Colophon" emoji="🖋️" :reel="REEL">
+    <UiSection label="Colophon" emoji="🖋️">
       <p class="text-surface-muted">
         <template v-for="(part, index) in parts" :key="index"
           ><UiTypefaceSwitch v-if="index % 2" /><template v-else>{{
@@ -21,9 +21,6 @@ interface ProfileColophonProps {
   colophon: string
   updated: string
 }
-
-// Spun past by the emoji before it lands.
-const REEL = ['✒️', '🔤', '🔠', '🖨️', '📰', '🗞️', '📏', '🎨']
 
 // The face’s name in the colophon doubles as the typeface switch, so
 // splitting around it leaves the switch at every odd index.
