@@ -195,10 +195,8 @@ from anywhere on either. The page casts a shadow onto the canvas as it moves.
 The right edge gives the canvas away. With a cursor, the edge pulls back as
 the cursor comes within 160px of it, by 48px once it is within 48px, and
 settles again as the cursor leaves: MagicTray’s magnetism, for fine pointers
-that allow motion, which uncovers a sliver of the canvas. A phone has no
-cursor to near an edge, so below `md` the page rests 1.5rem in from the
-right, with a strip of the canvas always in view to take hold of, and moves
-its text in by as much to keep its margin.
+that allow motion, which uncovers a sliver of the canvas. A finger has to
+find the edge itself.
 
 The page sits in vue-equipment’s MagicTray, which clips it with `clip-path`.
 The page itself stays where it is, so its fixed elements stay fixed. The

@@ -1,7 +1,9 @@
 <template>
   <magic-tray-provider :id="TrayIds.EmojiCanvas" :options="options">
+    <!-- The handle sits inside the edge rather than astride it: the half of it
+         past the edge would widen the page, and a phone zooms out to fit. -->
     <magic-tray-content
-      class="z-10 [--magic-tray-display:block] [--magic-tray-drag-overshoot-outer:0px] [--magic-tray-handle-width-y:2.5rem] [--magic-tray-width:100%] md:[--magic-tray-handle-width-y:5rem]"
+      class="z-10 [--magic-tray-display:block] [--magic-tray-drag-overshoot-outer:0px] [--magic-tray-handle-offset-x-right:0px] [--magic-tray-handle-width-y:2.5rem] [--magic-tray-width:100%] md:[--magic-tray-handle-width-y:5rem]"
     >
       <!-- The page stays where it is and the clip cuts it away, so its fixed
            elements stay fixed. -->
@@ -25,12 +27,9 @@
 import { easeOutQuint } from '@maas/vue-equipment/utils'
 import { useEventListener, useMediaQuery } from '@vueuse/core'
 import { useEmojiCanvasTray } from '../composables/private/useEmojiCanvasTray'
-import { PULL, STRIP } from '../utils/edge'
 import { TrayIds } from '../utils/enums'
-import type {
-  MagicTrayOptions,
-  MagicTraySnapPoint,
-} from '@maas/vue-equipment/plugins/MagicTray'
+import { PULL } from '../utils/pull'
+import type { MagicTrayOptions } from '@maas/vue-equipment/plugins/MagicTray'
 
 // How much of the viewport the open canvas takes. Half a phone’s would leave
 // too little of it to see.
@@ -52,14 +51,11 @@ const magnetic = useMediaQuery(
 
 const open = computed(() => (wide.value ? OPEN.wide : OPEN.narrow))
 
-// Where the page rests: flush with the edge where a cursor can pull it back,
-// a strip of canvas in from it on a phone, where nothing can.
-const rest = computed<MagicTraySnapPoint>(() => (wide.value ? 0 : `${STRIP}px`))
-
-// The canvas opens from the right edge alone.
+// The canvas opens from the right edge alone. At rest, the edge pulls back
+// towards a cursor nearing it, uncovering a sliver of the canvas: an
+// invitation to drag.
 const options = computed<MagicTrayOptions>(() => ({
-  snapPoints: { right: [rest.value, open.value] },
-  initial: { snapPoints: { right: rest.value }, transition: false },
+  snapPoints: { right: [0, open.value] },
   handles: { right: true },
   threshold: { distance: 48 },
   animation: { snap: { duration: 400, easing: easeOutQuint } },

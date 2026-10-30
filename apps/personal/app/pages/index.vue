@@ -1,7 +1,5 @@
 <template>
-  <div class="px-6 pr-12 md:px-12 xl:px-20">
-    <!-- On a phone the right edge keeps a strip of the canvas, so the page’s
-         margin on that side moves in by as much. -->
+  <div class="px-6 md:px-12 xl:px-20">
     <main>
       <ProfileHeader :page="page" :profile="profile" />
       <div class="pb-12 md:pb-24">
