@@ -1,5 +1,5 @@
 <template>
-  <div class="px-5 md:px-10 lg:px-16">
+  <div class="px-6 md:px-12 xl:px-20">
     <main>
       <ProfileHeader :page="page" :profile="profile" />
       <div class="pb-12 md:pb-24">

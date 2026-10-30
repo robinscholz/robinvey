@@ -121,7 +121,8 @@ intro, then one section after another, each a heading half a line over its
 block, all in a 64ch measure. Each list is a ledger of a date and the entry; a row that leaves
 the site carries `↗` after its title, and a row in Work or Projects opens on a
 click to show its summary. Structure comes from whitespace alone. The margin is
-20px on phones, 40px from the `md` breakpoint and 64px from `lg`. The names the
+the Wunschzettel’s: 24px on phones, 48px from the `md` breakpoint and 80px
+from `xl`, with 48px above the name from `md`. The names the
 page lists, the companies, the projects and the sites, never break across a
 line wherever they appear, and nor does a link in the prose.
 
