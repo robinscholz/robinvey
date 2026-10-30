@@ -22,13 +22,6 @@
               <UiRow :hue="viewActive ? pinned(project.id) : 0">
                 <UiMarquee :playing="viewActive">{{ project.name }}</UiMarquee>
                 <template #meta>{{ project.year }}</template>
-                <template #mark>
-                  <!-- Both marks are in the HTML, so the first click waits
-                       for no icon. v-show hides one inline, which no
-                       display class outranks. -->
-                  <UiIcon v-show="!viewActive" name="plus" />
-                  <UiIcon v-show="viewActive" name="minus" />
-                </template>
               </UiRow>
             </button>
           </magic-accordion-trigger>

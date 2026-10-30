@@ -1,7 +1,5 @@
 <template>
-  <div class="box-content max-w-[85ch] px-5 md:px-10" data-scramble>
-    <!-- The grid is 18ch, a 3ch gap and 64ch; the page is no wider, so the
-         rules stop where the text does. -->
+  <div class="px-5 md:px-10" data-scramble>
     <main>
       <ProfileHeader :page="page" :profile="profile" />
       <UiSection label="Now" emoji="⏳" :reel="REELS.now">

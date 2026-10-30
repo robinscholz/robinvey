@@ -21,14 +21,6 @@
     <component :is="as" class="min-w-0 flex-1">
       <slot />
     </component>
-    <span
-      class="text-surface-muted w-[1em] shrink-0 transition-[opacity,color] duration-150 ease-out group-hover:duration-0 data-pending:opacity-0 data-pending:transition-none"
-      :class="{ 'max-md:hidden': !$slots.mark }"
-      aria-hidden="true"
-      :data-pending="pending || null"
-    >
-      <slot name="mark" />
-    </span>
   </component>
 </template>
 
@@ -42,24 +34,4 @@ interface UiRowProps {
 const { as = 'span', interactive = true, hue = 0 } = defineProps<UiRowProps>()
 
 const { advance, color } = useHue()
-const { on, off } = useUiEmitter()
-
-// The mark waits out the intro, then fades in once the text has settled.
-const pending = shallowRef(false)
-
-function hold() {
-  pending.value = true
-}
-
-function release() {
-  pending.value = false
-}
-
-on('beforeIntro', hold)
-on('afterIntro', release)
-
-onScopeDispose(() => {
-  off('beforeIntro', hold)
-  off('afterIntro', release)
-})
 </script>

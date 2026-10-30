@@ -4,10 +4,10 @@
       <UiLink v-slot="{ held }" :to="site.url" :underline="false" hold>
         <UiRow>
           <UiMarquee :playing="held"
-            >{{ site.name }}, {{ site.kind }}</UiMarquee
-          >
+            >{{ site.name }}, {{ site.kind }}
+            <UiIcon name="arrow-n-e" class="text-surface-muted"
+          /></UiMarquee>
           <template #meta>{{ site.year }}</template>
-          <template #mark><UiIcon name="arrow-n-e" /></template>
         </UiRow>
       </UiLink>
     </li>

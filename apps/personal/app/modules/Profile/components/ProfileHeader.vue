@@ -1,18 +1,14 @@
 <template>
-  <header
-    class="grid-page items-baseline gap-y-[1lh] pt-6 pb-12 md:pt-10 md:pb-24"
-  >
-    <div>
-      <h1 class="font-medium">{{ profile.name }}</h1>
-      <p class="text-surface-muted">
-        {{ profile.role }}<br />
-        {{ profile.location }}
-      </p>
-    </div>
+  <header class="max-w-[64ch] pt-6 pb-12 md:pt-10 md:pb-24">
+    <h1 class="font-medium">{{ profile.name }}</h1>
+    <p class="text-surface-muted">
+      {{ profile.role }}<br />
+      {{ profile.location }}
+    </p>
     <ContentRenderer
       v-if="page.document"
       :value="page.document"
-      class="[&_p+p]:mt-[1lh]"
+      class="mt-[1lh] [&_p+p]:mt-[1lh]"
     />
   </header>
 </template>
