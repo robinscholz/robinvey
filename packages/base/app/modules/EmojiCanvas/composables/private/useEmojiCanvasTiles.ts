@@ -10,7 +10,7 @@ const BATCH = 8
 // One tile for each emoji in the field, drawn a few at a time while the
 // browser is idle, so a field of hundreds fills in without holding a frame.
 // The tiles are read on every frame, so the map is plain.
-export function useGardenTiles(draw: Draw) {
+export function useEmojiCanvasTiles(draw: Draw) {
   // Public state
   const tiles = new Map<string, HTMLCanvasElement>()
 
@@ -71,4 +71,4 @@ export function useGardenTiles(draw: Draw) {
   }
 }
 
-export type UseGardenTilesReturn = ReturnType<typeof useGardenTiles>
+export type UseEmojiCanvasTilesReturn = ReturnType<typeof useEmojiCanvasTiles>

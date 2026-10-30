@@ -1,5 +1,5 @@
 <template>
-  <!-- The garden out in the open, with no page over it. -->
+  <!-- The canvas out in the open, with no page over it. -->
   <div class="bg-surface-low text-surface fixed inset-0 flex flex-col">
     <header
       class="max-w-[64ch] px-5 pt-6 pb-12 md:px-10 md:pt-10 md:pb-24 lg:px-16 lg:pt-16"
@@ -10,10 +10,10 @@
         <UiLink to="/">{{ host }}</UiLink>
       </p>
     </header>
-    <!-- Loaded with the page, as nothing covers the garden here; lazy all
+    <!-- Loaded with the page, as nothing covers the canvas here; lazy all
          the same, so the field stays its own chunk and the home page can
          leave it until it is idle. -->
-    <LazyGardenField active class="flex-1" />
+    <LazyEmojiCanvas active class="flex-1" />
   </div>
 </template>
 

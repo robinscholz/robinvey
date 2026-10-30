@@ -1,6 +1,6 @@
 <template>
-  <GardenBed />
-  <GardenTray>
+  <EmojiCanvasBed />
+  <EmojiCanvasTray>
     <NuxtPage />
-  </GardenTray>
+  </EmojiCanvasTray>
 </template>

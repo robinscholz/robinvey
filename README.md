@@ -8,12 +8,12 @@ content as the site rendered to `/cv.pdf` at build time.
 
 ## Apps and packages
 
-| Path                | Package                     | Contents                                                                                                              |
-| ------------------- | --------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `apps/personal`     | `@robinscholz/personal`     | The one-page site, the content collections, the Profile module and the `/cv.pdf` route                                |
-| `apps/wunschzettel` | `@robinscholz/wunschzettel` | The wish list: the Wish module, the pages, the API, the picture store, the sign-in gate and the bookmarklet           |
-| `packages/base`     | `@robinscholz/base`         | The site’s Nuxt layer: mirror and vue-equipment wiring, the token theme and its fonts, type system, Ui and the garden |
-| `packages/database` | `@robinscholz/database`     | The Wunschzettel’s D1 database: Drizzle schema, migrations, the wishes repository and the seed                        |
+| Path                | Package                     | Contents                                                                                                                    |
+| ------------------- | --------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `apps/personal`     | `@robinscholz/personal`     | The one-page site, the content collections, the Profile module and the `/cv.pdf` route                                      |
+| `apps/wunschzettel` | `@robinscholz/wunschzettel` | The wish list: the Wish module, the pages, the API, the picture store, the sign-in gate and the bookmarklet                 |
+| `packages/base`     | `@robinscholz/base`         | The site’s Nuxt layer: mirror and vue-equipment wiring, the token theme and its fonts, type system, Ui and the emoji canvas |
+| `packages/database` | `@robinscholz/database`     | The Wunschzettel’s D1 database: Drizzle schema, migrations, the wishes repository and the seed                              |
 
 ## Setup
 
@@ -179,29 +179,29 @@ per system scheme until a choice is made, both with the choice after
 (`useThemeColor()`). `color-scheme`
 follows on `<html>`, so scrollbars and form controls match.
 
-## Garden
+## Emoji canvas
 
 A field of emoji lies underneath the page. Drag the page’s right edge towards
 the middle to uncover it, or click the edge, and the page is cut away with it.
 Let go more than 48 pixels from where you started, or flick, and the page
 snaps to uncover half the viewport, or three quarters of it below the `md`
-breakpoint. Click the garden, the part of the page still showing or its edge,
-or press Escape, to close it again; the garden and that part of the page are
+breakpoint. Click the canvas, the part of the page still showing or its edge,
+or press Escape, to close it again; the canvas and that part of the page are
 drag surfaces as well, `MagicTrayTrigger`s, so the page can be pushed shut
-from anywhere on either. The page casts a shadow onto the garden as it moves.
+from anywhere on either. The page casts a shadow onto the canvas as it moves.
 
-The right edge gives the garden away. With a cursor, the edge pulls back as
+The right edge gives the canvas away. With a cursor, the edge pulls back as
 the cursor comes within 160px of it, by 48px once it is within 48px, and
 settles again as the cursor leaves: MagicTray’s magnetism, for fine pointers
-that allow motion, which uncovers a sliver of the garden. A finger cannot near an edge, so on a touch screen the
+that allow motion, which uncovers a sliver of the canvas. A finger cannot near an edge, so on a touch screen the
 page pulls back once by itself, a moment after the intro has settled, holds,
-and lets go (`useGardenPeek`). A drag takes over wherever the pull is.
+and lets go (`useEmojiCanvasPeek`). A drag takes over wherever the pull is.
 
 The page sits in vue-equipment’s MagicTray, which clips it with `clip-path`.
 The page itself stays where it is, so its fixed elements stay fixed. The
-garden is a fixed layer behind the page on `bg-surface-low`, in the page’s
+canvas is a fixed layer behind the page on `bg-surface-low`, in the page’s
 colour mode. It stays hidden until the edge moves, so it never shows through
-an overscroll. The page’s shadow comes from an empty box in the garden layer,
+an overscroll. The page’s shadow comes from an empty box in the canvas layer,
 the size of the viewport, that slides with the edge by a transform, since the
 clip would cut off a shadow cast by the page itself.
 
@@ -214,7 +214,7 @@ Families of look-alikes, the clock faces, the speakers and the coloured
 shapes, are left out, since they would read as repeats. The stills are drawn in the browser: `utils/tile.ts` draws the glyph
 with the system’s emoji font onto a canvas, crops it to its ink, reads it off
 at six pixels a dot and paints the dots the way MagicDotMatrix would, round and
-three times as wide as their gaps, onto a tile. `useGardenTiles` draws the
+three times as wide as their gaps, onto a tile. `useEmojiCanvasTiles` draws the
 tiles a few at a time while the browser is idle, and the field paints the
 tiles in view onto one canvas, so hundreds of emoji cost the page nothing in
 elements.
@@ -225,12 +225,12 @@ its still, `UiEmoji`, which plays the emoji’s motion through the plugin’s em
 tooling and loops it while the pointer stays. Visitors who prefer reduced
 motion find the field still.
 
-`GardenField` lists the cells in view, paints them and hands the pointer’s cell
-to `UiEmoji`; `GardenBed` puts the field behind the page and adds the tray’s
+`EmojiCanvas` lists the cells in view, paints them and hands the pointer’s cell
+to `UiEmoji`; `EmojiCanvasBed` puts the field behind the page and adds the tray’s
 parts, the reveal, the shadow and the click that closes it.
 
 An address that leads nowhere gets the field out in the open, with no page
-over it: `apps/personal/app/error.vue` sets a header over a `GardenField` that
+over it: `apps/personal/app/error.vue` sets a header over a `EmojiCanvas` that
 fills the rest of the viewport, drifting from the start. The static build’s
 `404.html` boots the app in the browser, which finds no page and shows the
 error page; `not_found_handling` in `wrangler.jsonc` serves it. Until the app

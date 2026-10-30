@@ -2,7 +2,7 @@
   "name": "@robinscholz/base",
   "private": true,
   "type": "module",
-  "description": "Nuxt layer for robinvey: mirror v2 and vue-equipment wiring, the Mirage token theme, the type system, the Ui module and the garden under the page",
+  "description": "Nuxt layer for robinvey: mirror v2 and vue-equipment wiring, the Mirage token theme, the type system, the Ui module and the emoji canvas under the page",
   "contributors": [
     {
       "name": "Robin Vey",

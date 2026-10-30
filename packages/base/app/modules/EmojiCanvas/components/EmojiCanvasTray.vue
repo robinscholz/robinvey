@@ -1,5 +1,5 @@
 <template>
-  <magic-tray-provider :id="TrayIds.Garden" :options="options">
+  <magic-tray-provider :id="TrayIds.EmojiCanvas" :options="options">
     <magic-tray-content
       class="z-10 [--magic-tray-display:block] [--magic-tray-drag-overshoot-outer:0px] [--magic-tray-handle-width-y:2.5rem] [--magic-tray-width:100%] md:[--magic-tray-handle-width-y:5rem]"
     >
@@ -8,7 +8,7 @@
       <div class="bg-surface-base min-h-dvh" :inert="opened || undefined">
         <slot />
       </div>
-      <!-- While the garden is open, the part of the page still in view is a
+      <!-- While the canvas is open, the part of the page still in view is a
            drag surface for it, so the page can be pushed shut from anywhere
            on it; a tap closes it too. -->
       <magic-tray-trigger v-if="opened" side="right" as-child>
@@ -24,13 +24,13 @@
 <script setup lang="ts">
 import { easeOutQuint } from '@maas/vue-equipment/utils'
 import { useEventListener, useMediaQuery } from '@vueuse/core'
-import { useGardenPeek } from '../composables/private/useGardenPeek'
-import { useGardenTray } from '../composables/private/useGardenTray'
+import { useEmojiCanvasPeek } from '../composables/private/useEmojiCanvasPeek'
+import { useEmojiCanvasTray } from '../composables/private/useEmojiCanvasTray'
 import { TrayIds } from '../utils/enums'
 import { PULL } from '../utils/pull'
 import type { MagicTrayOptions } from '@maas/vue-equipment/plugins/MagicTray'
 
-// How much of the viewport the open garden takes. Half a phone’s would leave
+// How much of the viewport the open canvas takes. Half a phone’s would leave
 // too little of it to see.
 const OPEN = { narrow: 0.75, wide: 0.5 }
 
@@ -38,8 +38,8 @@ const OPEN = { narrow: 0.75, wide: 0.5 }
 // as the cursor comes within `start` and is complete at `stop`.
 const BAND = { start: 160, stop: 48 }
 
-const { opened, toggle, close } = useGardenTray()
-useGardenPeek()
+const { opened, toggle, close } = useEmojiCanvasTray()
+useEmojiCanvasPeek()
 
 const wide = useMediaQuery('(width >= 48rem)')
 
@@ -51,8 +51,8 @@ const magnetic = useMediaQuery(
 
 const open = computed(() => (wide.value ? OPEN.wide : OPEN.narrow))
 
-// The garden opens from the right edge alone. At rest, the edge pulls back
-// towards a cursor nearing it, uncovering a sliver of the garden: an
+// The canvas opens from the right edge alone. At rest, the edge pulls back
+// towards a cursor nearing it, uncovering a sliver of the canvas: an
 // invitation to drag.
 const options = computed<MagicTrayOptions>(() => ({
   snapPoints: { right: [0, open.value] },

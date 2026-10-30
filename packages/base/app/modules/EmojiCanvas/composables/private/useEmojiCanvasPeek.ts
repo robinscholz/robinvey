@@ -26,10 +26,10 @@ const LATE = 2000
 
 // A finger cannot near an edge the way a cursor does, so on a touch screen
 // the page pulls back once by itself, a little, and lets go: a glimpse of
-// the garden, and of the way to it. The pull rides on the tray’s magnetic
+// the canvas, and of the way to it. The pull rides on the tray’s magnetic
 // offset, which the page slides with, as it does for the cursor’s pull.
-export function useGardenPeek() {
-  const { state } = useMagicTray(TrayIds.Garden)
+export function useEmojiCanvasPeek() {
+  const { state } = useMagicTray(TrayIds.EmojiCanvas)
   const { on, off } = useUiEmitter()
   const nuxtApp = useNuxtApp()
   const touch = useMediaQuery('(hover: none)')

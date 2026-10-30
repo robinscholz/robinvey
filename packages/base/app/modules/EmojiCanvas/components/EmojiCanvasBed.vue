@@ -1,16 +1,16 @@
 <template>
-  <!-- Once the garden is open, it is a drag surface for the page, so the page
+  <!-- Once the canvas is open, it is a drag surface for the page, so the page
        can be pulled back from anywhere on it; a tap closes it too. -->
-  <magic-tray-trigger :id="TrayIds.Garden" side="right" as-child>
+  <magic-tray-trigger :id="TrayIds.EmojiCanvas" side="right" as-child>
     <div
       class="bg-surface-low invisible fixed inset-0 z-0 overflow-hidden data-revealed:visible"
       :data-revealed="revealed || null"
       @click="close"
     >
-      <!-- Nobody sees the garden before the page is up, so its code is loaded
+      <!-- Nobody sees the canvas before the page is up, so its code is loaded
            and its emoji drawn once the browser is idle, after the page has
            had its first moments. -->
-      <LazyGardenField hydrate-on-idle :active="revealed" class="size-full" />
+      <LazyEmojiCanvas hydrate-on-idle :active="revealed" class="size-full" />
       <!-- The page’s shadow, cast by an empty box the size of the viewport
            that slides with the page. The page clips itself, which would cut
            off its own shadow, and a transform keeps the box on the compositor,
@@ -24,8 +24,8 @@
 </template>
 
 <script setup lang="ts">
-import { useGardenTray } from '../composables/private/useGardenTray'
+import { useEmojiCanvasTray } from '../composables/private/useEmojiCanvasTray'
 import { TrayIds } from '../utils/enums'
 
-const { revealed, inset, close } = useGardenTray()
+const { revealed, inset, close } = useEmojiCanvasTray()
 </script>

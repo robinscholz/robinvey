@@ -34,13 +34,13 @@ import {
   usePreferredReducedMotion,
   useRafFn,
 } from '@vueuse/core'
-import { useGardenTiles } from '../composables/private/useGardenTiles'
+import { useEmojiCanvasTiles } from '../composables/private/useEmojiCanvasTiles'
 import { listEmoji } from '../utils/emoji'
 import { hashCell } from '../utils/hash'
 import { shuffle } from '../utils/shuffle'
 import { drawGrid, drawTile } from '../utils/tile'
 
-interface GardenFieldProps {
+interface EmojiCanvasProps {
   // The field drifts only while it is in view.
   active: boolean
 }
@@ -64,7 +64,7 @@ const DRIFT = { x: -6, y: -4 }
 // across the field does not draw every emoji it crosses.
 const REST = 150
 
-const { active } = defineProps<GardenFieldProps>()
+const { active } = defineProps<EmojiCanvasProps>()
 
 // A field for each visit.
 const seed = Math.floor(Math.random() * 2 ** 32)
@@ -98,7 +98,7 @@ const colorMode = useColorMode()
 const inactive = shallowRef('')
 let grid: HTMLCanvasElement | undefined
 
-const { tiles, request } = useGardenTiles((symbol) =>
+const { tiles, request } = useEmojiCanvasTiles((symbol) =>
   drawTile({ symbol, dots: DOTS, size: SIZE, scale: pixelRatio.value })
 )
 

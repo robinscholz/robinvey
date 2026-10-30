@@ -3,8 +3,8 @@ import { TrayIds } from '../../utils/enums'
 // An inset shorter than this is rounding left over from a settle.
 const EPSILON = 0.5
 
-export function useGardenTray() {
-  const { state, snapTo } = useMagicTray(TrayIds.Garden)
+export function useEmojiCanvasTray() {
+  const { state, snapTo } = useMagicTray(TrayIds.EmojiCanvas)
 
   // Public state
   // How far the page’s right edge stands in from the viewport’s, by the drag
@@ -23,7 +23,7 @@ export function useGardenTray() {
     }
   }
 
-  // The edge closes the garden when it is open, and opens it as far as the
+  // The edge closes the canvas when it is open, and opens it as far as the
   // snap point when it is not.
   function toggle() {
     if (opened.value) {
@@ -42,4 +42,4 @@ export function useGardenTray() {
   }
 }
 
-export type UseGardenTrayReturn = ReturnType<typeof useGardenTray>
+export type UseEmojiCanvasTrayReturn = ReturnType<typeof useEmojiCanvasTray>
