@@ -3,14 +3,18 @@
     <magic-tray-content
       class="z-10 [--magic-tray-display:block] [--magic-tray-drag-overshoot-outer:0px] [--magic-tray-handle-width-y:2.5rem] [--magic-tray-width:100%] md:[--magic-tray-handle-width-y:5rem]"
     >
-      <magic-tray-transform axis="x" :disabled="!engaged">
-        <div
-          class="bg-surface-base min-h-dvh"
-          :inert="opened !== undefined || undefined"
-        >
-          <slot />
-        </div>
-      </magic-tray-transform>
+      <!-- The page slides with the clip by a transform of its own, which
+           follows the pull as well as the drag; the tray’s own would follow
+           the drag alone. -->
+      <div
+        class="bg-surface-base min-h-dvh"
+        :inert="opened !== undefined || undefined"
+        :style="
+          shift ? { transform: `translate3d(${shift}px, 0, 0)` } : undefined
+        "
+      >
+        <slot />
+      </div>
       <!-- While a side is open, the part of the page still in view is a drag
            surface for it, so the page can be pushed shut from anywhere on
            it; a tap closes it too. -->
@@ -41,7 +45,7 @@ const OPEN = { narrow: 0.75, wide: 0.5 }
 // begins as the cursor comes within `start` and is complete at `stop`.
 const BAND = { start: 160, stop: 48 }
 
-const { opened, engaged, toggle, close } = useGardenTray()
+const { opened, engaged, shift, toggle, close } = useGardenTray()
 useGardenPeek()
 
 const wide = useMediaQuery('(width >= 48rem)')
@@ -55,11 +59,8 @@ const magnetic = useMediaQuery(
 const open = computed(() => (wide.value ? OPEN.wide : OPEN.narrow))
 
 // Once one side moves, the other side’s edge cannot be dragged until the
-// first is back at rest. The page slides with the edge only while it is away
-// from rest, as a transformed ancestor would pin the page’s fixed elements to
-// the page instead of the viewport. At rest, the right edge pulls back
-// towards a cursor nearing it, uncovering a sliver of the garden: an
-// invitation to drag.
+// first is back at rest. At rest, the right edge pulls back towards a cursor
+// nearing it, uncovering a sliver of the garden: an invitation to drag.
 const options = computed<MagicTrayOptions>(() => ({
   snapPoints: {
     left: [0, open.value],

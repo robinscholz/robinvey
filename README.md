@@ -243,15 +243,16 @@ garden, which fades as soon as the page moves again.
 The right edge gives the garden away. With a cursor, the edge pulls back as
 the cursor comes within 160px of it, by 48px once it is within 48px, and
 settles again as the cursor leaves: MagicTray’s magnetism, for fine pointers
-that allow motion, which clips the page without moving it and uncovers a
-sliver of the garden. A finger cannot near an edge, so on a touch screen the
+that allow motion, which uncovers a sliver of the garden. A finger cannot near an edge, so on a touch screen the
 page pulls back once by itself, a moment after the intro has settled, holds,
 and lets go (`useGardenPeek`). A drag takes over wherever the pull is.
 
 The page sits in vue-equipment’s MagicTray, which clips it with `clip-path`,
-and MagicTrayTransform slides it along with the clip. The transform is only set
-while the page is away from rest, since a transformed ancestor pins fixed
-elements to the page instead of the viewport. The colour mode switch is sticky
+and slides along with the clip by a transform of its own, which counts the
+magnetic pull as well as the drag, so a drag or a click after a pull carries on
+from where the page already is. The transform is only set while the page is
+away from rest, since a transformed ancestor pins fixed elements to the page
+instead of the viewport. The colour mode switch is sticky
 rather than fixed for the same reason, so it slides aside with the page
 wherever the page is scrolled to. The garden is a fixed layer behind the page
 on `bg-surface-low`, and always dark: it carries `data-color-mode="dark"`,

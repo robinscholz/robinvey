@@ -27,7 +27,7 @@ const LATE = 2000
 // A finger cannot near an edge the way a cursor does, so on a touch screen
 // the page pulls back once by itself, a little, and lets go: a glimpse of
 // the garden, and of the way to it. The pull rides on the tray’s magnetic
-// offset, which clips the page without moving it, as the cursor’s pull does.
+// offset, which the page slides with, as it does for the cursor’s pull.
 export function useGardenPeek() {
   const { state } = useMagicTray(TrayIds.Garden)
   const { on, off } = useUiEmitter()

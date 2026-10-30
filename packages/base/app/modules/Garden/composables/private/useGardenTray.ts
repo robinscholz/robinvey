@@ -41,6 +41,20 @@ export function useGardenTray() {
     right: state.dragged.right,
   }))
 
+  // How far the page has moved along, with its edges: dragged or pulled, as
+  // one offset, so a drag or a click after a pull carries on from where the
+  // page already is. Zero at rest, so the page carries no transform then: a
+  // transformed ancestor would pin its fixed elements to the page instead
+  // of the viewport.
+  const shift = computed(() => {
+    const x =
+      state.dragged.left +
+      state.magnetic.left -
+      state.dragged.right -
+      state.magnetic.right
+    return Math.abs(x) > EPSILON ? x : 0
+  })
+
   // Public functions
   function close() {
     for (const side of SIDES) {
@@ -66,6 +80,7 @@ export function useGardenTray() {
     engaged,
     settled,
     insets,
+    shift,
     close,
     toggle,
   }
