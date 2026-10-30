@@ -1,12 +1,13 @@
 <template>
+  <!-- A dot a character from 400px up; narrower than that, the matrix takes
+       the whole width. A button wraps its content however it is displayed,
+       so it takes the width first and the matrix fills it. -->
   <button
     type="button"
-    class="flex cursor-pointer"
+    class="flex cursor-pointer max-[400px]:w-full"
     aria-label="The next picture"
     @click="next"
   >
-    <!-- A dot a character from 400px up; narrower than that, the matrix takes
-         the whole width. -->
     <UiEmoji
       :symbol="symbol"
       :dots="DOTS"
