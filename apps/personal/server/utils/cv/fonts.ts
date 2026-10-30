@@ -1,6 +1,6 @@
 import type { FontFamily } from '@jasy/pdf'
 
-// The face the CV and the preview image share: Mirage, cut from the variable
+// The CV’s face: Mirage, cut from the variable
 // font at 400 and the CV’s optical size by `scripts/cv-font.py`, with the
 // site’s stylistic sets written into its character map.
 export const CV_FONT = 'Mirage'

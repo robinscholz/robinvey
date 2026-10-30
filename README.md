@@ -315,9 +315,17 @@ dates, because the engine may break a line wherever two text runs meet.
 
 ## Preview image
 
-`apps/personal/server/routes/og.png.get.ts` draws the picture a shared link shows,
-with satori and resvg: the name, role and location from `profile.yml` and
-the site’s host, set in the CV’s cut of Mirage on the paper, 1200 by 630.
+`apps/personal/server/routes/og.png.get.ts` draws the picture a shared link
+shows, with resvg: the emoji canvas, tiled ten by five with the mountains the
+panel cycles through, each on a dot matrix of twelve dots a side on the
+paper, 1200 by 630. The tiles are sampled from Apple’s emoji art by
+`scripts/og-tiles.swift`, which writes the dots each emoji lights and their
+colours to `server/utils/og/tiles.json`; run it again to change the emoji:
+
+```sh
+swift scripts/og-tiles.swift apps/personal/server/utils/og/tiles.json 🚠 🚡 🪂 🎿 🏔️ 🚲
+```
+
 The build prerenders it to `og.png`, and the page’s Open Graph tags point at
 it.
 
@@ -550,8 +558,7 @@ dump with `wrangler d1 export wunschzettel --remote --output=wishes.sql`.
 ## Fonts
 
 Mirage is Dreamtype’s face. The site takes it from `fonts.maas.engineering`,
-and the CV and the preview image embed the cut in
-`apps/personal/server/assets/fonts`. ABC Areal, licensed from Dinamo, is gone
+and the CV embeds the cut in `apps/personal/server/assets/fonts`. ABC Areal, licensed from Dinamo, is gone
 from the tree but stays in the history, so keep this repository private
 unless that history is rewritten.
 
@@ -560,7 +567,7 @@ unless that history is rewritten.
 - [Turborepo](https://turbo.build/repo), pnpm workspaces
 - [Nuxt 4](https://nuxt.com), [Nuxt Content](https://content.nuxt.com)
 - [mirror v2](https://github.com/magicasaservice/mirror), [vue-equipment](https://github.com/magicasaservice/vue-equipment), [magic-image](https://github.com/magicasaservice/magic-image)
-- [`@jasy/pdf`](https://www.npmjs.com/package/@jasy/pdf) for the CV, [satori](https://github.com/vercel/satori) and [resvg](https://github.com/thx/resvg-js) for the preview image
+- [`@jasy/pdf`](https://www.npmjs.com/package/@jasy/pdf) for the CV, [resvg](https://github.com/thx/resvg-js) for the preview image
 - [`@nuxt/icon`](https://github.com/nuxt/icon) with the Symbols collection
 - ESLint and Prettier presets from `@maas/config`
 - [Drizzle](https://orm.drizzle.team) on [Cloudflare D1](https://developers.cloudflare.com/d1/), [nuxt-auth-utils](https://github.com/atinux/nuxt-auth-utils) for the Wunschzettel
