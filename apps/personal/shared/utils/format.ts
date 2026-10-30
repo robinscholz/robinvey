@@ -28,10 +28,11 @@ function formatPoint(value: string): string {
     : monthFormat.format(new Date(`${value}-01T00:00:00Z`))
 }
 
+// The dash gets a thin space either side.
 export function formatYears({ start, end }: YearsPayload): string {
   const from = start.slice(0, 4)
   const to = end ? end.slice(0, 4) : 'now'
-  return from === to ? from : `${from}–${to}`
+  return from === to ? from : `${from}\u2009–\u2009${to}`
 }
 
 export function formatMonth(isoDate: string): string {
