@@ -1,11 +1,12 @@
 <template>
   <!-- Once the canvas is open, it is a drag surface for the page, so the page
-       can be pulled back from anywhere on it; a tap closes it too. -->
+       can be pulled back from anywhere on it, and a tap closes it. A click on
+       the sliver the edge uncovers for a nearing cursor opens it instead. -->
   <magic-tray-trigger :id="TrayIds.EmojiCanvas" side="right" as-child>
     <div
       class="bg-surface-low invisible fixed inset-0 z-0 overflow-hidden data-revealed:visible"
       :data-revealed="revealed || null"
-      @click="close"
+      @click="toggle"
     >
       <!-- Nobody sees the canvas before the page is up, so its code is loaded
            and its emoji drawn once the browser is idle, after the page has
@@ -27,5 +28,5 @@
 import { useEmojiCanvasTray } from '../composables/private/useEmojiCanvasTray'
 import { TrayIds } from '../utils/enums'
 
-const { revealed, inset, close } = useEmojiCanvasTray()
+const { revealed, inset, toggle } = useEmojiCanvasTray()
 </script>
