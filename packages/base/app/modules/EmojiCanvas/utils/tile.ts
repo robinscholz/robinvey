@@ -158,6 +158,34 @@ function sample(symbol: string, dots: number): Map<number, Channels> {
   return colors
 }
 
+// A code point no font has draws as a box. Each emoji is drawn small beside
+// that box, and one that draws the same box is left out.
+const PROBE = 16
+const MISSING = String.fromCodePoint(0x1fffe)
+
+export function drawable(symbols: Array<string>): Array<string> {
+  const context = createContext(PROBE, PROBE)
+  if (!context) {
+    return symbols
+  }
+  context.font = `${PROBE * 0.75}px ${FONT}`
+  context.textAlign = 'center'
+  context.textBaseline = 'middle'
+
+  function pixels(symbol: string): Uint8ClampedArray {
+    context?.clearRect(0, 0, PROBE, PROBE)
+    context?.fillText(symbol, PROBE / 2, PROBE / 2)
+    return (
+      context?.getImageData(0, 0, PROBE, PROBE).data ?? new Uint8ClampedArray()
+    )
+  }
+
+  const box = pixels(MISSING)
+  return symbols.filter((symbol) =>
+    pixels(symbol).some((value, index) => value !== box[index])
+  )
+}
+
 // The unlit dots of a matrix, drawn once for every cell to share.
 export function drawGrid({
   dots,

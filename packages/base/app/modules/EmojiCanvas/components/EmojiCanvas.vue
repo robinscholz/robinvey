@@ -38,7 +38,7 @@ import { useEmojiCanvasTiles } from '../composables/private/useEmojiCanvasTiles'
 import { listEmoji } from '../utils/emoji'
 import { hashCell } from '../utils/hash'
 import { shuffle } from '../utils/shuffle'
-import { drawGrid, drawTile } from '../utils/tile'
+import { drawGrid, drawTile, drawable } from '../utils/tile'
 
 interface EmojiCanvasProps {
   // The field drifts only while it is in view.
@@ -75,7 +75,8 @@ const { width, height } = useElementSize(areaRef)
 const { pixelRatio } = useDevicePixelRatio()
 const motion = usePreferredReducedMotion()
 
-// Listed once the component is up, so the server renders an empty field.
+// Listed once the component is up, less the emoji the system cannot draw,
+// so the server renders an empty field.
 const emoji = shallowRef<Array<string>>([])
 
 // The field is tiled with blocks that each hold every emoji once, in an
@@ -265,6 +266,6 @@ watch(
 
 onMounted(() => {
   readInactive()
-  emoji.value = listEmoji()
+  emoji.value = drawable(listEmoji())
 })
 </script>
