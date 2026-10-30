@@ -320,9 +320,9 @@ it.
 `apps/wunschzettel` is a wish list for the family: a grid of things, each a
 link to a shop in Germany with a fair price and an easy return. It stands
 apart from the site’s layer: mirror v2 with the stock tokens and none of the
-`robinvey` theme, a white page set in Mirage like the site, 15px in one
-weight and 16px on a phone, where a smaller field would make iOS zoom in,
-with a smaller size for the Edit buttons, a grid of pictures with a caption under
+`robinvey` theme, a white page set in Mirage like the site, at 14px on 20px
+in one weight, with a smaller size for the Edit buttons and the fields at
+16px on a touch screen, where a smaller one would make iOS zoom in, a grid of pictures with a caption under
 each, one to a row on a phone and up to four on a wide screen, on a page
 capped at 2000px so a card in four columns is never wider than the widest in
 three, no dark mode. Its icons are the 🎁 emoji, drawn as the site’s are, and

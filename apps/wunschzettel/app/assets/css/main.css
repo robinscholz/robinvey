@@ -15,13 +15,6 @@
   --default-font-feature-settings: 'ss02', 'cv04';
   --font-weight-*: initial;
   --font-weight-normal: 400;
-  --text-*: initial;
-  --text-xs: 0.8125rem;
-  --text-xs--line-height: 1.5;
-  --text-sm: 0.9375rem;
-  --text-sm--line-height: 1.6;
-  --text-base: 1rem;
-  --text-base--line-height: 1.6;
 }
 
 @utility focus-inline {
@@ -90,9 +83,8 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* 16px on a phone, where a smaller field makes iOS zoom in; 15px from sm. */
   body {
-    @apply bg-surface-low text-surface text-base sm:text-sm;
+    @apply bg-surface-low text-surface text-sm;
   }
 
   p {
