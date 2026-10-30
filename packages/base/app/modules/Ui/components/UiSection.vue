@@ -1,6 +1,6 @@
 <template>
   <section :aria-labelledby="headingId" class="max-w-[64ch] pb-12">
-    <h2 :id="headingId">{{ label }}</h2>
+    <h2 :id="headingId" class="mb-[0.5lh]">{{ label }}</h2>
     <slot />
   </section>
 </template>

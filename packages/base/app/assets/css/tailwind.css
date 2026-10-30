@@ -15,7 +15,6 @@
   --default-mono-font-family: var(--font-mono);
   --font-weight-*: initial;
   --font-weight-normal: 400;
-  --font-weight-medium: 500;
   --text-*: initial;
   --text-xs: 0.8125rem;
   --text-xs--line-height: 1.5;

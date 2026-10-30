@@ -1,7 +1,7 @@
 <template>
   <footer>
     <UiSection label="Colophon">
-      <p class="text-surface-muted">
+      <p>
         <template v-for="(part, index) in parts" :key="index"
           ><UiTypefaceSwitch v-if="index % 2" /><template v-else>{{
             part
