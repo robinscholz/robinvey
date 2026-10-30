@@ -11,7 +11,9 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "dev:web": "turbo run dev --filter=@robinscholz/web",
+    "dev:personal": "turbo run dev --filter=@robinscholz/personal",
+    "start:personal": "turbo run start --filter=@robinscholz/personal",
+    "deploy:personal": "turbo run deploy --filter=@robinscholz/personal",
     "dev:wunschzettel": "turbo run dev --filter=@robinscholz/wunschzettel",
     "start:wunschzettel": "turbo run start --filter=@robinscholz/wunschzettel",
     "deploy:wunschzettel": "turbo run deploy --filter=@robinscholz/wunschzettel",

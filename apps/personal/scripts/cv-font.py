@@ -12,7 +12,7 @@ CV's size. The engine's word spacing would reach only the ordinary space; set
 in the face, it reaches the no-break space too, which shares the glyph, so the
 words the CV holds together keep the same gaps as the rest.
 
-    python3 apps/web/scripts/cv-font.py [variable font]
+    python3 apps/personal/scripts/cv-font.py [variable font]
 """
 
 import sys
@@ -23,7 +23,7 @@ from fontTools.varLib.instancer import instantiateVariableFont
 
 ROOT = Path(__file__).resolve().parents[3]
 SOURCE = ROOT / 'packages/base/app/assets/fonts/ABCArealSuperfamilyVariable.woff2'
-TARGET = ROOT / 'apps/web/server/assets/fonts/ABCArealSemiMonoRegular.ttf'
+TARGET = ROOT / 'apps/personal/server/assets/fonts/ABCArealSemiMonoRegular.ttf'
 AXES = {'MONO': 50, 'wght': 400, 'slnt': 0, 'DRKM': 0}
 SPACE_ADJUST = -0.1
 

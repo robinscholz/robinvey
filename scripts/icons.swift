@@ -5,7 +5,7 @@ import Foundation
 // favicon.png for the browsers that take no SVG, and an opaque
 // apple-touch-icon.png on the page’s ground for the home screen.
 //
-//   swift scripts/icons.swift 🚠 '#f2f2f0' apps/web/public
+//   swift scripts/icons.swift 🚠 '#f2f2f0' apps/personal/public
 //   swift scripts/icons.swift 🎁 '#ffffff' apps/wunschzettel/public
 
 let arguments = CommandLine.arguments

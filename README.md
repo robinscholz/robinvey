@@ -10,7 +10,7 @@ content as the site rendered to `/cv.pdf` at build time.
 
 | Path                | Package                     | Contents                                                                                                              |
 | ------------------- | --------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `apps/web`          | `@robinscholz/web`          | The one-page site, the content collections, the Profile module and the `/cv.pdf` route                                |
+| `apps/personal`     | `@robinscholz/personal`     | The one-page site, the content collections, the Profile module and the `/cv.pdf` route                                |
 | `apps/wunschzettel` | `@robinscholz/wunschzettel` | The wish list: the Wish module, the pages, the API, the picture store, the sign-in gate and the bookmarklet           |
 | `packages/base`     | `@robinscholz/base`         | The site’s Nuxt layer: mirror and vue-equipment wiring, the token theme and its fonts, type system, Ui and the garden |
 | `packages/database` | `@robinscholz/database`     | The Wunschzettel’s D1 database: Drizzle schema, migrations, the wishes repository and the seed                        |
@@ -24,7 +24,7 @@ pnpm dev
 
 `dev` builds the mirror tokens in `packages/base` and `apps/wunschzettel`
 first, then starts the site on
-port 3000 and the Wunschzettel on port 3001; `pnpm dev:web` and
+port 3000 and the Wunschzettel on port 3001; `pnpm dev:personal` and
 `pnpm dev:wunschzettel` start one of them. `/cv.pdf` renders on every request in development.
 The Wunschzettel applies pending migrations to its local D1 database first,
 then replaces the local wishes with the ones in production
@@ -45,7 +45,7 @@ pnpm build
 pnpm preview
 ```
 
-`build` writes the static site to `apps/web/.output/public`, `cv.pdf`
+`build` writes the static site to `apps/personal/.output/public`, `cv.pdf`
 included, and the Wunschzettel’s Worker to `apps/wunschzettel/.output`.
 `preview` serves the site the way Cloudflare does, with the same cache
 headers and 404 page, on port 8787. `pnpm start:wunschzettel` runs the
@@ -57,7 +57,7 @@ URLs, the links printed on the CV and the preview image all start from
 deploy:
 
 ```sh
-NUXT_PUBLIC_SITE_URL=https://preview.robinvey.com pnpm --filter @robinscholz/web build
+NUXT_PUBLIC_SITE_URL=https://preview.robinvey.com pnpm --filter @robinscholz/personal build
 ```
 
 Lint and typecheck before you push:
@@ -73,8 +73,8 @@ either package changes.
 
 ## Content
 
-Everything on the page and in the PDF comes from `apps/web/content`. Each
-collection has a schema in `apps/web/content.config.ts`, which types the
+Everything on the page and in the PDF comes from `apps/personal/content`. Each
+collection has a schema in `apps/personal/content.config.ts`, which types the
 queries. Nuxt Content does not reject a file that breaks it, so check the page
 and the PDF after an edit.
 
@@ -105,7 +105,7 @@ to expand.
 
 The site shows each role’s `summary`; the PDF continues it with its
 `highlights`, written as whole sentences, so each role reads as one paragraph.
-Both read the same transformers in `apps/web/shared/utils`, so the two never
+Both read the same transformers in `apps/personal/shared/utils`, so the two never
 disagree.
 
 ## The look
@@ -285,7 +285,7 @@ puts it behind the page and adds the tray’s parts, the reveal, the shadow and
 the click that closes it.
 
 An address that leads nowhere gets the garden out in the open, with no page
-over it: `apps/web/app/error.vue` sets a header in the page’s grid over a
+over it: `apps/personal/app/error.vue` sets a header in the page’s grid over a
 `GardenPlot` that fills the rest of the viewport, with the wind blowing from
 the start. Its emoji spins through the flowers and lands on a wilted one. The
 static build’s `404.html` boots the app in the browser, which finds no page and
@@ -326,14 +326,14 @@ The favicon is the 🚠 emoji: an SVG for the browsers that draw it, and
 `scripts/icons.swift`, which draws an emoji with AppKit:
 
 ```sh
-swift scripts/icons.swift 🚠 '#f2f2f0' apps/web/public
+swift scripts/icons.swift 🚠 '#f2f2f0' apps/personal/public
 ```
 
 The Wunschzettel’s 🎁 is drawn the same way, on white.
 
 ## The CV
 
-`apps/web/server/routes/cv.pdf.get.ts` reads the collections, and
+`apps/personal/server/routes/cv.pdf.get.ts` reads the collections, and
 `server/utils/cv/document.ts` lays the CV out with
 [`@jasy/pdf`](https://www.npmjs.com/package/@jasy/pdf): one A4 page, real text,
 tagged for screen readers, every link clickable, with a document title
@@ -349,14 +349,14 @@ link without it.
 
 The PDF engine embeds static faces, and reads kerning only from plain
 pair-positioning lookups, which ABC Areal mostly wraps in Extension lookups.
-`apps/web/server/assets/fonts` therefore holds a Semi Mono instance at 400, the
+`apps/personal/server/assets/fonts` therefore holds a Semi Mono instance at 400, the
 CV’s only weight, with just its kerning lookups, unwrapped, and its space a
 tenth of an em narrower; glyphs and kerning values are untouched. Brackets
 come from a proportional cut, as on the site, and the section emoji from a
 Noto Color Emoji subset. Cut Semi Mono again after a font update:
 
 ```sh
-python3 apps/web/scripts/cv-font.py
+python3 apps/personal/scripts/cv-font.py
 ```
 
 `server/utils/cv/typeset.ts` adds the optical corrections the kerning leaves: a
@@ -367,7 +367,7 @@ site sets that dash the same way with `UiRange`.
 
 ## Preview image
 
-`apps/web/server/routes/og.png.get.ts` draws the picture a shared link shows,
+`apps/personal/server/routes/og.png.get.ts` draws the picture a shared link shows,
 with satori and resvg: the name, role and location from `profile.yml` and
 the site’s host, set in the CV’s Semi Mono cut on the paper, 1200 by 630.
 The build prerenders it to `og.png`, and the page’s Open Graph tags point at

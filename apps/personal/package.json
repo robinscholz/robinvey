@@ -1,5 +1,5 @@
 {
-  "name": "@robinscholz/web",
+  "name": "@robinscholz/personal",
   "private": true,
   "type": "module",
   "description": "robinvey.com: the one-page site set from Nuxt Content, and the CV rendered to /cv.pdf",
