@@ -23,13 +23,12 @@ pnpm dev
 ```
 
 `dev` builds the mirror tokens in `packages/base` and `apps/wunschzettel`
-first, then starts the site on
-port 3000 and the Wunschzettel on port 3001; `pnpm dev:personal` and
-`pnpm dev:wunschzettel` start one of them. `/cv.pdf` renders on every request in development.
-The Wunschzettel applies pending migrations to its local D1 database first,
-then replaces the local wishes with the ones in production
-(`apps/wunschzettel/scripts/pull-database.mjs`, also `pnpm db:pull` from
-`apps/wunschzettel`), so a local run shows the list as it is online. It reads
+first, then starts the site on port 3000 and the Wunschzettel on port 3001;
+`pnpm dev:personal` and `pnpm dev:wunschzettel` start one of them. `/cv.pdf`
+renders on every request in development. The Wunschzettel applies pending
+migrations to its local D1 database first, then replaces the local wishes
+with the ones in production (`apps/wunschzettel/scripts/pull-database.mjs`,
+also `pnpm db:pull`), so a local run shows the list as it is online. It reads
 them with a plain query, since `wrangler d1 export` holds up the live
 database while it runs, and drops the local copy of any picture whose address
 changed. Offline or signed out of wrangler, it keeps the local wishes and the
@@ -42,22 +41,23 @@ opens the database in drizzle-kit studio.
 
 ```sh
 pnpm build
-pnpm preview
+pnpm start
 ```
 
 `build` writes the static site to `apps/personal/.output/public`, `cv.pdf`
-included, and the Wunschzettel’s Worker to `apps/wunschzettel/.output`.
-`preview` serves the site the way Cloudflare does, with the same cache
-headers and 404 page, on port 8787. `pnpm start:wunschzettel` runs the
-Wunschzettel’s production build in workerd, the runtime Cloudflare uses, on
-port 3001 against the same local database, sign-in gate included. Canonical
-URLs, the links printed on the CV and the preview image all start from
-`https://robinvey.com`, and the Wunschzettel’s from
+included, and the Wunschzettel’s Worker to `apps/wunschzettel/.output`;
+`pnpm build:personal` and `pnpm build:wunschzettel` build one of them.
+`start` runs both builds in workerd, the runtime Cloudflare uses: the site
+with the same cache headers and 404 page as online, on port 8787, and the
+Wunschzettel on port 3001 against the same local database, sign-in gate
+included; `pnpm start:personal` and `pnpm start:wunschzettel` start one of
+them. Canonical URLs, the links printed on the CV and the preview image all
+start from `https://robinvey.com`, and the Wunschzettel’s from
 `https://wunschzettel.robinvey.com`. Set another origin for a preview
 deploy:
 
 ```sh
-NUXT_PUBLIC_SITE_URL=https://preview.robinvey.com pnpm --filter @robinscholz/personal build
+NUXT_PUBLIC_SITE_URL=https://preview.robinvey.com pnpm build:personal
 ```
 
 Lint and typecheck before you push:
@@ -70,6 +70,12 @@ pnpm typecheck
 Neither waits for the token build. `typecheck` runs through each app, so it
 covers the base layer and the content schemas too, and runs again whenever
 either package changes.
+
+Every root script goes through Turborepo, and `turbo.json` holds the order:
+`tokens` before `dev` and `build`, `db:migrate` and `db:pull` before the
+Wunschzettel’s `dev` and `start`, `build` before `start` and `deploy`. Each
+package keeps single commands in its own scripts, so
+`pnpm --filter <package> <script>` runs that one step and nothing before it.
 
 ## Content
 
@@ -235,7 +241,7 @@ be dragged. Once the page has come to rest open, it casts a shadow onto the
 garden, which fades as soon as the page moves again.
 
 The right edge gives the garden away. With a cursor, the edge pulls back as
-the cursor comes within 96px of it, by 24px once it is within 32px, and
+the cursor comes within 160px of it, by 40px once it is within 48px, and
 settles again as the cursor leaves: MagicTray’s magnetism, for fine pointers
 that allow motion, which clips the page without moving it and uncovers a
 sliver of the garden. A finger cannot near an edge, so on a touch screen the
@@ -546,7 +552,7 @@ says the sign-in is not set up yet.
 ## Deploy
 
 The site is a Cloudflare Worker that serves only static files, from
-`wrangler.jsonc` at the root. The Wunschzettel is a Worker with a server,
+`apps/personal/wrangler.jsonc`. The Wunschzettel is a Worker with a server,
 from `apps/wunschzettel/wrangler.jsonc`: it names the Worker `wunschzettel`,
 binds the D1 database `wunschzettel` as `DB`, the R2 bucket
 `wunschzettel-images` as `IMAGES` and the built files as `ASSETS`, and sets
@@ -555,15 +561,16 @@ the GitHub redirect URI has one origin to match. Each is its own Workers
 Builds project, and Workers Builds deploys every push to `main`. Both builds
 run from the repository root:
 
-| Setting        | Site                  | Wunschzettel                                         |
-| -------------- | --------------------- | ---------------------------------------------------- |
-| Root directory | `/`                   | `/`                                                  |
-| Build command  | `pnpm build`          | `pnpm --filter @robinscholz/wunschzettel build`      |
-| Deploy command | `npx wrangler deploy` | `pnpm --filter @robinscholz/wunschzettel run deploy` |
+| Setting        | Site                                             | Wunschzettel                                         |
+| -------------- | ------------------------------------------------ | ---------------------------------------------------- |
+| Root directory | `/`                                              | `/`                                                  |
+| Build command  | `pnpm build:personal`                            | `pnpm build:wunschzettel`                            |
+| Deploy command | `pnpm --filter @robinscholz/personal run deploy` | `pnpm --filter @robinscholz/wunschzettel run deploy` |
 
-The Wunschzettel’s `deploy` script applies pending migrations to the
-deployed database with `wrangler d1 migrations apply DB --remote`, then
-uploads the Worker; `pnpm deploy:wunschzettel` does the same from a
+The site’s `deploy` script is `wrangler deploy`. The Wunschzettel’s applies
+pending migrations to the deployed database with
+`wrangler d1 migrations apply DB --remote` first, then uploads the Worker.
+`pnpm deploy:personal` and `pnpm deploy:wunschzettel` do the same from a
 checkout, after a build. The `run` matters: without it, pnpm starts its own
 `deploy` command instead. For the migrations, the build’s API token needs D1
 edit access on top of what Workers Builds gives it. Set the Worker up once,

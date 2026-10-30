@@ -5,6 +5,7 @@ import {
 } from '@maas/vue-equipment/utils'
 import { useMediaQuery, usePreferredReducedMotion } from '@vueuse/core'
 import { TrayIds } from '../../utils/enums'
+import { PULL } from '../../utils/pull'
 
 interface RunPayload {
   from: number
@@ -13,12 +14,9 @@ interface RunPayload {
   easing: (t: number) => number
 }
 
-// How far the page pulls back, in pixels: a sliver of garden.
-const PEEK = 24
-
 // The pull, the hold and the release, in milliseconds. The release takes
 // the tray’s own snap, so the page lets go the way it does after a drag.
-const PULL = 350
+const DRAW = 350
 const HOLD = 200
 const RELEASE = 400
 
@@ -94,9 +92,9 @@ export function useGardenPeek() {
     ) {
       return
     }
-    await run({ from: 0, to: PEEK, duration: PULL, easing: easeInOutQuad })
+    await run({ from: 0, to: PULL, duration: DRAW, easing: easeInOutQuad })
     await wait(HOLD)
-    await run({ from: PEEK, to: 0, duration: RELEASE, easing: easeOutQuint })
+    await run({ from: PULL, to: 0, duration: RELEASE, easing: easeOutQuint })
   }
 
   function schedule(delay: number) {

@@ -30,17 +30,16 @@ import { useEventListener, useMediaQuery } from '@vueuse/core'
 import { useGardenPeek } from '../composables/private/useGardenPeek'
 import { useGardenTray } from '../composables/private/useGardenTray'
 import { TrayIds } from '../utils/enums'
+import { PULL } from '../utils/pull'
 import type { MagicTrayOptions } from '@maas/vue-equipment/plugins/MagicTray'
 
 // How much of the viewport an open side uncovers. Half a phone’s would leave
 // too little garden to see.
 const OPEN = { narrow: 0.75, wide: 0.5 }
 
-// How far the right edge pulls back towards a cursor, in pixels, and the
-// band it does it in: the pull begins as the cursor comes within `start` of
-// the edge and is complete at `stop`.
-const PULL = 24
-const BAND = { start: 96, stop: 32 }
+// The band the right edge pulls back in, in pixels from the edge: the pull
+// begins as the cursor comes within `start` and is complete at `stop`.
+const BAND = { start: 160, stop: 48 }
 
 const { opened, engaged, toggle, close } = useGardenTray()
 useGardenPeek()
