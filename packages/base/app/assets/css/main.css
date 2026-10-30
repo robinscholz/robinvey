@@ -46,20 +46,9 @@
   ::selection {
     background-color: color-mix(
       in oklch,
-      var(--ui-selection-hue) 40%,
+      var(--app-color-surface-fg) 15%,
       transparent
     );
-  }
-
-  /* The hover hue lands at once and lets go gently. */
-  [data-hue],
-  [data-hue] * {
-    transition: color 150ms ease-out;
-  }
-
-  [data-hue]:hover,
-  [data-hue]:hover * {
-    transition-duration: 0s;
   }
 
   [data-scramble][aria-busy='true'] {

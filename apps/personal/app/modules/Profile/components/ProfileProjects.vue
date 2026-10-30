@@ -17,9 +17,8 @@
               type="button"
               class="block w-full cursor-pointer text-left"
               :aria-expanded="Boolean(viewActive)"
-              @click="viewActive || pin(project.id)"
             >
-              <UiRow :hue="viewActive ? pinned(project.id) : 0">
+              <UiRow>
                 <UiMarquee :playing="viewActive">{{ project.name }}</UiMarquee>
                 <template #meta>{{ project.year }}</template>
               </UiRow>
@@ -49,6 +48,4 @@ interface ProfileProjectsProps {
 }
 
 const { projects } = defineProps<ProfileProjectsProps>()
-
-const { pin, pinned } = useHue()
 </script>

@@ -26,36 +26,6 @@
             "$type": "color"
           }
         }
-      },
-      "hue": {
-        "1": {
-          "$value": "oklch(0.66 0.221 33)",
-          "$type": "color"
-        },
-        "2": {
-          "$value": "oklch(0.73 0.18 52)",
-          "$type": "color"
-        },
-        "3": {
-          "$value": "oklch(0.86 0.173 100)",
-          "$type": "color"
-        },
-        "4": {
-          "$value": "oklch(0.8 0.261 142)",
-          "$type": "color"
-        },
-        "5": {
-          "$value": "oklch(0.66 0.182 251)",
-          "$type": "color"
-        },
-        "6": {
-          "$value": "oklch(0.66 0.181 282)",
-          "$type": "color"
-        },
-        "7": {
-          "$value": "oklch(0.66 0.277 318)",
-          "$type": "color"
-        }
       }
     }
   }

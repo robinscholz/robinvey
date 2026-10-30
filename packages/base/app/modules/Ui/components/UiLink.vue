@@ -7,8 +7,6 @@
     :target="remote ? '_blank' : undefined"
     :class="classes"
     :data-held="held || null"
-    :data-hue="underline || null"
-    @pointerenter="underline && advance()"
   >
     <slot :held="held" />
   </NuxtLink>
@@ -25,8 +23,6 @@ interface UiLinkProps {
 }
 
 const { to, underline = true, hold = false } = defineProps<UiLinkProps>()
-
-const { advance } = useHue()
 
 const linkRef = useTemplateRef('link')
 
@@ -48,7 +44,7 @@ const file = computed(() => to.startsWith('/') && /\.\w+$/.test(to))
 
 const classes = computed(() => [
   underline
-    ? 'underline decoration-1 underline-offset-[0.2em] hover:text-(--ui-hue)'
+    ? 'underline decoration-1 underline-offset-[0.2em] hover:text-surface-muted'
     : 'block outline-offset-0',
   {
     'max-md:motion-safe:select-none max-md:motion-safe:[-webkit-touch-callout:none] max-md:motion-safe:[-webkit-user-drag:none]':

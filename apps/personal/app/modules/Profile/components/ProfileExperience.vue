@@ -13,9 +13,8 @@
                 type="button"
                 class="block w-full cursor-pointer text-left"
                 :aria-expanded="Boolean(viewActive)"
-                @click="viewActive || pin(entry.id)"
               >
-                <UiRow :hue="viewActive ? pinned(entry.id) : 0">
+                <UiRow>
                   <ProfileExperienceTitle
                     :entry="entry"
                     :playing="viewActive"
@@ -55,6 +54,4 @@ interface ProfileExperienceProps {
 }
 
 const { experience } = defineProps<ProfileExperienceProps>()
-
-const { pin, pinned } = useHue()
 </script>

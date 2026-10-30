@@ -20,11 +20,9 @@
                     boxClass,
                     'hover:bg-primary-subtle-hover data-[active=true]:bg-primary-subtle-active rounded-component-compact-sm px-[1ch] py-[0.25lh]',
                   ]
-                : 'text-surface-muted data-[active=true]:text-(--ui-hue)',
+                : 'text-surface-muted data-[active=true]:text-surface',
             ]"
             :aria-label="`Colour mode: ${current.label}`"
-            :data-hue="variant === 'plain' || null"
-            @pointerenter="variant === 'plain' && advance()"
           >
             <UiIcon :name="current.icon" />
             <span>{{ current.label }}</span>
@@ -40,9 +38,8 @@
               :key="option.value"
               :class="[
                 rowClass,
-                'rounded-component-compact-sm data-[active=true]:bg-primary-subtle px-[1ch] py-[0.125lh] data-[active=true]:text-(--ui-hue)',
+                'rounded-component-compact-sm data-[active=true]:bg-primary-subtle px-[1ch] py-[0.125lh]',
               ]"
-              @pointerenter="advance"
               @click="select(option.value)"
             >
               <UiIcon
@@ -131,7 +128,6 @@ const { placement = 'top-start', variant = 'plain' } =
 const menu = computed(() => MENUS[placement])
 
 const colorMode = useColorMode()
-const { advance } = useHue()
 const { run } = useSwitch()
 
 const preference = computed<ColorModePreference>(
