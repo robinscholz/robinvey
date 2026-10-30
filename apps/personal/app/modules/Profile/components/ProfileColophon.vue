@@ -1,7 +1,11 @@
 <template>
   <footer>
     <UiSection label="Colophon">
-      <p>{{ colophon }} Updated {{ updated }}.</p>
+      <!-- The update note moves to the next line as a whole, never split. -->
+      <p>
+        {{ colophon }}
+        <span class="whitespace-nowrap">Updated {{ updated }}.</span>
+      </p>
       <div class="mt-[1lh]">
         <UiColorModeSwitch variant="button" />
       </div>
