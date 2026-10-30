@@ -24,11 +24,13 @@
 <script setup lang="ts">
 import { easeOutQuint } from '@maas/vue-equipment/utils'
 import { useEventListener, useMediaQuery } from '@vueuse/core'
-import { useEmojiCanvasPeek } from '../composables/private/useEmojiCanvasPeek'
 import { useEmojiCanvasTray } from '../composables/private/useEmojiCanvasTray'
+import { PULL, STRIP } from '../utils/edge'
 import { TrayIds } from '../utils/enums'
-import { PULL } from '../utils/pull'
-import type { MagicTrayOptions } from '@maas/vue-equipment/plugins/MagicTray'
+import type {
+  MagicTrayOptions,
+  MagicTraySnapPoint,
+} from '@maas/vue-equipment/plugins/MagicTray'
 
 // How much of the viewport the open canvas takes. Half a phone’s would leave
 // too little of it to see.
@@ -39,7 +41,6 @@ const OPEN = { narrow: 0.75, wide: 0.5 }
 const BAND = { start: 160, stop: 48 }
 
 const { opened, toggle, close } = useEmojiCanvasTray()
-useEmojiCanvasPeek()
 
 const wide = useMediaQuery('(width >= 48rem)')
 
@@ -51,11 +52,14 @@ const magnetic = useMediaQuery(
 
 const open = computed(() => (wide.value ? OPEN.wide : OPEN.narrow))
 
-// The canvas opens from the right edge alone. At rest, the edge pulls back
-// towards a cursor nearing it, uncovering a sliver of the canvas: an
-// invitation to drag.
+// Where the page rests: flush with the edge where a cursor can pull it back,
+// a strip of canvas in from it on a phone, where nothing can.
+const rest = computed<MagicTraySnapPoint>(() => (wide.value ? 0 : `${STRIP}px`))
+
+// The canvas opens from the right edge alone.
 const options = computed<MagicTrayOptions>(() => ({
-  snapPoints: { right: [0, open.value] },
+  snapPoints: { right: [rest.value, open.value] },
+  initial: { snapPoints: { right: rest.value }, transition: false },
   handles: { right: true },
   threshold: { distance: 48 },
   animation: { snap: { duration: 400, easing: easeOutQuint } },

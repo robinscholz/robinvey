@@ -1,12 +1,14 @@
 <template>
-  <div class="px-6 md:px-12 xl:px-20">
+  <div class="px-6 pr-12 md:px-12 xl:px-20">
+    <!-- On a phone the right edge keeps a strip of the canvas, so the page’s
+         margin on that side moves in by as much. -->
     <main>
       <ProfileHeader :page="page" :profile="profile" />
       <div class="pb-12 md:pb-24">
         <ProfileCarousel />
       </div>
       <!-- The lists side by side where there is room, two from xl. -->
-      <div class="grid gap-x-12 xl:grid-cols-2">
+      <div class="grid grid-cols-1 gap-x-12 xl:grid-cols-2">
         <UiSection label="Work">
           <ProfileExperience :experience="experience" />
         </UiSection>
