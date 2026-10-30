@@ -1,30 +1,30 @@
 <template>
   <div class="px-6 md:px-12 xl:px-20">
     <main>
-      <ProfileHeader :page="page" :profile="profile" />
+      <profile-header :page="page" :profile="profile" />
       <div class="pb-12 md:pb-24">
-        <ProfileCarousel />
+        <profile-carousel />
       </div>
       <!-- The lists side by side where there is room, two from xl. -->
       <div class="grid grid-cols-1 gap-x-12 xl:grid-cols-2">
-        <UiSection label="Work">
-          <ProfileExperience :experience="experience" />
-        </UiSection>
-        <UiSection label="Projects">
-          <ProfileProjects :projects="projects" />
-        </UiSection>
-        <UiSection v-if="sites.length" label="Built">
-          <ProfileSites :sites="sites" />
-        </UiSection>
-        <UiSection v-if="writing.length" label="Writing">
-          <ProfileWriting :writing="writing" />
-        </UiSection>
+        <ui-section label="Work">
+          <profile-experience :experience="experience" />
+        </ui-section>
+        <ui-section label="Projects">
+          <profile-projects :projects="projects" />
+        </ui-section>
+        <ui-section v-if="sites.length" label="Built">
+          <profile-sites :sites="sites" />
+        </ui-section>
+        <ui-section v-if="writing.length" label="Writing">
+          <profile-writing :writing="writing" />
+        </ui-section>
       </div>
-      <UiSection label="Contact">
-        <ContentRenderer v-if="contact.document" :value="contact.document" />
-      </UiSection>
+      <ui-section label="Contact">
+        <content-renderer v-if="contact.document" :value="contact.document" />
+      </ui-section>
     </main>
-    <ProfileColophon :colophon="page.colophon" :updated="updated" />
+    <profile-colophon :colophon="page.colophon" :updated="updated" />
   </div>
 </template>
 

@@ -14,32 +14,32 @@
                 class="block w-full cursor-pointer text-left"
                 :aria-expanded="Boolean(viewActive)"
               >
-                <UiRow>
-                  <ProfileExperienceTitle
+                <ui-row>
+                  <profile-experience-title
                     :entry="entry"
                     :playing="viewActive"
                   />
                   <template #meta>{{ entry.years }}</template>
-                </UiRow>
+                </ui-row>
               </button>
             </magic-accordion-trigger>
             <magic-accordion-content>
               <!-- The summary is what the row opens for, so it is set in the
                    full ink; only the link under it steps back. -->
-              <UiRow as="div" :interactive="false" class="pt-1 pb-[1lh]">
+              <ui-row as="div" :interactive="false" class="pt-1 pb-[1lh]">
                 <p v-if="entry.summary">{{ entry.summary }}</p>
                 <p v-if="entry.url" class="text-surface-muted">
-                  <UiLink :to="entry.url">{{ entry.link }}</UiLink>
+                  <ui-link :to="entry.url">{{ entry.link }}</ui-link>
                 </p>
-              </UiRow>
+              </ui-row>
             </magic-accordion-content>
           </li>
         </magic-accordion-view>
         <li v-else>
-          <UiRow :interactive="false">
-            <ProfileExperienceTitle :entry="entry" />
+          <ui-row :interactive="false">
+            <profile-experience-title :entry="entry" />
             <template #meta>{{ entry.years }}</template>
-          </UiRow>
+          </ui-row>
         </li>
       </template>
     </ul>

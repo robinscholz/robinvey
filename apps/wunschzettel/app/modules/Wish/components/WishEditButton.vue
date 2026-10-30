@@ -1,7 +1,7 @@
 <template>
-  <WishButton size="sm" :flush="false" @click="edit(wish.id)">
+  <wish-button size="sm" :flush="false" @click="edit(wish.id)">
     Edit<span class="sr-only">: {{ wish.title }}</span>
-  </WishButton>
+  </wish-button>
 </template>
 
 <script setup lang="ts">

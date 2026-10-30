@@ -1,5 +1,5 @@
 <template>
-  <MAlertDialogRoot
+  <m-alert-dialog-root
     v-model:open="open"
     :options="{
       keyListener: { close: false },
@@ -7,20 +7,22 @@
       transition: { content: 'wish-alert', backdrop: 'wish-alert-backdrop' },
     }"
   >
-    <MAlertDialogBackdrop
+    <m-alert-dialog-backdrop
       class="fixed inset-0 bg-[color-mix(in_oklab,var(--mirror-bg-surface-low)_70%,transparent)]"
     />
-    <MAlertDialogContent
+    <m-alert-dialog-content
       :final-focus="finalFocus"
       class="bg-surface-low rounded-component-sm shadow-component-high fixed inset-x-6 top-1/2 mx-auto max-w-xs -translate-y-1/2 p-6 outline-hidden"
     >
-      <MAlertDialogTitle>Remove {{ title || 'this wish' }}?</MAlertDialogTitle>
+      <m-alert-dialog-title
+        >Remove {{ title || 'this wish' }}?</m-alert-dialog-title
+      >
       <p class="mt-8 flex justify-end gap-x-8">
-        <WishButton @click="open = false">Cancel</WishButton>
-        <WishButton variant="danger" @click="confirm">Remove</WishButton>
+        <wish-button @click="open = false">Cancel</wish-button>
+        <wish-button variant="danger" @click="confirm">Remove</wish-button>
       </p>
-    </MAlertDialogContent>
-  </MAlertDialogRoot>
+    </m-alert-dialog-content>
+  </m-alert-dialog-root>
 </template>
 
 <script setup lang="ts">

@@ -21,7 +21,7 @@
         <!-- A picture fades in once it has loaded. One that comes with the
              page is asked for at the size the grid shows it; the others
              measure themselves when their turn comes. -->
-        <MagicImage
+        <magic-image
           v-if="wish.image"
           :src="wish.image"
           :provider="preview ? 'none' : undefined"

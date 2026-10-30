@@ -3,7 +3,7 @@
     <!-- The handle sits inside the edge rather than astride it: the half of it
          past the edge would widen the page, and a phone zooms out to fit. -->
     <magic-tray-content
-      class="z-10 [--magic-tray-display:block] [--magic-tray-drag-overshoot-outer:0px] [--magic-tray-handle-offset-x-right:0px] [--magic-tray-handle-width-y:2.5rem] [--magic-tray-width:100%] md:[--magic-tray-handle-width-y:5rem]"
+      class="z-10 [--magic-tray-display:block] [--magic-tray-drag-overshoot-outer:0rem] [--magic-tray-handle-offset-x-right:0rem] [--magic-tray-handle-width-y:2.5rem] [--magic-tray-width:100%] md:[--magic-tray-handle-width-y:5rem]"
     >
       <!-- The page stays where it is and the clip cuts it away, so its fixed
            elements stay fixed. -->

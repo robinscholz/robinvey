@@ -1,19 +1,21 @@
 <template>
   <ul>
     <li v-for="site in sites" :key="site.id">
-      <UiLink v-slot="{ held }" :to="site.url" :underline="false" hold>
-        <UiRow>
+      <ui-link v-slot="{ held }" :to="site.url" :underline="false" hold>
+        <ui-row>
           <!-- The arrow stays on the last word’s line. -->
-          <UiMarquee :playing="held"
+          <ui-marquee :playing="held"
             >{{ splitLastWord(`${site.name}, ${site.kind}`).head }}
             <span class="whitespace-nowrap"
               >{{ splitLastWord(`${site.name}, ${site.kind}`).tail
-              }}<UiIcon name="arrow-n-e" class="text-surface-muted ml-[0.25em]"
+              }}<ui-icon
+                name="arrow-n-e"
+                class="text-surface-muted ml-[0.25em]"
             /></span>
-          </UiMarquee>
+          </ui-marquee>
           <template #meta>{{ site.year }}</template>
-        </UiRow>
-      </UiLink>
+        </ui-row>
+      </ui-link>
     </li>
   </ul>
 </template>

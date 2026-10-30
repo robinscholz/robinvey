@@ -18,21 +18,23 @@
               class="block w-full cursor-pointer text-left"
               :aria-expanded="Boolean(viewActive)"
             >
-              <UiRow>
-                <UiMarquee :playing="viewActive">{{ project.name }}</UiMarquee>
+              <ui-row>
+                <ui-marquee :playing="viewActive">{{
+                  project.name
+                }}</ui-marquee>
                 <template #meta>{{ project.year }}</template>
-              </UiRow>
+              </ui-row>
             </button>
           </magic-accordion-trigger>
           <magic-accordion-content>
             <!-- The description is what the row opens for, so it is set in
                  the full ink; only the link under it steps back. -->
-            <UiRow as="div" :interactive="false" class="pt-1 pb-[1lh]">
+            <ui-row as="div" :interactive="false" class="pt-1 pb-[1lh]">
               <p>{{ project.description }}</p>
               <p v-if="project.url" class="text-surface-muted">
-                <UiLink :to="project.url">{{ project.link }}</UiLink>
+                <ui-link :to="project.url">{{ project.link }}</ui-link>
               </p>
-            </UiRow>
+            </ui-row>
           </magic-accordion-content>
         </li>
       </magic-accordion-view>

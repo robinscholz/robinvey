@@ -10,7 +10,7 @@
       <!-- Nobody sees the canvas before the page is up, so its code is loaded
            and its emoji drawn once the browser is idle, after the page has
            had its first moments. -->
-      <LazyEmojiCanvas hydrate-on-idle :active="revealed" class="size-full" />
+      <lazy-emoji-canvas hydrate-on-idle :active="revealed" class="size-full" />
       <!-- The page’s shadow, cast by an empty box the size of the viewport
            that slides with the page. The page clips itself, which would cut
            off its own shadow, and a transform keeps the box on the compositor,

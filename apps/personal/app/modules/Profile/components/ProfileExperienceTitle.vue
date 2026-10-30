@@ -1,7 +1,7 @@
 <template>
-  <UiMarquee :playing="playing"
+  <ui-marquee :playing="playing"
     >{{ entry.company
-    }}<template v-if="entry.role">, {{ entry.role }}</template></UiMarquee
+    }}<template v-if="entry.role">, {{ entry.role }}</template></ui-marquee
   >
 </template>
 

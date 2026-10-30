@@ -1,5 +1,5 @@
 <template>
-  <WishCard
+  <wish-card
     ref="card"
     :wish="wish"
     sortable
@@ -9,7 +9,7 @@
     <template v-if="$slots.actions" #actions>
       <slot name="actions" />
     </template>
-  </WishCard>
+  </wish-card>
 </template>
 
 <script setup lang="ts">

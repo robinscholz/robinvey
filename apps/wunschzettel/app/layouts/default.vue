@@ -5,8 +5,8 @@
     <!-- The page is capped where a card in four columns is as wide as the
          widest one in three, so the pictures never outgrow the shops’
          copies. -->
-    <WishHeader />
+    <wish-header />
     <slot />
-    <WishToaster />
+    <wish-toaster />
   </div>
 </template>

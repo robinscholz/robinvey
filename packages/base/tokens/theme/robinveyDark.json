@@ -45,10 +45,10 @@
         "default": {
           "$value": {
             "color": "{app.color.component.shadow.default}",
-            "offsetX": "0px",
+            "offsetX": "0rem",
             "offsetY": "2rem",
             "blur": "4rem",
-            "spread": "0px"
+            "spread": "0rem"
           },
           "$type": "shadow"
         }

@@ -1,7 +1,7 @@
 <template>
   <header>
     <h1>
-      <NuxtLink to="/" class="focus-inline">{{ LIST.title }}</NuxtLink>
+      <nuxt-link to="/" class="focus-inline">{{ LIST.title }}</nuxt-link>
     </h1>
   </header>
 </template>

@@ -1,15 +1,15 @@
 <template>
   <footer>
-    <UiSection label="Colophon">
+    <ui-section label="Colophon">
       <!-- The update note has a line of its own, and never splits. -->
       <p>
         {{ colophon }}<br />
         <span class="whitespace-nowrap">Updated {{ updated }}.</span>
       </p>
       <div class="mt-[1lh]">
-        <UiColorModeSwitch variant="button" />
+        <ui-color-mode-switch variant="button" />
       </div>
-    </UiSection>
+    </ui-section>
   </footer>
 </template>
 

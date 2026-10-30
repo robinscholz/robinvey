@@ -13,30 +13,30 @@
   >
     <div class="min-h-full px-6 pt-8 pb-24 md:px-12 md:pt-12">
       <p class="text-right">
-        <WishButton @click="close">Close</WishButton>
+        <wish-button @click="close">Close</wish-button>
       </p>
       <form class="mt-20 md:mt-32" @submit.prevent="submit">
         <fieldset :disabled="pending !== null">
           <div class="flex flex-col gap-y-1">
-            <WishFields v-model="draft" />
+            <wish-fields v-model="draft" />
           </div>
           <p class="mt-16 flex items-baseline justify-end gap-x-8">
-            <WishButton
+            <wish-button
               ref="removeButton"
               variant="danger"
               :loading="pending === 'remove'"
               @click="removing = true"
             >
               {{ pending === 'remove' ? 'Removing …' : 'Remove' }}
-            </WishButton>
-            <WishButton
+            </wish-button>
+            <wish-button
               v-if="complete || pending === 'load'"
               variant="success"
               type="submit"
               :loading="pending === 'save'"
             >
               {{ pending === 'save' ? 'Saving …' : 'Save' }}
-            </WishButton>
+            </wish-button>
             <span v-else class="text-surface-muted"
               >Title and link are still missing.</span
             >
@@ -44,7 +44,7 @@
         </fieldset>
         <p v-if="notice" class="text-surface-muted">{{ notice }}</p>
       </form>
-      <WishRemoveDialog
+      <wish-remove-dialog
         v-model:open="removing"
         :title="draft.title.trim()"
         :final-focus="() => removeButtonRef?.$el ?? null"

@@ -1,5 +1,5 @@
 <template>
-  <NuxtLayout>
+  <nuxt-layout>
     <main class="pt-20 md:pt-32">
       <!-- A card with nothing in it, where the list’s first one would be. -->
       <div class="grid-wishes">
@@ -11,12 +11,12 @@
           <h2 class="mt-5">{{ title }}</h2>
           <p class="text-surface-muted">{{ error.statusCode }}</p>
           <p class="text-surface-muted">
-            <NuxtLink to="/" class="link">Back to the list</NuxtLink>
+            <nuxt-link to="/" class="link">Back to the list</nuxt-link>
           </p>
         </div>
       </div>
     </main>
-  </NuxtLayout>
+  </nuxt-layout>
 </template>
 
 <script setup lang="ts">

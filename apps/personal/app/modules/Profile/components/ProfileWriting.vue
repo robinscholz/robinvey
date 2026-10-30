@@ -1,19 +1,21 @@
 <template>
   <ul>
     <li v-for="article in writing" :key="article.id">
-      <UiLink v-slot="{ held }" :to="article.url" :underline="false" hold>
-        <UiRow>
+      <ui-link v-slot="{ held }" :to="article.url" :underline="false" hold>
+        <ui-row>
           <!-- The arrow stays on the last word’s line. -->
-          <UiMarquee :playing="held"
+          <ui-marquee :playing="held"
             >{{ splitLastWord(article.title).head }}
             <span class="whitespace-nowrap"
               >{{ splitLastWord(article.title).tail
-              }}<UiIcon name="arrow-n-e" class="text-surface-muted ml-[0.25em]"
+              }}<ui-icon
+                name="arrow-n-e"
+                class="text-surface-muted ml-[0.25em]"
             /></span>
-          </UiMarquee>
+          </ui-marquee>
           <template #meta>{{ article.month }}</template>
-        </UiRow>
-      </UiLink>
+        </ui-row>
+      </ui-link>
     </li>
   </ul>
 </template>

@@ -1,13 +1,13 @@
 <template>
   <main class="pt-20 md:pt-32">
-    <ClientOnly>
+    <client-only>
       <div v-if="received" class="grid-wishes">
         <ul class="contents">
-          <WishCard :wish="wish" preview />
+          <wish-card :wish="wish" preview />
         </ul>
         <div class="xl:col-span-2 xl:max-w-xl">
           <form class="flex flex-col gap-y-1" @submit.prevent="submit">
-            <WishFields v-model="draft" />
+            <wish-fields v-model="draft" />
           </form>
           <p class="text-surface-muted mt-8">
             Compare prices:
@@ -23,30 +23,30 @@
             >
           </p>
           <p class="mt-16">
-            <WishButton
+            <wish-button
               v-if="complete"
               variant="success"
               :loading="saving"
               @click="submit"
             >
               {{ saving ? 'Saving …' : 'Save' }}
-            </WishButton>
+            </wish-button>
             <span v-else class="text-surface-muted"
               >Title and link are still missing.</span
             >
           </p>
         </div>
       </div>
-      <WishBookmarklet v-else />
+      <wish-bookmarklet v-else />
       <!-- The bookmarklet comes with the page, so it is there before the
            script is. Arriving with a product, it is hidden until the form
            has taken its place. -->
       <template #fallback>
         <div :[WishBookmarkletAttribute]="''">
-          <WishBookmarklet />
+          <wish-bookmarklet />
         </div>
       </template>
-    </ClientOnly>
+    </client-only>
     <section
       v-if="!received && wishes.length"
       :[WishBookmarkletAttribute]="''"
@@ -59,13 +59,13 @@
           class="flex items-baseline gap-x-6"
         >
           <span class="min-w-0 flex-1">{{ entry.title }}</span>
-          <WishButton :loading="removing === entry.id" @click="ask(entry)">
+          <wish-button :loading="removing === entry.id" @click="ask(entry)">
             {{ removing === entry.id ? 'Removing …' : 'Remove' }}
-          </WishButton>
+          </wish-button>
         </li>
       </ul>
     </section>
-    <WishRemoveDialog
+    <wish-remove-dialog
       v-model:open="asking"
       :title="asked?.title ?? ''"
       @confirm="discard"

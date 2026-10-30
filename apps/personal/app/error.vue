@@ -7,13 +7,13 @@
       <h1>{{ title }}</h1>
       <p class="text-surface-muted">{{ error.statusCode }}</p>
       <p class="mt-[1lh]">
-        <UiLink to="/">{{ host }}</UiLink>
+        <ui-link to="/">{{ host }}</ui-link>
       </p>
     </header>
     <!-- Loaded with the page, as nothing covers the canvas here; lazy all
          the same, so the field stays its own chunk and the home page can
          leave it until it is idle. -->
-    <LazyEmojiCanvas active class="flex-1" />
+    <lazy-emoji-canvas active class="flex-1" />
   </div>
 </template>
 

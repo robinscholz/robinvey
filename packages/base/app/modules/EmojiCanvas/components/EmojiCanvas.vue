@@ -10,7 +10,7 @@
     <canvas ref="canvas" class="absolute inset-0 size-full" />
     <!-- The cell under the pointer plays its emoji’s motion on a matrix of
          its own, over its still. -->
-    <UiEmoji
+    <ui-emoji
       v-if="hovered"
       :key="hovered.key"
       :symbol="hovered.symbol"

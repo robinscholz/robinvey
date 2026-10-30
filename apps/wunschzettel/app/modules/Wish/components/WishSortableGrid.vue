@@ -1,19 +1,19 @@
 <template>
-  <DragDropProvider
+  <drag-drop-provider
     :sensors="SENSORS"
     @drag-over="onDragOver"
     @drag-end="onDragEnd"
   >
-    <WishGrid :wishes="ordered">
+    <wish-grid :wishes="ordered">
       <template #default="{ wish, index, preload }">
-        <WishSortableCard :wish="wish" :index="index" :preload="preload">
+        <wish-sortable-card :wish="wish" :index="index" :preload="preload">
           <template v-if="$slots.actions" #actions>
             <slot name="actions" :wish="wish" />
           </template>
-        </WishSortableCard>
+        </wish-sortable-card>
       </template>
-    </WishGrid>
-  </DragDropProvider>
+    </wish-grid>
+  </drag-drop-provider>
 </template>
 
 <script setup lang="ts">

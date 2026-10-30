@@ -2,7 +2,7 @@
   <ul v-if="wishes.length" class="grid-wishes">
     <template v-for="(wish, index) in wishes" :key="wish.id">
       <slot :wish="wish" :index="index" :preload="index < PRELOADED">
-        <WishCard :wish="wish" :preload="index < PRELOADED" />
+        <wish-card :wish="wish" :preload="index < PRELOADED" />
       </slot>
     </template>
   </ul>

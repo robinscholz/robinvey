@@ -1,6 +1,6 @@
 <template>
   <!-- A link in the prose names something, so it stays on one line. -->
-  <UiLink :to="href" class="whitespace-nowrap"><slot /></UiLink>
+  <ui-link :to="href" class="whitespace-nowrap"><slot /></ui-link>
 </template>
 
 <script setup lang="ts">

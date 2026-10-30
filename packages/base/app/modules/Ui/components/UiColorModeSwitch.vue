@@ -1,5 +1,5 @@
 <template>
-  <ColorScheme tag="div">
+  <color-scheme tag="div">
     <magic-menu-provider
       :id="menu.id"
       :options="{
@@ -24,7 +24,7 @@
             ]"
             :aria-label="`Colour mode: ${current.label}`"
           >
-            <UiIcon :name="current.icon" />
+            <ui-icon :name="current.icon" />
             <span>{{ current.label }}</span>
           </button>
         </magic-menu-trigger>
@@ -42,10 +42,10 @@
               ]"
               @click="select(option.value)"
             >
-              <UiIcon
+              <ui-icon
                 :name="option.value === preference ? 'check' : 'spacer'"
               />
-              <UiIcon :name="option.icon" />
+              <ui-icon :name="option.icon" />
               <span>{{ option.label }}</span>
             </magic-menu-item>
           </div>
@@ -54,11 +54,11 @@
     </magic-menu-provider>
     <template #placeholder>
       <span :class="[rowClass, 'invisible']" aria-hidden="true">
-        <UiIcon :name="SYSTEM.icon" />
+        <ui-icon :name="SYSTEM.icon" />
         <span>{{ SYSTEM.label }}</span>
       </span>
     </template>
-  </ColorScheme>
+  </color-scheme>
 </template>
 
 <script setup lang="ts">

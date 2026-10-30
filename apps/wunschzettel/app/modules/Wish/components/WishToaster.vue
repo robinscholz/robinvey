@@ -1,11 +1,11 @@
 <template>
-  <ClientOnly>
-    <MagicToastProvider
+  <client-only>
+    <magic-toast-provider
       :id="ToastIds.Wish"
       :options="options"
       class="[--magic-toast-animation-duration:300ms] [--magic-toast-padding-x:--spacing(4)] [--magic-toast-padding-y:--spacing(4)] motion-reduce:[--magic-toast-animation-duration:0ms]"
     />
-  </ClientOnly>
+  </client-only>
 </template>
 
 <script setup lang="ts">

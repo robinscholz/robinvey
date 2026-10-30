@@ -1,5 +1,5 @@
 <template>
-  <NuxtLink
+  <nuxt-link
     ref="link"
     :to="to"
     :external="file || undefined"
@@ -9,7 +9,7 @@
     :data-held="held || null"
   >
     <slot :held="held" />
-  </NuxtLink>
+  </nuxt-link>
 </template>
 
 <script setup lang="ts">

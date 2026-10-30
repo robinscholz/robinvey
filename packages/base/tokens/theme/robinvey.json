@@ -31,14 +31,14 @@
     "dimension": {
       "border": {
         "default": {
-          "$value": "1px",
+          "$value": "0.0625rem",
           "$type": "dimension"
         }
       },
       "outline": {
         "focus": {
           "default": {
-            "$value": "2px",
+            "$value": "0.125rem",
             "$type": "dimension"
           }
         }

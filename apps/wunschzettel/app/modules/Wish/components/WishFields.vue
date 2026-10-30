@@ -1,14 +1,14 @@
 <template>
-  <WishField v-model="draft.title" label="Title" />
-  <WishField v-model="draft.url" label="Link" type="url" />
-  <WishField
+  <wish-field v-model="draft.title" label="Title" />
+  <wish-field v-model="draft.url" label="Link" type="url" />
+  <wish-field
     v-model="draft.shop"
     label="Shop"
     :placeholder="formatHost(draft.url)"
   />
-  <WishField v-model="draft.price" label="Price" placeholder="0,00" />
-  <WishField v-model="draft.image" label="Picture" type="url" />
-  <WishField v-model="draft.note" label="Note" placeholder="Size, colour …" />
+  <wish-field v-model="draft.price" label="Price" placeholder="0,00" />
+  <wish-field v-model="draft.image" label="Picture" type="url" />
+  <wish-field v-model="draft.note" label="Note" placeholder="Size, colour …" />
 </template>
 
 <script setup lang="ts">

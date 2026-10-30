@@ -1,9 +1,9 @@
 <template>
-  <MButton
+  <m-button
     :class="[BASE, VARIANTS[variant], SIZES[size], flush && PULLS[size]]"
   >
     <slot />
-  </MButton>
+  </m-button>
 </template>
 
 <script setup lang="ts">

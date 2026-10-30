@@ -1,6 +1,6 @@
 <template>
-  <EmojiCanvasBed />
-  <EmojiCanvasTray>
-    <NuxtPage />
-  </EmojiCanvasTray>
+  <emoji-canvas-bed />
+  <emoji-canvas-tray>
+    <nuxt-page />
+  </emoji-canvas-tray>
 </template>
