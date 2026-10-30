@@ -6,6 +6,10 @@
           "base": {
             "$value": "{config.color.palette.stone.solid.1}",
             "$type": "color"
+          },
+          "low": {
+            "$value": "{config.color.palette.stone.solid.2}",
+            "$type": "color"
           }
         },
         "fg": {

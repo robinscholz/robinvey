@@ -1,10 +1,6 @@
 <template>
-  <!-- The garden out in the open, with no page over it. Dark like the garden
-       under the page, whatever the colour mode. -->
-  <div
-    class="bg-surface-low text-surface fixed inset-0 flex flex-col"
-    data-color-mode="dark"
-  >
+  <!-- The garden out in the open, with no page over it. -->
+  <div class="bg-surface-low text-surface fixed inset-0 flex flex-col">
     <header
       class="max-w-[64ch] px-5 pt-6 pb-12 md:px-10 md:pt-10 md:pb-24 lg:px-16 lg:pt-16"
     >
@@ -39,7 +35,4 @@ const title = computed(() =>
 const host = new URL(siteUrl).host
 
 useSeoMeta({ title })
-
-// The frame around the page is dark with it, whatever the visitor chose.
-useThemeColor({ mode: 'dark' })
 </script>

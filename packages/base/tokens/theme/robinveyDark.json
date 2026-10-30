@@ -6,6 +6,10 @@
           "base": {
             "$value": "{config.color.palette.stone.solid.15}",
             "$type": "color"
+          },
+          "low": {
+            "$value": "oklch(0.16 0.003 106)",
+            "$type": "color"
           }
         },
         "fg": {

@@ -1,12 +1,9 @@
 <template>
-  <!-- Always dark, whatever the page’s colour mode: the attribute scopes the
-       dark tokens and the font’s dark axis to the garden. Once a side is
-       open, the garden is a drag surface for it, so the page can be pulled
-       back from anywhere on the garden; a tap closes it too. -->
+  <!-- Once a side is open, the garden is a drag surface for it, so the page
+       can be pulled back from anywhere on the garden; a tap closes it too. -->
   <magic-tray-trigger :id="TrayIds.Garden" :side="opened ?? 'right'" as-child>
     <div
       class="bg-surface-low invisible fixed inset-0 z-0 overflow-hidden data-revealed:visible"
-      data-color-mode="dark"
       :data-revealed="revealed || null"
       @click="close"
     >
@@ -14,15 +11,13 @@
            and its emoji drawn once the browser is idle, after the page has
            had its first moments. -->
       <LazyGardenField hydrate-on-idle :active="revealed" class="size-full" />
-      <!-- The page’s shadow, cast by an empty box over the part of the page in
-           view. The page clips itself, which would cut off its own shadow. -->
+      <!-- The page’s shadow, cast by an empty box the size of the viewport
+           that slides with the page. The page clips itself, which would cut
+           off its own shadow, and a transform keeps the box on the compositor,
+           so the shadow costs nothing while the page moves. -->
       <div
-        class="shadow-component pointer-events-none absolute inset-y-0 right-(--garden-page-right) left-(--garden-page-left) opacity-0 transition-opacity duration-150 ease-out data-settled:opacity-100 data-settled:duration-300"
-        :data-settled="settled || null"
-        :style="{
-          '--garden-page-left': `${insets.left}px`,
-          '--garden-page-right': `${insets.right}px`,
-        }"
+        class="shadow-component pointer-events-none absolute inset-0 will-change-transform"
+        :style="{ transform: `translateX(${insets.left - insets.right}px)` }"
       />
     </div>
   </magic-tray-trigger>
@@ -32,5 +27,5 @@
 import { useGardenTray } from '../composables/private/useGardenTray'
 import { TrayIds } from '../utils/enums'
 
-const { revealed, opened, settled, insets, close } = useGardenTray()
+const { revealed, opened, insets, close } = useGardenTray()
 </script>

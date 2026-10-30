@@ -37,7 +37,8 @@ import {
 import { useGardenTiles } from '../composables/private/useGardenTiles'
 import { listEmoji } from '../utils/emoji'
 import { hashCell } from '../utils/hash'
-import { drawTile } from '../utils/tile'
+import { shuffle } from '../utils/shuffle'
+import { drawGrid, drawTile } from '../utils/tile'
 
 interface GardenFieldProps {
   // The field drifts only while it is in view.
@@ -76,24 +77,29 @@ const motion = usePreferredReducedMotion()
 
 // Listed once the component is up, so the server renders an empty field.
 const emoji = shallowRef<Array<string>>([])
+
+// The field is tiled with blocks that each hold every emoji once, in an
+// order of their own, so no emoji repeats within a block and a repeat across
+// a seam is rare. A block is about square, and the few cells it has over are
+// filled from the start of its order, at its far corner.
+const blockCols = computed(() => Math.ceil(Math.sqrt(emoji.value.length)))
+const blockRows = computed(() =>
+  blockCols.value ? Math.ceil(emoji.value.length / blockCols.value) : 0
+)
+const blocks = new Map<string, Array<string>>()
 const offset = shallowReactive({ x: 0, y: 0 })
 const pointer = shallowRef<Cell>()
 const hovered = refDebounced(pointer, REST)
 
-// The colour of an unlit dot, read from the garden’s own tokens.
+// The unlit dots every cell shares, in the colour the page’s tokens give
+// them, which follows the colour mode. The tiles hold lit dots only, so
+// they outlast a change of mode.
+const colorMode = useColorMode()
 const inactive = shallowRef('')
-
-// A tile with no emoji on it, for cells whose tile is not drawn yet.
-let blank: HTMLCanvasElement | undefined
+let grid: HTMLCanvasElement | undefined
 
 const { tiles, request } = useGardenTiles((symbol) =>
-  drawTile({
-    symbol,
-    dots: DOTS,
-    size: SIZE,
-    scale: pixelRatio.value,
-    inactive: inactive.value,
-  })
+  drawTile({ symbol, dots: DOTS, size: SIZE, scale: pixelRatio.value })
 )
 
 // The cells in view, with one more all round, so none pops in at the edge.
@@ -120,13 +126,40 @@ const cells = computed<Array<Cell>>(() => {
   return result
 })
 
+// A block’s order, drawn from its place and the visit’s seed. Far travels
+// would pile orders up, so the cache starts over now and then.
+function blockAt(blockCol: number, blockRow: number): Array<string> {
+  const key = `${blockCol}:${blockRow}`
+  const known = blocks.get(key)
+  if (known) {
+    return known
+  }
+  if (blocks.size > 32) {
+    blocks.clear()
+  }
+  const order = shuffle(
+    emoji.value,
+    hashCell({ col: blockCol, row: blockRow, seed })
+  )
+  blocks.set(key, order)
+  return order
+}
+
 function cellAt({ col, row }: Pick<Cell, 'col' | 'row'>): Cell | undefined {
   const list = emoji.value
-  const symbol = list[hashCell({ col, row, seed }) % list.length]
+  if (list.length === 0) {
+    return undefined
+  }
+  const blockCol = Math.floor(col / blockCols.value)
+  const blockRow = Math.floor(row / blockRows.value)
+  const index =
+    (row - blockRow * blockRows.value) * blockCols.value +
+    (col - blockCol * blockCols.value)
+  const symbol = blockAt(blockCol, blockRow)[index % list.length]
   return symbol ? { key: `${col}:${row}`, col, row, symbol } : undefined
 }
 
-// Every cell in view, from its tile or a blank one until it is drawn. The
+// Every cell in view: the grid, and the tile over it once it is drawn. The
 // canvas is sized to the area in device pixels, and drawn in CSS pixels.
 function draw() {
   const canvas = canvasRef.value
@@ -141,7 +174,7 @@ function draw() {
     canvas.width = pixelWidth
     canvas.height = pixelHeight
   }
-  blank ??= drawTile({
+  grid ??= drawGrid({
     dots: DOTS,
     size: SIZE,
     scale,
@@ -150,17 +183,27 @@ function draw() {
   context.setTransform(scale, 0, 0, scale, 0, 0)
   context.clearRect(0, 0, width.value, height.value)
   for (const cell of cells.value) {
-    const tile = tiles.get(cell.symbol) ?? blank
+    const x = cell.col * PITCH + offset.x
+    const y = cell.row * PITCH + offset.y
+    if (grid) {
+      context.drawImage(grid, x, y, SIZE, SIZE)
+    }
+    const tile = tiles.get(cell.symbol)
     if (tile) {
-      context.drawImage(
-        tile,
-        cell.col * PITCH + offset.x,
-        cell.row * PITCH + offset.y,
-        SIZE,
-        SIZE
-      )
+      context.drawImage(tile, x, y, SIZE, SIZE)
     }
   }
+}
+
+function readInactive() {
+  const area = areaRef.value
+  if (!area) {
+    return
+  }
+  inactive.value = getComputedStyle(area).getPropertyValue(
+    '--app-color-surface-fg-subtle'
+  )
+  grid = undefined
 }
 
 const { pause, resume } = useRafFn(
@@ -213,13 +256,15 @@ watch(
   { immediate: true }
 )
 
+// The mode is written to <html> in the same tick, so the tokens are read
+// once that has settled.
+watch(
+  () => colorMode.value,
+  () => nextTick(readInactive)
+)
+
 onMounted(() => {
-  const area = areaRef.value
-  if (area) {
-    inactive.value = getComputedStyle(area).getPropertyValue(
-      '--app-color-surface-fg-subtle'
-    )
-  }
+  readInactive()
   emoji.value = listEmoji()
 })
 </script>

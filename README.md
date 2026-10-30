@@ -195,7 +195,7 @@ and settles it back in, the choreography of `useSwitch()`. One that leaves the p
 showing that mode, is kept without it. The `theme-color` tags follow the
 mode, so the browser’s own frame takes the paper or the dark ground: one tag
 per system scheme until a choice is made, both with the choice after
-(`useThemeColor()`); the error page keeps the dark one. `color-scheme`
+(`useThemeColor()`). `color-scheme`
 follows on `<html>`, so scrollbars and form controls match.
 
 ## Garden
@@ -208,8 +208,7 @@ below the `md` breakpoint. Click the garden, the part of the page still showing
 or its edge, or press Escape, to close it again; the garden and that part of
 the page are drag surfaces as well, `MagicTrayTrigger`s, so the page can be
 pushed shut from anywhere on either. While one edge is out, the other cannot
-be dragged. Once the page has come to rest open, it casts a shadow onto the
-garden, which fades as soon as the page moves again.
+be dragged. The page casts a shadow onto the garden as it moves.
 
 The right edge gives the garden away. With a cursor, the edge pulls back as
 the cursor comes within 160px of it, by 48px once it is within 48px, and
@@ -224,18 +223,18 @@ magnetic pull as well as the drag, so a drag or a click after a pull carries on
 from where the page already is. The transform is only set while the page is
 away from rest, since a transformed ancestor pins fixed elements to the page
 instead of the viewport. The garden is a fixed layer behind the page
-on `bg-surface-low`, and always dark: it carries `data-color-mode="dark"`,
-which scopes the dark mode’s tokens to it, so it stays black with the dark hues
-whichever mode the page is in. It stays hidden until an edge moves, so it never
-shows through an overscroll. The page’s shadow comes from an empty box in the
-garden layer over the part of the page in view, since the clip would cut off a
-shadow cast by the page itself.
+on `bg-surface-low`, in the page’s colour mode. It stays hidden until an edge moves, so it never
+shows through an overscroll. The page’s shadow comes from an empty box in the garden layer, the size of
+the viewport, that slides with the page by a transform, since the clip would
+cut off a shadow cast by the page itself.
 
-The field is every emoji the system draws as a single code point, 1,148 of
+The field is every emoji the system draws as a single code point, 1,098 of
 them, each a still on a 48px dot matrix of twelve dots a side, one every 80px,
-on a grid without an end. A cell draws its emoji from a hash of its place and a
-seed drawn for the visit, so the field is laid out afresh each time and never
-repeats. The stills are drawn in the browser: `utils/tile.ts` draws the glyph
+on a grid without an end. The field is tiled with blocks that each hold every
+emoji once, in an order drawn from the block’s place and a seed for the visit,
+so no emoji repeats within a block and the field is laid out afresh each time.
+Families of look-alikes, the clock faces, the speakers and the coloured
+shapes, are left out, since they would read as repeats. The stills are drawn in the browser: `utils/tile.ts` draws the glyph
 with the system’s emoji font onto a canvas, crops it to its ink, reads it off
 at six pixels a dot and paints the dots the way MagicDotMatrix would, round and
 three times as wide as their gaps, onto a tile. `useGardenTiles` draws the
@@ -258,14 +257,14 @@ over it: `apps/personal/app/error.vue` sets a header over a `GardenField` that
 fills the rest of the viewport, drifting from the start. The static build’s
 `404.html` boots the app in the browser, which finds no page and shows the
 error page; `not_found_handling` in `wrangler.jsonc` serves it. Until the app
-has booted, `app/spa-loading-template.html` stands in with the dark ground and
-the header, so the page never flashes white. The field is a lazy component: on
+has booted, `app/spa-loading-template.html` stands in with the ground and the
+header, so the page never flashes. The field is a lazy component: on
 the home page it hydrates once the browser is idle, so its code stays out of
 the intro’s way, and on the error page it loads with the page.
 
 ## Titles on phones
 
-Below the `md` breakpoint every title in Work, Sites, Projects and Writing
+Below the `md` breakpoint every title in Work, Built, Projects and Writing
 stays on one line, cut off with a fade where it does not fit. It scrolls while
 its row is open, or while a link row is held; a hold does not open the link.
 From `md` up, and for visitors who prefer reduced motion, titles wrap.

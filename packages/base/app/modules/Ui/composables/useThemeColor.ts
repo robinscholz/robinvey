@@ -6,11 +6,6 @@ const GROUND = '#161615'
 
 type ThemeColorMode = 'light' | 'dark'
 
-interface UseThemeColorOptions {
-  // A mode the page keeps whatever the visitor chose, as the error page does.
-  mode?: ThemeColorMode
-}
-
 function colorOf(mode: ThemeColorMode): string {
   return mode === 'dark' ? GROUND : PAPER
 }
@@ -18,12 +13,12 @@ function colorOf(mode: ThemeColorMode): string {
 // Sets the browser’s theme colour: one tag per system scheme, so the first
 // paint is right before the app has read the visitor’s choice, and both
 // carry that choice once there is one.
-export function useThemeColor({ mode }: UseThemeColorOptions = {}) {
+export function useThemeColor() {
   const colorMode = useColorMode()
 
   // Private state
   const chosen = computed(() => {
-    const preference = mode ?? colorMode.preference
+    const preference = colorMode.preference
     return preference === 'dark' || preference === 'light'
       ? colorOf(preference)
       : undefined

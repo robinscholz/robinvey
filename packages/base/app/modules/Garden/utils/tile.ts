@@ -1,12 +1,22 @@
-interface TilePayload {
-  // Without a symbol the tile is a blank matrix.
-  symbol?: string
+interface Matrix {
   dots: number
   size: number
   // Device pixels to a CSS pixel.
   scale: number
+}
+
+interface TilePayload extends Matrix {
+  symbol: string
+}
+
+interface GridPayload extends Matrix {
   // The colour of an unlit dot.
   inactive: string
+}
+
+interface Geometry {
+  gap: number
+  dot: number
 }
 
 type Channels = [red: number, green: number, blue: number]
@@ -32,6 +42,26 @@ function createContext(width: number, height: number) {
   canvas.width = width
   canvas.height = height
   return canvas.getContext('2d', { willReadFrequently: true })
+}
+
+// The geometry MagicDotMatrix draws: dots three times as wide as the gaps
+// between them.
+function geometry({ dots, size }: Matrix): Geometry {
+  const gap = size / (4 * dots - 1)
+  return { gap, dot: (size - (dots - 1) * gap) / dots }
+}
+
+function fillDot(
+  context: CanvasRenderingContext2D,
+  index: number,
+  dots: number,
+  { gap, dot }: Geometry
+) {
+  const x = (index % dots) * (dot + gap) + dot / 2
+  const y = Math.floor(index / dots) * (dot + gap) + dot / 2
+  context.beginPath()
+  context.arc(x, y, dot / 2, 0, Math.PI * 2)
+  context.fill()
 }
 
 // The glyph, cropped to the pixels it inks.
@@ -128,35 +158,44 @@ function sample(symbol: string, dots: number): Map<number, Channels> {
   return colors
 }
 
-// One still of the emoji as a dot matrix, with the geometry MagicDotMatrix
-// draws: round dots three times as wide as the gaps between them.
+// The unlit dots of a matrix, drawn once for every cell to share.
+export function drawGrid({
+  dots,
+  size,
+  scale,
+  inactive,
+}: GridPayload): HTMLCanvasElement | undefined {
+  const context = createContext(size * scale, size * scale)
+  if (!context) {
+    return undefined
+  }
+  const shape = geometry({ dots, size, scale })
+  context.scale(scale, scale)
+  context.globalAlpha = DIM
+  context.fillStyle = inactive
+  for (let index = 0; index < dots * dots; index++) {
+    fillDot(context, index, dots, shape)
+  }
+  return context.canvas
+}
+
+// The lit dots of one emoji, each in the colour it covers the dot with, on
+// a clear ground, so the tile sits on the grid in any colour mode.
 export function drawTile({
   symbol,
   dots,
   size,
   scale,
-  inactive,
 }: TilePayload): HTMLCanvasElement | undefined {
   const context = createContext(size * scale, size * scale)
   if (!context) {
     return undefined
   }
-  const colors = symbol ? sample(symbol, dots) : new Map<number, Channels>()
-  const gap = size / (4 * dots - 1)
-  const dot = (size - (dots - 1) * gap) / dots
-
+  const shape = geometry({ dots, size, scale })
   context.scale(scale, scale)
-  for (let index = 0; index < dots * dots; index++) {
-    const color = colors.get(index)
-    const x = (index % dots) * (dot + gap) + dot / 2
-    const y = Math.floor(index / dots) * (dot + gap) + dot / 2
-    context.globalAlpha = color ? 1 : DIM
-    context.fillStyle = color
-      ? `rgb(${Math.round(color[0])} ${Math.round(color[1])} ${Math.round(color[2])})`
-      : inactive
-    context.beginPath()
-    context.arc(x, y, dot / 2, 0, Math.PI * 2)
-    context.fill()
+  for (const [index, [red, green, blue]] of sample(symbol, dots)) {
+    context.fillStyle = `rgb(${Math.round(red)} ${Math.round(green)} ${Math.round(blue)})`
+    fillDot(context, index, dots, shape)
   }
   return context.canvas
 }

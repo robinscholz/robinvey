@@ -25,20 +25,11 @@ export function useGardenTray() {
       state.draggingSide ?? SIDES.find((side) => state.dragged[side] > EPSILON)
   )
 
-  // Open, let go of and done snapping.
-  const settled = computed(() => {
-    const side = opened.value
-    return (
-      side !== undefined &&
-      !state.dragging &&
-      Math.abs(state.dragged[side] - state.snapped[side]) < EPSILON
-    )
-  })
-
-  // How far each edge of the page stands in from the viewport’s.
+  // How far each edge of the page stands in from the viewport’s, by the drag
+  // and by the pull alike.
   const insets = computed(() => ({
-    left: state.dragged.left,
-    right: state.dragged.right,
+    left: state.dragged.left + state.magnetic.left,
+    right: state.dragged.right + state.magnetic.right,
   }))
 
   // How far the page has moved along, with its edges: dragged or pulled, as
@@ -78,7 +69,6 @@ export function useGardenTray() {
     revealed,
     opened,
     engaged,
-    settled,
     insets,
     shift,
     close,
