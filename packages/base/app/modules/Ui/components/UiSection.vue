@@ -8,7 +8,12 @@
         data-hue
         @pointerenter="enter"
       >
-        <UiEmoji v-if="emoji" ref="emoji" :symbol="emoji" class="mr-[1ch]" />
+        <UiEmoji
+          v-if="emoji"
+          ref="emoji"
+          :symbol="emoji"
+          class="mr-[1ch] size-[1em]"
+        />
         {{ label }}
       </h2>
       <div>

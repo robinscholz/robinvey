@@ -11,7 +11,7 @@
       <div>
         <h1>{{ title }}</h1>
         <p class="text-surface-muted">
-          <UiEmoji symbol="🥀" autoplay class="mr-[1ch]" />{{
+          <UiEmoji symbol="🥀" autoplay class="mr-[1ch] size-[1em]" />{{
             error.statusCode
           }}
         </p>

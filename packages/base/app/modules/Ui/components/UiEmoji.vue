@@ -1,5 +1,5 @@
 <template>
-  <span class="inline-block size-[2lh] align-middle" aria-hidden="true">
+  <span class="inline-block align-middle" aria-hidden="true">
     <magic-dot-matrix
       :id="id"
       class="dot-matrix"
@@ -15,19 +15,26 @@ import { usePreferredReducedMotion } from '@vueuse/core'
 
 interface UiEmojiProps {
   symbol: string
+  // Dots a side. The box is sized by whoever places the emoji.
+  dots?: number
   // Plays once drawn, for a page the intro does not play on.
   autoplay?: boolean
+  // Plays from the moment it is drawn and never stops.
+  loop?: boolean
 }
-
-// Dots a side.
-const SIZE = 12
 
 // Every dot matrix on the page shares the colour of its unlit dots, so the
 // tint the sampler suggests is left out.
 const INACTIVE = '--magic-dot-matrix-inactive-color'
 
-// The motion plays once, on the intro and on request, and rests in between.
-const { symbol, autoplay = false } = defineProps<UiEmojiProps>()
+// Unless it loops, the motion plays once, on the intro and on request, and
+// rests in between.
+const {
+  symbol,
+  dots = 12,
+  autoplay = false,
+  loop = false,
+} = defineProps<UiEmojiProps>()
 
 const id = useId()
 const { on, off } = useUiEmitter()
@@ -37,11 +44,14 @@ const {
   sequence,
   options: emojiOptions,
   style,
-} = useMagicDotMatrixEmoji(() => symbol, { cols: SIZE, rows: SIZE })
+} = useMagicDotMatrixEmoji(
+  () => symbol,
+  () => ({ cols: dots, rows: dots })
+)
 
 const options = computed(() => ({
   ...emojiOptions.value,
-  loop: false,
+  loop,
   autoplay: false,
 }))
 
@@ -80,7 +90,7 @@ watch(
   sequence,
   () => {
     state.frame = rest.value
-    if (autoplay) {
+    if (autoplay || loop) {
       play()
     }
   },
