@@ -7,6 +7,11 @@
          copies. -->
     <wish-header />
     <slot />
+    <!-- The colour mode switch sits at the foot of the page, under the list
+         and out of its way. -->
+    <footer class="mt-20 md:mt-32">
+      <ui-color-mode-switch />
+    </footer>
     <wish-toaster />
   </div>
 </template>

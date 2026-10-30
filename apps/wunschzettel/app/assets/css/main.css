@@ -76,6 +76,15 @@
     scrollbar-gutter: stable;
   }
 
+  /* The browser’s own parts, scrollbars and form controls, follow the mode. */
+  :root {
+    color-scheme: light;
+  }
+
+  [data-color-mode='dark'] {
+    color-scheme: dark;
+  }
+
   *,
   ::before,
   ::after {
@@ -128,11 +137,30 @@
   opacity: 0;
 }
 
+/* The colour mode menu fades; the page cross-fades between modes through a
+   view transition, where the browser has one. */
+.ui-color-mode-menu-enter-active,
+.ui-color-mode-menu-leave-active {
+  transition: opacity 150ms var(--ease-out);
+}
+
+.ui-color-mode-menu-enter-from,
+.ui-color-mode-menu-leave-to {
+  opacity: 0;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 150ms;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .wish-alert-enter-active,
   .wish-alert-leave-active,
   .wish-alert-backdrop-enter-active,
-  .wish-alert-backdrop-leave-active {
+  .wish-alert-backdrop-leave-active,
+  .ui-color-mode-menu-enter-active,
+  .ui-color-mode-menu-leave-active {
     transition-duration: 0ms;
   }
 }

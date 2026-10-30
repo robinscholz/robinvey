@@ -9,12 +9,35 @@ export default defineNuxtConfig({
     '@maas/mirror/nuxt',
     '@maas/vue-equipment/nuxt',
     '@maas/magic-image',
+    '@nuxtjs/color-mode',
+    '@nuxt/icon',
     'nuxt-auth-utils',
+    '~~/app/modules/Ui',
     '~~/app/modules/Wish',
   ],
 
   vueEquipment: {
-    plugins: ['MagicToast'],
+    plugins: ['MagicMenu', 'MagicToast'],
+  },
+
+  // The page follows the system until the switch at its foot is set; the
+  // choice stays in the browser.
+  colorMode: {
+    preference: 'system',
+    fallback: 'light',
+    classSuffix: '',
+    dataValue: 'color-mode',
+    storageKey: 'wunschzettel-color-mode',
+    disableTransition: true,
+  },
+
+  // Only the switch has icons, and it renders in the browser alone, which
+  // asks Symbols for them itself; the Worker never has to.
+  icon: {
+    mode: 'svg',
+    componentName: 'NuxtIcon',
+    provider: 'iconify',
+    iconifyApiEndpoint: 'https://symbols.maas.earth',
   },
 
   // Pictures are cut out and resized by Cloudflare Images on the production
@@ -37,8 +60,12 @@ export default defineNuxtConfig({
     },
   },
 
-  // Light mode only: the dark theme file is left out.
-  css: ['~~/.maas/tokens/css/application.css', '~/assets/css/main.css'],
+  // The dark theme applies under data-color-mode="dark" on <html>.
+  css: [
+    '~~/.maas/tokens/css/application.css',
+    '~~/.maas/tokens/css/theme/dark/application.css',
+    '~/assets/css/main.css',
+  ],
 
   vite: {
     plugins: [tailwindcss()],
@@ -103,11 +130,8 @@ export default defineNuxtConfig({
         },
         { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
       ],
-      meta: [
-        { name: 'robots', content: 'noindex' },
-        // The page is white, and so is the browser’s frame around it.
-        { name: 'theme-color', content: '#fff' },
-      ],
+      // The theme-color tags come from plugins/theme-color.ts, with the mode.
+      meta: [{ name: 'robots', content: 'noindex' }],
     },
   },
 
