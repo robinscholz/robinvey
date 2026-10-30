@@ -1,9 +1,9 @@
 <template>
   <footer>
     <UiSection label="Colophon">
-      <!-- The update note moves to the next line as a whole, never split. -->
+      <!-- The update note has a line of its own, and never splits. -->
       <p>
-        {{ colophon }}
+        {{ colophon }}<br />
         <span class="whitespace-nowrap">Updated {{ updated }}.</span>
       </p>
       <div class="mt-[1lh]">
