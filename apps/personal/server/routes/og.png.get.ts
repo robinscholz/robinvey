@@ -1,7 +1,7 @@
 import { queryCollection } from '@nuxt/content/server'
 import { Resvg } from '@resvg/resvg-js'
 import satori from 'satori'
-import { SEMI_MONO_FILE } from '../utils/cv/fonts'
+import { CV_FONT_FILE } from '../utils/cv/fonts'
 import { OG_FONT, OG_SIZE, ogCard } from '../utils/og/card'
 
 // The picture a link to the site shows where it is shared, drawn from the
@@ -10,9 +10,9 @@ import { OG_FONT, OG_SIZE, ogCard } from '../utils/og/card'
 export default defineEventHandler(async (event) => {
   const { siteUrl } = useRuntimeConfig(event).public
 
-  const [profile, semiMono] = await Promise.all([
+  const [profile, mirage] = await Promise.all([
     queryCollection(event, 'profile').first(),
-    readFont(SEMI_MONO_FILE),
+    readFont(CV_FONT_FILE),
   ])
 
   const svg = await satori(
@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
       fonts: [
         {
           name: OG_FONT,
-          data: Buffer.from(semiMono),
+          data: Buffer.from(mirage),
           weight: 400,
           style: 'normal',
         },

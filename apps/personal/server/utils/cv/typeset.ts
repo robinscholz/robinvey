@@ -20,22 +20,16 @@ interface SpacingPayload {
   afterNext: string
 }
 
-// Optical corrections the font’s kerning leaves, in em. An r is open below
-// its arm, so a comma or full stop after it floats; it comes in to meet the
-// r. The dash in a range of years gets a thin space either side, as the
-// face’s own thin space is nearly a word space. Each correction is a run of
-// its own, which drops the font’s pair kerning there, so these are whole
-// adjustments rather than additions to it.
-const POINT_AFTER_R = -0.11
-const RANGE_SPACE = 0.125
+// The dash in a range of years gets a thin space either side, in em: the
+// fifth of an em the site sets as a thin space character, which the face
+// has no glyph for. The correction is a run of its own, which drops the
+// font’s pair kerning there, so it is a whole adjustment rather than an
+// addition to it.
+const RANGE_SPACE = 0.2
 
-const POINT = /^[,.]$/
 const WORD = /^\S$/
 
 function spacing({ char, previous, next, afterNext }: SpacingPayload): number {
-  if (char === 'r' && POINT.test(next)) {
-    return POINT_AFTER_R
-  }
   if (next === '–' && WORD.test(char) && WORD.test(afterNext)) {
     return RANGE_SPACE
   }
@@ -46,11 +40,9 @@ function spacing({ char, previous, next, afterNext }: SpacingPayload): number {
 }
 
 // The parts as runs for `Text`, each in its own style, with each corrected
-// glyph set apart and carrying its own letter spacing. The corrections read
-// across parts, so an r still meets a comma that follows it in another tone.
-// Only for text that stays on one line: the engine may break a line wherever
-// two runs meet, so a correction inside a wrapping paragraph could split its
-// word across lines.
+// glyph set apart and carrying its own letter spacing. Only for text that
+// stays on one line: the engine may break a line wherever two runs meet, so
+// a correction inside a wrapping paragraph could split its word across lines.
 export function typeset({ parts, size }: TypesetPayload): Array<TextSegment> {
   const chars = parts.flatMap(({ text, style = {} }) =>
     [...text].map((char) => ({ char, style }))

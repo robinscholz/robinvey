@@ -1,6 +1,6 @@
 // The size link previews take.
 export const OG_SIZE = { width: 1200, height: 630 }
-export const OG_FONT = 'ABC Areal'
+export const OG_FONT = 'Mirage'
 
 // The site’s paper, ink and muted ink in sRGB: `app.color.surface.bg.base`,
 // `fg` and `fg.muted` of the light mode, which the renderer takes no oklch()

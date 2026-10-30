@@ -1,16 +1,14 @@
-"""Cuts the CV's face from the variable ABC Areal.
+"""Cuts the CV's face from the variable Mirage.
 
-The PDF engine embeds static faces, so this pins the variable font at Semi
-Mono 400. The engine also reads kerning only from plain pair-positioning
-lookups, and the font keeps most of its pairs inside Extension lookups, so the
-CV's copy keeps just the kerning lookups, unwrapped. Glyphs and kerning values
-are untouched; mark positioning, which the engine ignores, is left out.
-
-The one change to the face is its space, a tenth of an em narrower. The Semi
-Mono space is nearly as wide as a letter, which opens gaps between words at the
-CV's size. The engine's word spacing would reach only the ordinary space; set
-in the face, it reaches the no-break space too, which shares the glyph, so the
-words the CV holds together keep the same gaps as the rest.
+The PDF engine embeds static TrueType faces, so this pins the variable font
+at weight 400 and the optical size of the CV's text. The engine reads kerning
+only from plain pair-positioning lookups, and the font keeps its pairs inside
+Extension lookups, so the CV's copy keeps just the kerning lookups, unwrapped.
+It reads no stylistic sets either, so the two the site turns on, ss02 for
+square quotes and punctuation and cv04, are written into the character map:
+each character that has an alternate in them maps to the alternate. Glyphs
+and kerning values are untouched; mark positioning, which the engine
+ignores, is left out.
 
     python3 apps/personal/scripts/cv-font.py [variable font]
 """
@@ -22,10 +20,10 @@ from fontTools.ttLib import TTFont
 from fontTools.varLib.instancer import instantiateVariableFont
 
 ROOT = Path(__file__).resolve().parents[3]
-SOURCE = ROOT / 'packages/base/app/assets/fonts/ABCArealSuperfamilyVariable.woff2'
-TARGET = ROOT / 'apps/personal/server/assets/fonts/ABCArealSemiMonoRegular.ttf'
-AXES = {'MONO': 50, 'wght': 400, 'slnt': 0, 'DRKM': 0}
-SPACE_ADJUST = -0.1
+SOURCE = Path.home() / 'Library/Fonts/Mirage-Variable.ttf'
+TARGET = ROOT / 'apps/personal/server/assets/fonts/Mirage.ttf'
+AXES = {'wght': 400, 'opsz': 9, 'wdth': 100}
+FEATURES = ['ss02', 'cv04']
 
 
 def keep_kerning(font: TTFont) -> None:
@@ -60,27 +58,42 @@ def keep_kerning(font: TTFont) -> None:
             system.FeatureCount = len(system.FeatureIndex)
 
 
-def narrow_space(font: TTFont) -> None:
-    glyph = font.getBestCmap()[ord(' ')]
-    advance, lsb = font['hmtx'][glyph]
-    font['hmtx'][glyph] = (advance + round(SPACE_ADJUST * font['head'].unitsPerEm), lsb)
+def substitutions(font: TTFont, tag: str) -> dict[str, str]:
+    gsub = font['GSUB'].table
+    records = [r for r in gsub.FeatureList.FeatureRecord if r.FeatureTag == tag]
+    mapping: dict[str, str] = {}
+    for index in sorted({i for r in records for i in r.Feature.LookupListIndex}):
+        for subtable in gsub.LookupList.Lookup[index].SubTable:
+            subtable = getattr(subtable, 'ExtSubTable', subtable)
+            if not hasattr(subtable, 'mapping'):
+                sys.exit(f'{tag} is not a plain substitution')
+            mapping.update(subtable.mapping)
+    return mapping
+
+
+def bake_features(font: TTFont) -> None:
+    mapping: dict[str, str] = {}
+    for tag in FEATURES:
+        mapping.update(substitutions(font, tag))
+    for table in font['cmap'].tables:
+        for code, glyph in table.cmap.items():
+            if glyph in mapping:
+                table.cmap[code] = mapping[glyph]
 
 
 def main() -> None:
     source = Path(sys.argv[1]) if len(sys.argv) > 1 else SOURCE
     font = instantiateVariableFont(TTFont(source), AXES)
     keep_kerning(font)
-    narrow_space(font)
-    font.flavor = None
+    bake_features(font)
     font.save(TARGET)
 
     cut = TTFont(TARGET)
     lookups = [lookup.LookupType for lookup in cut['GPOS'].table.LookupList.Lookup]
     if any(kind != 2 for kind in lookups):
         sys.exit(f'Kerning did not fit in plain lookups: {lookups}')
-    cmap = cut.getBestCmap()
-    if cmap.get(0xA0) != cmap[ord(' ')]:
-        sys.exit('The no-break space no longer shares the space glyph')
+    if not cut.getBestCmap()[ord('g')].endswith('.cv04'):
+        sys.exit('cv04 did not reach the character map')
     print(f'Wrote {TARGET.relative_to(ROOT)}')
 
 

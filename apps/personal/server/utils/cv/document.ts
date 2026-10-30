@@ -3,21 +3,14 @@ import {
   Column,
   Document,
   Expanded,
-  Link,
   Padding,
   Page,
   Row,
-  Svg,
   Text,
 } from '@jasy/pdf'
-import { CV_EMOJI_FONT, CV_FONT } from './fonts'
+import { CV_FONT } from './fonts'
 import { typeset } from './typeset'
-import type {
-  JasyDocument,
-  PDFElement,
-  TextOptions,
-  TextStyle,
-} from '@jasy/pdf'
+import type { JasyDocument, PDFElement, TextOptions } from '@jasy/pdf'
 import type { TypesetPart } from './typeset'
 
 interface CvDocumentPayload {
@@ -30,17 +23,11 @@ interface CvDocumentPayload {
 
 interface SectionPayload {
   title: string
-  emoji: string
   children: Array<PDFElement>
 }
 
 interface CopyPayload {
   parts: Array<TypesetPart>
-}
-
-interface LinkedPayload {
-  content: PDFElement
-  href: string
 }
 
 interface ProsePayload {
@@ -54,6 +41,11 @@ interface HeaderPayload {
   names: Array<string>
 }
 
+interface RowPayload {
+  meta: string
+  children: Array<PDFElement>
+}
+
 interface ExperienceEntryPayload {
   entry: Experience
   names: Array<string>
@@ -64,32 +56,33 @@ interface ProjectEntryPayload {
   names: Array<string>
 }
 
-const INK = '#000000'
-// The site’s light muted text, `app.color.surface.fg.muted` (stone 10), in
-// sRGB: the PDF engine takes no oklch().
+// The site’s ink and muted ink in sRGB: `app.color.surface.fg` and
+// `fg.muted` of the light mode, which the PDF engine takes no oklch() for.
+const INK = '#161615'
 const MUTED = '#595954'
+
+// The site’s type at the page’s scale: one size, on 1.6 leading, in a
+// measure of about 64 characters, flush left in the margin.
 const SIZE = 9
-const LINE_HEIGHT = 1.4
-const LABEL_WIDTH = 96
-const GUTTER = 16
+const LINE_HEIGHT = 1.6
+const MEASURE = 420
+const MARGIN = { top: 48, right: 48, bottom: 40, left: 48 }
 
-const MARGIN = { top: 32, right: 40, bottom: 28, left: 40 }
+// The dates beside an entry, as on the site’s rows: a column of ten
+// characters in the muted ink, two characters from the text.
+const META_WIDTH = 56
+const GUTTER = 10
 
-// Space comes in lines: one between the entries of a section, two above a
-// section, so the page keeps the rhythm of its text.
+// Space comes in lines: two above a section and half a line under its
+// heading, as on the site, and one between the entries of a section.
 const LINE = SIZE * LINE_HEIGHT
 const SECTION_SPACE = 2 * LINE
+const HEADING_SPACE = LINE / 2
+const ENTRY_GAP = 3
 
-// The role and place under the name, the company and dates after a title and
-// the footer step back in tone; everything else is set in black.
 const muted: TextOptions = { color: MUTED }
 
-// The Symbols arrow the site marks outbound links with, at weight 300, drawn
-// one text size square like the site’s icons.
-const ARROW = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1152 1152"><path fill="${INK}" d="m328 873 475-476v244c0 22 18 40 40 40s40-18 40-40V301c0-22-18-40-40-40H504c-22 0-40 18-40 40s18 40 40 40h243L272 817c-8 8-12 17-12 28 0 22 18 40 40 40 11 0 21-4 28-12"/></svg>`
-const ARROW_GAP = 1.5
-
-const NO_BREAK_SPACE = '\u00A0'
+const NO_BREAK_SPACE = ' '
 
 // A word of one or two letters, which a line should not end on.
 const SHORT_WORD = /(?<=^|\s)(\p{L}{1,2}) /gu
@@ -102,9 +95,8 @@ function copy({ parts }: CopyPayload): PDFElement {
 
 // Running text, with the names the CV lists kept on one line and each short
 // word kept with the word after it: their spaces become no-break spaces,
-// which the engine never breaks at. The CV’s face draws them as narrow as its
-// word space. Names go first: with the a in Magic as a Service already held,
-// the name would no longer match.
+// which the engine never breaks at. Names go first: with the a in Magic as a
+// Service already held, the name would no longer match.
 function prose({ text, names }: ProsePayload): string {
   return names
     .reduce(
@@ -119,49 +111,38 @@ function paragraphs(payload: ProsePayload): Array<PDFElement> {
   return payload.text ? [Text(prose(payload))] : []
 }
 
-// Linked text followed by the site’s arrow, which links too.
-function linked({ content, href }: LinkedPayload): PDFElement {
-  return Row({ gap: ARROW_GAP, align: 'center' }, [
-    content,
-    Link({ href }, Svg(ARROW, { width: SIZE })),
+// A row of the site’s lists: the dates in the margin, the entry beside them.
+function row({ meta, children }: RowPayload): PDFElement {
+  return Row({ gap: GUTTER, align: 'start' }, [
+    Box({ width: META_WIDTH }, [
+      copy({ parts: [{ text: meta, style: muted }] }),
+    ]),
+    Expanded(Column({ gap: ENTRY_GAP }, children)),
   ])
 }
 
 // The engine moves a block to the next page only when it sits directly on the
 // page, so every entry becomes its own page-level block, kept whole. The first
-// carries the label and the space above it, so a heading never ends a page
+// carries the heading and the space above it, so a heading never ends a page
 // alone.
-function section({
-  title,
-  emoji,
-  children,
-}: SectionPayload): Array<PDFElement> {
+function section({ title, children }: SectionPayload): Array<PDFElement> {
   return children.map((child, index) =>
     Column({ keepTogether: true }, [
       Padding(
         { top: index === 0 ? SECTION_SPACE : LINE },
-        Row({ gap: GUTTER, align: 'start' }, [
-          Box(
-            { width: LABEL_WIDTH },
-            index === 0 ? [Text(`${emoji} ${title}`)] : []
-          ),
-          Expanded(child),
-        ])
+        index === 0
+          ? Column({ gap: HEADING_SPACE }, [Text(title, { role: 'h2' }), child])
+          : child
       ),
     ])
   )
 }
 
-// Set like the site’s header: who and where in the margin column, the
-// summary beside it.
+// Set like the site’s header: the name, a line, then the summary.
 function header({ profile, cv, names }: HeaderPayload): PDFElement {
-  return Row({ gap: GUTTER, align: 'start' }, [
-    Box({ width: LABEL_WIDTH }, [
-      Text(profile.name, { role: 'h1' }),
-      Text(profile.role, muted),
-      Text(profile.location, muted),
-    ]),
-    Expanded(Text(prose({ text: cv.summary, names }))),
+  return Column({ gap: LINE }, [
+    Text(profile.name, { role: 'h1' }),
+    Text(prose({ text: cv.summary, names })),
   ])
 }
 
@@ -173,45 +154,38 @@ function contact(profile: Profile): PDFElement {
   return Column(entries.map(({ text, href }) => Text(text, { href })))
 }
 
-// The role leads, and the company and years after it step back. An entry
-// without a role leads with its company.
-function experienceHead(entry: Experience): PDFElement {
-  const link: TextStyle = entry.url ? { href: entry.url } : {}
-  const head: Array<TypesetPart> = entry.role
-    ? [
-        { text: entry.role },
-        { text: ', ', style: muted },
-        { text: entry.company, style: { ...muted, ...link } },
-      ]
-    : [{ text: entry.company, style: link }]
-  return copy({
-    parts: [...head, { text: `, ${entry.period}`, style: muted }],
-  })
+// The link under an entry, in the muted ink, as under an open row on the site.
+function linkLine(entry: { url?: string; link: string }): Array<PDFElement> {
+  return entry.url ? [Text(entry.link, { ...muted, href: entry.url })] : []
 }
 
+// The company leads and the role follows, in the ink. The site shows the
+// summary alone; the CV carries on into the highlights, which are written
+// as sentences, so each role reads as one paragraph.
 function experienceEntry({ entry, names }: ExperienceEntryPayload): PDFElement {
-  return Column({ gap: 3, keepTogether: true }, [
-    experienceHead(entry),
-    // The site shows the summary alone; the CV carries on into the highlights,
-    // which are written as sentences, so each role reads as one paragraph.
-    ...paragraphs({
-      text: [entry.summary, ...entry.highlights].join(' ').trim(),
-      names,
-    }),
-  ])
+  const head = entry.role ? `${entry.company}, ${entry.role}` : entry.company
+  return row({
+    meta: entry.period,
+    children: [
+      Text(head),
+      ...paragraphs({
+        text: [entry.summary, ...entry.highlights].join(' ').trim(),
+        names,
+      }),
+      ...linkLine(entry),
+    ],
+  })
 }
 
 function projectEntry({ project, names }: ProjectEntryPayload): PDFElement {
-  const head = copy({
-    parts: [
-      { text: project.name, style: project.url ? { href: project.url } : {} },
-      { text: `, ${project.year}`, style: muted },
+  return row({
+    meta: String(project.year),
+    children: [
+      Text(project.name),
+      Text(prose({ text: project.description, names })),
+      ...linkLine(project),
     ],
   })
-  return Column({ gap: 3, keepTogether: true }, [
-    project.url ? linked({ content: head, href: project.url }) : head,
-    Text(prose({ text: project.description, names })),
-  ])
 }
 
 export function cvDocument(payload: CvDocumentPayload): JasyDocument {
@@ -224,32 +198,26 @@ export function cvDocument(payload: CvDocumentPayload): JasyDocument {
   const sections: Array<SectionPayload> = [
     {
       title: 'Experience',
-      emoji: '🌀',
       children: experience.map((entry) => experienceEntry({ entry, names })),
     },
     {
       title: 'Projects',
-      emoji: '🧰',
       children: projects.map((project) => projectEntry({ project, names })),
     },
     {
       title: 'Education',
-      emoji: '🧩',
       children: cv.education.map((entry) =>
-        copy({
-          parts: [
-            { text: `${entry.degree}, ${entry.institution}` },
-            { text: `, ${entry.period}`, style: muted },
-          ],
+        row({
+          meta: entry.period,
+          children: [Text(`${entry.degree}, ${entry.institution}`)],
         })
       ),
     },
     {
       title: 'Interests',
-      emoji: '🌍',
       children: paragraphs({ text: cv.interests, names }),
     },
-    { title: 'Contact', emoji: '🐌', children: [contact(profile)] },
+    { title: 'Contact', children: [contact(profile)] },
   ]
 
   const footer = Padding(
@@ -260,24 +228,18 @@ export function cvDocument(payload: CvDocumentPayload): JasyDocument {
   return Document(
     {
       font: CV_FONT,
-      emoji: CV_EMOJI_FONT,
       size: SIZE,
       lineHeight: LINE_HEIGHT,
       color: INK,
       meta: { title: `${profile.name}, CV`, author: profile.name },
     },
     [
-      Page(
-        {
-          size: 'A4',
-          margin: MARGIN,
-          footer,
-        },
-        [
+      Page({ size: 'A4', margin: MARGIN, footer }, [
+        Box({ width: MEASURE }, [
           header({ profile, cv, names }),
           ...sections.flatMap((entry) => section(entry)),
-        ]
-      ),
+        ]),
+      ]),
     ]
   )
 }

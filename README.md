@@ -272,40 +272,43 @@ The Wunschzettel’s 🎁 is drawn the same way, on white.
 
 `apps/personal/server/routes/cv.pdf.get.ts` reads the collections, and
 `server/utils/cv/document.ts` lays the CV out with
-[`@jasy/pdf`](https://www.npmjs.com/package/@jasy/pdf): one A4 page, real text,
-tagged for screen readers, every link clickable, with a document title
-so the browser tab reads “Robin Vey, CV”. The build prerenders it to a
-static `cv.pdf`.
+[`@jasy/pdf`](https://www.npmjs.com/package/@jasy/pdf): A4, real text, tagged
+for screen readers, every link clickable, with a document title so the
+browser tab reads “Robin Vey, CV”. The build prerenders it to a static
+`cv.pdf`.
 
-Name, role and location sit in a margin column with the summary beside them,
-then one section after another, Contact last. Space comes
-in lines of text: one between the entries of a section, two above a section.
-Each role reads as one paragraph. Project titles link out and carry the site’s
-outbound arrow after them, which links too; company names and the contact lines
-link without it.
+It is set like the site: the name, the summary a line below, then one
+section after another in a measure of about 64 characters, each heading half
+a line over its block, with the dates beside each entry in a margin column
+in the muted ink. Space comes in lines of text: two above a section, one
+between the entries of a section. Each role reads as one paragraph under
+its company and role, and the site a role or project links to sits under
+that in the muted ink, as under an open row on the site. Contact comes
+last, and the footer carries the date of the build.
 
-The PDF engine embeds static faces, and reads kerning only from plain
-pair-positioning lookups, which ABC Areal mostly wraps in Extension lookups.
-`apps/personal/server/assets/fonts` therefore holds a Semi Mono instance at 400, the
-CV’s only weight, with just its kerning lookups, unwrapped, and its space a
-tenth of an em narrower; glyphs and kerning values are untouched. Brackets
-come from a proportional cut, as on the site, and the section emoji from a
-Noto Color Emoji subset. Cut Semi Mono again after a font update:
+The PDF engine embeds static TrueType faces, reads kerning only from plain
+pair-positioning lookups, which Mirage wraps in Extension lookups, and reads
+no stylistic sets. `apps/personal/server/assets/fonts/Mirage.ttf` is
+therefore an instance cut from the variable Mirage at 400 and the CV’s
+optical size, with just its kerning lookups, unwrapped, and the site’s
+`ss02` and `cv04` written into its character map, so the face sets as it
+does on the site. Cut it again after a font update, from the variable
+Mirage in your font library or from a path you pass:
 
 ```sh
 python3 apps/personal/scripts/cv-font.py
 ```
 
-`server/utils/cv/typeset.ts` adds the optical corrections the kerning leaves: a
-comma or full stop moves in to meet an r, and the dash in a range of years gets
-a thin space either side. They apply to one-line text only, such as titles and
+`server/utils/cv/typeset.ts` adds the one correction the kerning leaves: the
+dash in a range of years gets a thin space either side, the fifth of an em
+the site sets as a character. It applies to one-line text only, such as the
 dates, because the engine may break a line wherever two text runs meet.
 
 ## Preview image
 
 `apps/personal/server/routes/og.png.get.ts` draws the picture a shared link shows,
 with satori and resvg: the name, role and location from `profile.yml` and
-the site’s host, set in the CV’s Semi Mono cut on the paper, 1200 by 630.
+the site’s host, set in the CV’s cut of Mirage on the paper, 1200 by 630.
 The build prerenders it to `og.png`, and the page’s Open Graph tags point at
 it.
 
@@ -535,10 +538,11 @@ dump with `wrangler d1 export wunschzettel --remote --output=wishes.sql`.
 
 ## Fonts
 
-Mirage is served from `fonts.maas.engineering`, so no file of it is committed.
-The CV and the preview image still embed ABC Areal from
-`apps/personal/server/assets/fonts`, licensed from Dinamo, so keep this
-repository private.
+Mirage is Dreamtype’s face. The site takes it from `fonts.maas.engineering`,
+and the CV and the preview image embed the cut in
+`apps/personal/server/assets/fonts`. ABC Areal, licensed from Dinamo, is gone
+from the tree but stays in the history, so keep this repository private
+unless that history is rewritten.
 
 ## Tooling
 
