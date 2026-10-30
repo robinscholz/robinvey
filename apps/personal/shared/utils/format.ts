@@ -73,3 +73,17 @@ export function holdNames({ text, names }: HoldPayload): string {
     text
   )
 }
+
+interface SplitWords {
+  head: string
+  tail: string
+}
+
+// A text in two: everything up to its last word, and the last word, so a
+// mark after the text can be kept on the last word’s line.
+export function splitLastWord(text: string): SplitWords {
+  const at = text.lastIndexOf(' ')
+  return at > 0
+    ? { head: text.slice(0, at), tail: text.slice(at + 1) }
+    : { head: '', tail: text }
+}

@@ -8,18 +8,22 @@
       <UiSection label="Now">
         <p>{{ profile.now }}</p>
       </UiSection>
-      <UiSection label="Work">
-        <ProfileExperience :experience="experience" />
-      </UiSection>
-      <UiSection v-if="sites.length" label="Built">
-        <ProfileSites :sites="sites" />
-      </UiSection>
-      <UiSection label="Projects">
-        <ProfileProjects :projects="projects" />
-      </UiSection>
-      <UiSection v-if="writing.length" label="Writing">
-        <ProfileWriting :writing="writing" />
-      </UiSection>
+      <!-- The lists side by side where there is room: two from md, four
+           from 2xl. -->
+      <div class="grid gap-x-12 md:grid-cols-2 2xl:grid-cols-4">
+        <UiSection label="Work">
+          <ProfileExperience :experience="experience" />
+        </UiSection>
+        <UiSection v-if="sites.length" label="Built">
+          <ProfileSites :sites="sites" />
+        </UiSection>
+        <UiSection label="Projects">
+          <ProfileProjects :projects="projects" />
+        </UiSection>
+        <UiSection v-if="writing.length" label="Writing">
+          <ProfileWriting :writing="writing" />
+        </UiSection>
+      </div>
       <UiSection label="Contact">
         <ContentRenderer v-if="contact.document" :value="contact.document" />
       </UiSection>

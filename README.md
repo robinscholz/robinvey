@@ -118,7 +118,9 @@ disagree.
 
 The page is set flush left in one column, like a typed letter: the name, the
 intro, then one section after another, each a heading half a line over its
-block, all in a 64ch measure. Each list is a ledger of a date and the entry; a row that leaves
+block, in a 64ch measure. The four lists, Work, Built, Projects and Writing,
+sit side by side where there is room, two from the `md` breakpoint and four
+from `2xl`, across the whole page. Each list is a ledger of a date and the entry; a row that leaves
 the site carries `↗` after its title, and a row in Work or Projects opens on a
 click to show its summary. Structure comes from whitespace alone. The margin is
 the Wunschzettel’s: 24px on phones, 48px from the `md` breakpoint and 80px
