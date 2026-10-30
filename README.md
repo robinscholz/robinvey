@@ -130,25 +130,17 @@ picks for it; a click swaps it for 🚡 and back. `UiEmoji` in the Ui module
 draws any emoji that way, at the dot count and in the box of whoever places
 it.
 
-Everything is set in ABC Areal Semi Mono at one size and weight, 15px on 24px
-leading. Tailwind’s other sizes and weights are reset in
+Everything is set in Mirage at one size and weight, 15px on 24px leading.
+Tailwind’s other sizes and weights are reset in
 `packages/base/app/assets/css/tailwind.css`, so no other size can creep in.
 
-The font is the variable ABC Areal Superfamily with its `MONO` axis fixed at
-50: Semi Mono, mono letterforms on proportional widths. Semi Mono sets round
-and square brackets in wide cells, which opens gaps around them, so those come
-from a proportional cut instead. The date column turns on tabular figures so
-years still line up digit by digit. Dark mode also switches on the font’s
-`DRKM` axis, which thins the strokes for light type on a dark ground.
-
-The face is `packages/base/public/fonts/ABCAreal-400-700.woff2`, named with
-its weight range, and Nuxt Fonts declares it from the `--font-mono` theme
-variable in `packages/base/app/assets/css/tailwind.css`: it preloads the file
-and reads its metrics to declare fallbacks after it, Segoe UI, Helvetica
-Neue, Arial, Noto Sans and Liberation Sans, each sized and lifted to take the
-same room, so text set before the face arrives holds still when it does. The
-brackets face is declared by hand in `main.css`, as it carries a
-`unicode-range` of its own.
+Mirage is Dreamtype’s face. It comes from the MaaS font server, the same
+stylesheet vue.equipment links, with the same features on: `ss02` sets square
+quotes and punctuation and `cv04` a character variant, both through Tailwind’s
+`--default-font-feature-settings`. The sheet is linked with critical priority
+and the host preconnected in `packages/base/nuxt.config.ts`, so the face is
+asked for before anything else. The date column turns on tabular figures so
+years line up digit by digit.
 
 Colour comes from mirror tokens. The `robinvey` theme in
 `packages/base/tokens/theme` sets the paper, the ink and the font family over
@@ -196,29 +188,10 @@ without the scramble, and after two seconds CSS reveals it regardless.
 Visitors who prefer reduced motion, or have no JavaScript, see the text
 straight away.
 
-## Typeface switch
-
-The words Semi Mono in the colophon switch the whole page between ABC Areal
-Semi Mono and its Regular cut, by moving the font’s `MONO` axis from 50 to 0.
-The page scrambles, fades out, changes face while hidden and fades back in as
-noise before the text settles, all within 600ms; the switch keeps its place on
-screen while the text above it rewraps. Visitors who prefer reduced motion get
-the new face at once. Regular drops what is there only for Semi Mono: the
-tighter word spacing and the proportional brackets.
-
-The choreography is `useSwitch()` in the Ui module, which runs one change to
-the whole page at a time; the colour mode switch goes through it too.
-
-The choice is kept in `localStorage` under `robinvey-typeface`. An inline
-script sets it on `<html>` before the first paint, so a returning visitor never
-sees Semi Mono first, and the colophon’s label follows once the page has
-hydrated.
-
 ## Colour mode
 
-The colour mode menu in the colophon offers Dark, Light and System. A choice that changes the page goes through
-the same choreography as the typeface switch: scrambled, hidden, changed,
-settled. One that leaves the page as it is, System on a system already
+The colour mode menu in the colophon offers Dark, Light and System. A choice that changes the page scrambles the text, hides it while it changes
+and settles it back in, the choreography of `useSwitch()`. One that leaves the page as it is, System on a system already
 showing that mode, is kept without it. The `theme-color` tags follow the
 mode, so the browser’s own frame takes the paper or the dark ground: one tag
 per system scheme until a choice is made, both with the choice after
@@ -592,13 +565,15 @@ dump with `wrangler d1 export wunschzettel --remote --output=wishes.sql`.
 
 ## Fonts
 
-ABC Areal is licensed from Dinamo. The font files are committed, so keep this
+Mirage is served from `fonts.maas.engineering`, so no file of it is committed.
+The CV and the preview image still embed ABC Areal from
+`apps/personal/server/assets/fonts`, licensed from Dinamo, so keep this
 repository private.
 
 ## Tooling
 
 - [Turborepo](https://turbo.build/repo), pnpm workspaces
-- [Nuxt 4](https://nuxt.com), [Nuxt Content](https://content.nuxt.com), [Nuxt Fonts](https://fonts.nuxt.com)
+- [Nuxt 4](https://nuxt.com), [Nuxt Content](https://content.nuxt.com)
 - [mirror v2](https://github.com/magicasaservice/mirror), [vue-equipment](https://github.com/magicasaservice/vue-equipment), [magic-image](https://github.com/magicasaservice/magic-image)
 - [`@jasy/pdf`](https://www.npmjs.com/package/@jasy/pdf) for the CV, [satori](https://github.com/vercel/satori) and [resvg](https://github.com/thx/resvg-js) for the preview image
 - [`@nuxt/icon`](https://github.com/nuxt/icon) with the Symbols collection
