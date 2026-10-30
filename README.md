@@ -241,7 +241,7 @@ be dragged. Once the page has come to rest open, it casts a shadow onto the
 garden, which fades as soon as the page moves again.
 
 The right edge gives the garden away. With a cursor, the edge pulls back as
-the cursor comes within 160px of it, by 40px once it is within 48px, and
+the cursor comes within 160px of it, by 48px once it is within 48px, and
 settles again as the cursor leaves: MagicTray’s magnetism, for fine pointers
 that allow motion, which clips the page without moving it and uncovers a
 sliver of the garden. A finger cannot near an edge, so on a touch screen the
