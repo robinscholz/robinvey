@@ -146,30 +146,11 @@ Colour comes from mirror tokens. The `robinvey` theme in
 `packages/base/tokens/theme` sets the paper, the ink and the font family over
 the stock mirror-tokens tree, which is fetched from git on every token build.
 
-## Hover colour
+## Hover
 
-Every hover takes the next colour of the rainbow: red, orange, yellow,
-green, blue, indigo, violet. The hues are tokens in the `robinvey` theme,
-`app.color.hue.1` to `app.color.hue.7`, one set per colour mode. Each sits
-at the most saturated hue and lightness sRGB allows within its colour’s
-range, while keeping at least 3:1 contrast on the paper, or 4.5:1 on the
-dark ground. Orange and yellow are the exceptions in light mode, at 2.3:1 and
-1.8:1: dark enough for 3:1 on the paper, they turn to brown and mustard.
-
-Text selection takes the same rainbow as a 40% tint behind the ink, so the
-text stays legible, and moves on to the next hue with every new selection. It
-keeps its own count, so dragging across rows that advance the hover hue does
-not recolour a selection mid-drag.
-
-`useHue()` in the Ui module owns the counter. Rows, links and the colour mode
-switch call `advance()` when the pointer enters, and read the result as
-`--ui-hue`. The hue lands at once and lets go over 150ms: `data-hue` in
-`main.css`. Links in markdown render through `ProseA`, which hands them to
-`UiLink`, so the intro and the Contact paragraph behave like every other link;
-the markdown parser’s `nofollow` is switched off in `nuxt.config.ts`, so
-NuxtLink sets the rel of an outbound link there as it does everywhere else.
-An open row in Work or Projects pins the hue it had when it was opened and
-keeps it until it closes, so open rows stay easy to find.
+A link or a row under the pointer steps back into the muted ink, and text
+selection is a 15% tint of the ink behind the text. Nothing on the page takes
+a colour of its own apart from the emoji.
 
 ## Intro
 
@@ -200,15 +181,14 @@ follows on `<html>`, so scrollbars and form controls match.
 
 ## Garden
 
-A field of emoji lies underneath the page. Drag the page’s left or
-right edge towards the middle to uncover it, or click the edge, and the page
-slides aside with it. Let go more than 48 pixels from where you started, or
-flick, and the page snaps to uncover half the viewport, or three quarters of it
-below the `md` breakpoint. Click the garden, the part of the page still showing
-or its edge, or press Escape, to close it again; the garden and that part of
-the page are drag surfaces as well, `MagicTrayTrigger`s, so the page can be
-pushed shut from anywhere on either. While one edge is out, the other cannot
-be dragged. The page casts a shadow onto the garden as it moves.
+A field of emoji lies underneath the page. Drag the page’s right edge towards
+the middle to uncover it, or click the edge, and the page is cut away with it.
+Let go more than 48 pixels from where you started, or flick, and the page
+snaps to uncover half the viewport, or three quarters of it below the `md`
+breakpoint. Click the garden, the part of the page still showing or its edge,
+or press Escape, to close it again; the garden and that part of the page are
+drag surfaces as well, `MagicTrayTrigger`s, so the page can be pushed shut
+from anywhere on either. The page casts a shadow onto the garden as it moves.
 
 The right edge gives the garden away. With a cursor, the edge pulls back as
 the cursor comes within 160px of it, by 48px once it is within 48px, and
@@ -217,18 +197,15 @@ that allow motion, which uncovers a sliver of the garden. A finger cannot near a
 page pulls back once by itself, a moment after the intro has settled, holds,
 and lets go (`useGardenPeek`). A drag takes over wherever the pull is.
 
-The page sits in vue-equipment’s MagicTray, which clips it with `clip-path`,
-and slides along with the clip by a transform of its own, which counts the
-magnetic pull as well as the drag, so a drag or a click after a pull carries on
-from where the page already is. The transform is only set while the page is
-away from rest, since a transformed ancestor pins fixed elements to the page
-instead of the viewport. The garden is a fixed layer behind the page
-on `bg-surface-low`, in the page’s colour mode. It stays hidden until an edge moves, so it never
-shows through an overscroll. The page’s shadow comes from an empty box in the garden layer, the size of
-the viewport, that slides with the page by a transform, since the clip would
-cut off a shadow cast by the page itself.
+The page sits in vue-equipment’s MagicTray, which clips it with `clip-path`.
+The page itself stays where it is, so its fixed elements stay fixed. The
+garden is a fixed layer behind the page on `bg-surface-low`, in the page’s
+colour mode. It stays hidden until the edge moves, so it never shows through
+an overscroll. The page’s shadow comes from an empty box in the garden layer,
+the size of the viewport, that slides with the edge by a transform, since the
+clip would cut off a shadow cast by the page itself.
 
-The field is every emoji the system draws as a single code point, 1,098 of
+The field is every emoji the system draws as a single code point, 1,096 of
 them, each a still on a 48px dot matrix of twelve dots a side, one every 80px,
 on a grid without an end. The field is tiled with blocks that each hold every
 emoji once, in an order drawn from the block’s place and a seed for the visit,
