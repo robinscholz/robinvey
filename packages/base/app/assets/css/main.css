@@ -1,25 +1,9 @@
 @reference './tailwind.css';
 
-/* The face itself is declared by Nuxt Fonts, from the file in public/fonts,
-   with metric-matched fallbacks after it (see nuxt.config.ts). Semi Mono sets
-   round and square brackets in wide cells, which opens gaps around them, so
-   those come from a proportional cut, set before the face. */
-@font-face {
-  font-family: 'ABC Areal Brackets';
-  src: url('../fonts/ABCArealProportional.woff2') format('woff2');
-  font-weight: 400 700;
-  font-style: oblique 0deg 12deg;
-  font-display: swap;
-  unicode-range: U+0028-0029, U+005B, U+005D;
-}
-
 @layer base {
   *,
   ::before,
   ::after {
-    font-variation-settings:
-      'MONO' var(--axis-mono, 50),
-      'DRKM' var(--axis-dark, 0);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -31,24 +15,7 @@
 
   /* The browser's own parts, scrollbars and form controls, follow the mode. */
   [data-color-mode='dark'] {
-    --axis-dark: 1;
     color-scheme: dark;
-  }
-
-  [data-typeface='regular'] {
-    --axis-mono: 0;
-  }
-
-  [data-typeface='regular'] body {
-    font-family: var(--font-mono);
-    word-spacing: normal;
-  }
-
-  [data-typeface-changing],
-  [data-typeface-changing] *,
-  [data-typeface-changing] *::before,
-  [data-typeface-changing] *::after {
-    transition: none !important;
   }
 
   [data-switch-fade] [data-scramble] {
@@ -62,9 +29,7 @@
 
   body {
     margin: 0;
-    font-family: 'ABC Areal Brackets', var(--font-mono);
     font-kerning: normal;
-    word-spacing: -0.1em;
     overflow-x: clip;
     @apply bg-surface-base text-surface text-sm;
   }

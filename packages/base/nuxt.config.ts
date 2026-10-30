@@ -14,7 +14,6 @@ export default defineNuxtConfig({
     '@maas/mirror/nuxt',
     '@maas/vue-equipment/nuxt',
     '@nuxtjs/color-mode',
-    '@nuxt/fonts',
     '@nuxt/icon',
     join(currentDir, 'app/modules/Ui'),
     join(currentDir, 'app/modules/Garden'),
@@ -27,21 +26,6 @@ export default defineNuxtConfig({
       'MagicMarquee',
       'MagicMenu',
       'MagicTray',
-    ],
-  },
-
-  // The face is the file in public/fonts, named with its weight range so the
-  // local provider reads it as one variable face. Nuxt Fonts declares it,
-  // preloads it and reads its metrics to set fallbacks after it that take up
-  // the same room, so the text holds still when the face arrives.
-  fonts: {
-    families: [
-      {
-        name: 'ABC Areal',
-        provider: 'local',
-        weights: ['400 700'],
-        styles: ['normal'],
-      },
     ],
   },
 
@@ -63,11 +47,26 @@ export default defineNuxtConfig({
     disableTransition: true,
   },
 
+  // Mirage comes from the MaaS font server, as it does on vue.equipment. The
+  // sheet is critical, so the face is asked for before anything else.
   app: {
     head: {
       htmlAttrs: { lang: 'en', 'data-theme': 'robinvey' },
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      ],
+      link: [
+        {
+          rel: 'preconnect',
+          href: 'https://fonts.maas.engineering',
+          crossorigin: 'anonymous',
+        },
+        {
+          rel: 'stylesheet',
+          href: 'https://fonts.maas.engineering/mirage/1.1.3/stylesheet.css',
+          crossorigin: 'anonymous',
+          tagPriority: 'critical',
+        },
       ],
     },
   },

@@ -8,7 +8,6 @@
     <magic-marquee
       v-if="scrolling"
       :id="MarqueeIds.Title"
-      :key="typeface"
       :options="{ speed: SPEED }"
       class="[--magic-marquee-gap:2ch]"
     >
@@ -42,8 +41,6 @@ const { playing = false } = defineProps<UiMarqueeProps>()
 // About 25px a second, slow enough to read along.
 const SPEED = 0.5
 
-const { typeface } = useTypeface()
-
 const frameRef = useTemplateRef('frame')
 const modelRef = useTemplateRef('model')
 
@@ -57,8 +54,7 @@ const overflowing = shallowRef(false)
 const scrolling = computed(() => overflowing.value && playing)
 
 // The model keeps the text on one line on narrow screens, so it is wider
-// than the frame exactly when the text does not fit. Regular is narrower
-// than Semi Mono, so a new typeface can settle it either way.
+// than the frame exactly when the text does not fit.
 function detect() {
   if (!frameRef.value || !modelRef.value) {
     return
@@ -69,8 +65,6 @@ function detect() {
 }
 
 useResizeObserver(frameRef, detect)
-
-watch(typeface, detect, { flush: 'post' })
 
 onMounted(async () => {
   ready.value = true

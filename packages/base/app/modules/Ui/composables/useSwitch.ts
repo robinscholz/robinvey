@@ -13,8 +13,8 @@ type SwitchFade = 'out' | 'in'
 const HOLD = 360
 const DURATION = 350
 
-// One choreography for every switch that changes the whole page, the
-// typeface and the colour mode among them.
+// One choreography for a switch that changes the whole page, as the colour
+// mode’s does.
 export function useSwitch() {
   // Public state
   // One switch at a time, whichever of them is asked.

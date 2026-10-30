@@ -53,56 +53,6 @@
           "$type": "color"
         }
       }
-    },
-    "fontFamily": {
-      "surface": {
-        "display": {
-          "$value": "ABC Areal",
-          "$type": "fontFamily"
-        },
-        "title": {
-          "$value": "ABC Areal",
-          "$type": "fontFamily"
-        },
-        "subtitle": {
-          "$value": "ABC Areal",
-          "$type": "fontFamily"
-        },
-        "callout": {
-          "$value": "ABC Areal",
-          "$type": "fontFamily"
-        },
-        "body": {
-          "$value": "ABC Areal",
-          "$type": "fontFamily"
-        },
-        "caption": {
-          "$value": "ABC Areal",
-          "$type": "fontFamily"
-        },
-        "footnote": {
-          "$value": "ABC Areal",
-          "$type": "fontFamily"
-        },
-        "code": {
-          "$value": "ABC Areal",
-          "$type": "fontFamily"
-        }
-      },
-      "component": {
-        "text": {
-          "$value": "ABC Areal",
-          "$type": "fontFamily"
-        },
-        "number": {
-          "$value": "ABC Areal",
-          "$type": "fontFamily"
-        },
-        "symbol": {
-          "$value": "ABC Areal",
-          "$type": "fontFamily"
-        }
-      }
     }
   }
 }

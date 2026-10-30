@@ -23,10 +23,6 @@ export default defineNuxtModule({
         from: resolver.resolve('./composables/useThemeColor'),
       },
       {
-        name: 'useTypeface',
-        from: resolver.resolve('./composables/useTypeface'),
-      },
-      {
         name: 'useUiEmitter',
         from: resolver.resolve('./composables/useUiEmitter'),
       },

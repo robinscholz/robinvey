@@ -13,7 +13,7 @@ interface UiRangeProps {
 
 const { value } = defineProps<UiRangeProps>()
 
-// The face’s thin space is nearly as wide as a word space, so the dash in a
-// range gets a true thin space either side from margins instead.
+// The dash in a range gets a thin space either side, from margins, so it
+// reads the same in any face.
 const parts = computed(() => value.split('–'))
 </script>

@@ -2,7 +2,7 @@
   "name": "@robinscholz/base",
   "private": true,
   "type": "module",
-  "description": "Nuxt layer for robinvey: mirror v2 and vue-equipment wiring, the ABC Areal token theme and its fonts, the type system, the Ui module and the garden under the page",
+  "description": "Nuxt layer for robinvey: mirror v2 and vue-equipment wiring, the Mirage token theme, the type system, the Ui module and the garden under the page",
   "contributors": [
     {
       "name": "Robin Vey",
@@ -24,7 +24,6 @@
     "@maas/vue-autosize": "^1.8.0",
     "@maas/vue-equipment": "^1.3.0",
     "@maas/vue-primitive": "^1.5.0",
-    "@nuxt/fonts": "^1.2.0",
     "@nuxt/icon": "^2.5.1",
     "@nuxt/kit": "^4.6.0",
     "@nuxtjs/color-mode": "^3.5.2",
