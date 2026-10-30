@@ -44,7 +44,7 @@ const file = computed(() => to.startsWith('/') && /\.\w+$/.test(to))
 
 const classes = computed(() => [
   underline
-    ? 'underline decoration-1 underline-offset-[0.2em] hover:text-surface-muted'
+    ? 'underline decoration-1 underline-offset-[0.2em]'
     : 'block outline-offset-0',
   {
     'max-md:motion-safe:select-none max-md:motion-safe:[-webkit-touch-callout:none] max-md:motion-safe:[-webkit-user-drag:none]':

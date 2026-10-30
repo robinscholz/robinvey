@@ -3,7 +3,7 @@
     :is="as"
     :class="[
       'flex items-baseline gap-x-[1.5ch] md:gap-x-[2ch]',
-      { 'hover:text-surface-muted': interactive },
+      { group: interactive },
     ]"
   >
     <span
@@ -11,7 +11,12 @@
     >
       <slot name="meta" />
     </span>
-    <component :is="as" class="min-w-0 flex-1">
+    <!-- The title underlines under the pointer, the way a link in the prose
+         is underlined; the dates beside it stay as they are. -->
+    <component
+      :is="as"
+      class="min-w-0 flex-1 decoration-1 underline-offset-[0.2em] group-hover:underline"
+    >
       <slot />
     </component>
   </component>
