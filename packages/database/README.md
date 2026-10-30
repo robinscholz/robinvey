@@ -36,10 +36,11 @@ API request of a Worker isolate.
 Schema changes go through drizzle-kit:
 
 ```sh
-pnpm db:generate --name <what-changed>
+pnpm db:generate -- --name <what-changed>
 ```
 
 That diffs `src/schema.ts` against `migrations/meta` and writes a new SQL
-migration. Commit the result. The app’s `dev` and `start` scripts apply
-pending migrations to the local database, and its `deploy` script applies
-them to the deployed one before uploading the Worker.
+migration. Commit the result. The app’s `db:migrate` script applies pending
+migrations to the local database and runs before its `dev` and `start`; its
+`deploy` script applies them to the deployed one before uploading the
+Worker.

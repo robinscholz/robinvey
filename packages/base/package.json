@@ -14,7 +14,7 @@
     ".": "./nuxt.config.ts"
   },
   "scripts": {
-    "build": "mirror tokens && mirror css",
+    "tokens": "mirror tokens && mirror css",
     "lint": "eslint ."
   },
   "dependencies": {

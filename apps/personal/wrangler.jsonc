@@ -3,7 +3,7 @@
   "name": "robinvey",
   "compatibility_date": "2026-10-10",
   "assets": {
-    "directory": "./apps/personal/.output/public",
+    "directory": ".output/public",
     "not_found_handling": "404-page",
   },
 }

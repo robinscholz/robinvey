@@ -10,15 +10,15 @@
     }
   ],
   "scripts": {
-    "dev": "pnpm tokens && pnpm db:migrate && pnpm db:pull && nuxt dev",
-    "build": "pnpm tokens && nuxt build",
-    "start": "pnpm db:migrate && pnpm db:pull && wrangler dev",
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "start": "wrangler dev",
     "deploy": "wrangler d1 migrations apply DB --remote && wrangler deploy",
+    "lint": "eslint .",
+    "typecheck": "nuxt typecheck",
     "tokens": "mirror tokens && mirror css",
     "db:migrate": "wrangler d1 migrations apply DB --local",
-    "db:pull": "node scripts/pull-database.mjs",
-    "lint": "eslint .",
-    "typecheck": "nuxt typecheck"
+    "db:pull": "node scripts/pull-database.mjs"
   },
   "dependencies": {
     "@dnd-kit/dom": "^0.5.1",
