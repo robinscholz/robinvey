@@ -1,9 +1,7 @@
 <template>
   <UiMarquee :playing="playing"
     >{{ entry.company
-    }}<span v-if="entry.role" class="text-surface-muted"
-      >, {{ entry.role }}</span
-    ></UiMarquee
+    }}<template v-if="entry.role">, {{ entry.role }}</template></UiMarquee
   >
 </template>
 

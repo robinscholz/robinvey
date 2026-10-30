@@ -1,6 +1,6 @@
 <template>
   <footer>
-    <UiSection label="Colophon" emoji="🖋️" :reel="REEL" :rule="rule">
+    <UiSection label="Colophon" emoji="🖋️" :reel="REEL">
       <p class="text-surface-muted">
         <template v-for="(part, index) in parts" :key="index"
           ><UiTypefaceSwitch v-if="index % 2" /><template v-else>{{
@@ -9,7 +9,7 @@
         >
         Updated {{ updated }}.
       </p>
-      <div class="mt-[1lh] lg:hidden">
+      <div class="mt-[1lh]">
         <UiColorModeSwitch variant="button" />
       </div>
     </UiSection>
@@ -20,7 +20,6 @@
 interface ProfileColophonProps {
   colophon: string
   updated: string
-  rule: number
 }
 
 // Spun past by the emoji before it lands.
@@ -30,7 +29,7 @@ const REEL = ['✒️', '🔤', '🔠', '🖨️', '📰', '🗞️', '📏', '�
 // splitting around it leaves the switch at every odd index.
 const SWITCH = /(Semi Mono)/
 
-const { colophon, updated, rule } = defineProps<ProfileColophonProps>()
+const { colophon, updated } = defineProps<ProfileColophonProps>()
 
 const parts = computed(() => colophon.split(SWITCH))
 </script>

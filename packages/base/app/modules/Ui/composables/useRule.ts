@@ -3,24 +3,19 @@
 const GLYPHS = ['∗', '–', '+', '×', '#', '%', '=']
 
 export function useRule() {
-  // Private state
-  const glyphs = useState<Array<string>>('ui-rule-glyphs', () => [])
+  // Public state
+  // One glyph for every rule on the page; empty until drawn, so a rule keeps
+  // its line without one.
+  const glyph = useState('ui-rule-glyph', () => '')
 
   // Public functions
-  function shuffle() {
-    glyphs.value = GLYPHS.map((glyph) => ({ glyph, key: Math.random() }))
-      .sort((first, second) => first.key - second.key)
-      .map(({ glyph }) => glyph)
-  }
-
-  // Empty until shuffled, so a rule keeps its line without a glyph.
-  function glyph(position: number): string {
-    return glyphs.value[position % GLYPHS.length] ?? ''
+  function draw() {
+    glyph.value = GLYPHS[Math.floor(Math.random() * GLYPHS.length)] ?? ''
   }
 
   return {
-    shuffle,
     glyph,
+    draw,
   }
 }
 

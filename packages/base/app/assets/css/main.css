@@ -66,7 +66,7 @@
     font-kerning: normal;
     word-spacing: -0.1em;
     overflow-x: clip;
-    @apply bg-surface-base text-surface text-sm sm:text-base;
+    @apply bg-surface-base text-surface text-sm;
   }
 
   p {

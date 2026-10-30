@@ -1,8 +1,8 @@
 <template>
   <section :aria-labelledby="headingId" class="pb-12">
-    <UiRule v-if="rule !== undefined" :position="rule" class="mb-3" />
+    <UiRule class="mb-3" />
     <div class="grid-page items-baseline gap-y-3">
-      <h2 :id="headingId" class="text-surface-muted">
+      <h2 :id="headingId">
         <UiReel
           v-if="emoji"
           :symbol="emoji"
@@ -23,10 +23,9 @@ interface UiSectionProps {
   label: string
   emoji?: string
   reel?: Array<string>
-  rule?: number
 }
 
-const { label, emoji, reel, rule } = defineProps<UiSectionProps>()
+const { label, emoji, reel } = defineProps<UiSectionProps>()
 
 const headingId = useId()
 </script>

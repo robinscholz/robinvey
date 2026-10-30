@@ -23,10 +23,6 @@
 import { useElementSize } from '@vueuse/core'
 import { scrambleRepeat } from '../utils/scramble'
 
-interface UiRuleProps {
-  position: number
-}
-
 interface GlyphMetrics {
   ink: number
   offset: number
@@ -47,13 +43,9 @@ const FALLBACK_COUNT = 600
 // size. Every rule shares it, whatever the glyph’s own side bearings.
 const GAP = 0.35
 
-const { position } = defineProps<UiRuleProps>()
-
-const { glyph } = useRule()
+const { glyph: char } = useRule()
 const { typeface } = useTypeface()
 const { on, off } = useUiEmitter()
-
-const char = computed(() => glyph(position))
 
 const ruleRef = useTemplateRef('rule')
 const { width, height } = useElementSize(ruleRef)
