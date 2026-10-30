@@ -11,9 +11,9 @@
       @click="close"
     >
       <!-- Nobody sees the garden before the page is up, so its code is loaded
-           and its plants grown once the browser is idle, after the page has
+           and its emoji drawn once the browser is idle, after the page has
            had its first moments. -->
-      <LazyGardenPlot hydrate-on-idle :active="revealed" class="size-full" />
+      <LazyGardenField hydrate-on-idle :active="revealed" class="size-full" />
       <!-- The page’s shadow, cast by an empty box over the part of the page in
            view. The page clips itself, which would cut off its own shadow. -->
       <div

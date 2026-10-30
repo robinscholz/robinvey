@@ -6,19 +6,12 @@ interface ScramblePayload {
   roots: Array<Element>
   duration: number
   hold?: number
-  onProgress?: (progress: number) => void
   swap?: () => Promise<void>
 }
 
 interface BusyPayload {
   roots: Array<Element>
   busy: boolean
-}
-
-interface RepeatPayload {
-  char: string
-  count: number
-  progress: number
 }
 
 interface SettlePayload {
@@ -339,24 +332,9 @@ function prepare(roots: Array<Element>): Array<ScrambledText> {
   return texts
 }
 
-// One glyph repeated along a line, scrambled and settled like the text. Any
-// symbol may stand in, as the caller holds each glyph’s place.
-export function scrambleRepeat({
-  char,
-  count,
-  progress,
-}: RepeatPayload): Array<string> {
-  return Array.from({ length: count }, (_, index) =>
-    progress >= settle({ index, length: count })
-      ? char
-      : (SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)] ?? char)
-  )
-}
-
 // Scrambles the text under each root at once, then settles it over the
 // duration. While it runs the roots are busy, which sets them to break lines
-// only where the forced breaks are, so no line can rewrap. Each write is
-// reported, so text it leaves to Vue, such as the rules, can keep step.
+// only where the forced breaks are, so no line can rewrap.
 //
 // A hold keeps every glyph noise for that long before the run begins, and a
 // swap changes the page as the hold ends. The real text comes back, takes the
@@ -368,13 +346,11 @@ export function scramble({
   roots,
   duration,
   hold = 0,
-  onProgress,
   swap,
 }: ScramblePayload): Promise<void> {
   let texts = prepare(roots)
   let pending = swap
   write({ texts, progress: 0 })
-  onProgress?.(0)
   markBusy({ roots, busy: true })
 
   return new Promise((resolve) => {
@@ -398,7 +374,6 @@ export function scramble({
       if (progress >= 1 || now - changed >= INTERVAL) {
         changed = now
         write({ texts, progress })
-        onProgress?.(progress)
       }
       if (progress < 1) {
         requestAnimationFrame(frame)

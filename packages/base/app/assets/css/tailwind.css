@@ -31,13 +31,3 @@
     transparent
   );
 }
-
-@utility grid-page {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  column-gap: 3ch;
-
-  @variant md {
-    grid-template-columns: 18ch minmax(0, 64ch);
-  }
-}

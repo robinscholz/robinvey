@@ -1,6 +1,6 @@
 <template>
   <footer>
-    <UiSection label="Colophon" emoji="🖋️">
+    <UiSection label="Colophon">
       <p class="text-surface-muted">
         <template v-for="(part, index) in parts" :key="index"
           ><UiTypefaceSwitch v-if="index % 2" /><template v-else>{{

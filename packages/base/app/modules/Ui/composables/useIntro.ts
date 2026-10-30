@@ -28,7 +28,6 @@ export function useIntro() {
     const scrambling = scramble({
       roots: [...document.querySelectorAll(ScrambleSelector)],
       duration: DURATION,
-      onProgress: (progress) => emit('scrambleProgress', progress),
     })
     html.removeAttribute(IntroAttribute)
     await scrambling

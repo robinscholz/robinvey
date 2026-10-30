@@ -6,24 +6,18 @@
     data-color-mode="dark"
   >
     <header
-      class="grid-page items-baseline gap-y-[1lh] px-5 pt-6 pb-12 md:px-10 md:pt-10 md:pb-24"
+      class="max-w-[64ch] px-5 pt-6 pb-12 md:px-10 md:pt-10 md:pb-24 lg:px-16 lg:pt-16"
     >
-      <div>
-        <h1>{{ title }}</h1>
-        <p class="text-surface-muted">
-          <UiEmoji symbol="🥀" autoplay class="mr-[1ch] size-[1em]" />{{
-            error.statusCode
-          }}
-        </p>
-      </div>
-      <p>
+      <h1>{{ title }}</h1>
+      <p class="text-surface-muted">{{ error.statusCode }}</p>
+      <p class="mt-[1lh]">
         <UiLink to="/">{{ host }}</UiLink>
       </p>
     </header>
     <!-- Loaded with the page, as nothing covers the garden here; lazy all
-         the same, so the plot stays its own chunk and the home page can
+         the same, so the field stays its own chunk and the home page can
          leave it until it is idle. -->
-    <LazyGardenPlot active class="flex-1" />
+    <LazyGardenField active class="flex-1" />
   </div>
 </template>
 

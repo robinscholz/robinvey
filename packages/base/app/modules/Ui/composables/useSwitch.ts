@@ -16,8 +16,6 @@ const DURATION = 350
 // One choreography for every switch that changes the whole page, the
 // typeface and the colour mode among them.
 export function useSwitch() {
-  const { emit } = useUiEmitter()
-
   // Public state
   // One switch at a time, whichever of them is asked.
   const switching = useState('ui-switching', () => false)
@@ -50,7 +48,6 @@ export function useSwitch() {
       roots: [...document.querySelectorAll(ScrambleSelector)],
       duration: DURATION,
       hold: HOLD,
-      onProgress: (progress) => emit('scrambleProgress', progress),
       swap: async () => {
         await change()
         fade('in')

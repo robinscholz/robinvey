@@ -1,26 +1,26 @@
 <template>
-  <div class="px-5 md:px-10" data-scramble>
+  <div class="px-5 md:px-10 lg:px-16" data-scramble>
     <main>
       <ProfileHeader :page="page" :profile="profile" />
       <div class="pb-12 md:pb-24">
         <ProfileCableway />
       </div>
-      <UiSection label="Now" emoji="⏳">
+      <UiSection label="Now">
         <p>{{ profile.now }}</p>
       </UiSection>
-      <UiSection label="Work" emoji="🌀">
+      <UiSection label="Work">
         <ProfileExperience :experience="experience" />
       </UiSection>
-      <UiSection v-if="sites.length" label="Sites" emoji="🌐">
+      <UiSection v-if="sites.length" label="Sites">
         <ProfileSites :sites="sites" />
       </UiSection>
-      <UiSection label="Projects" emoji="🧰">
+      <UiSection label="Projects">
         <ProfileProjects :projects="projects" />
       </UiSection>
-      <UiSection v-if="writing.length" label="Writing" emoji="✍️">
+      <UiSection v-if="writing.length" label="Writing">
         <ProfileWriting :writing="writing" />
       </UiSection>
-      <UiSection label="Contact" emoji="🐌">
+      <UiSection label="Contact">
         <ContentRenderer v-if="contact.document" :value="contact.document" />
       </UiSection>
     </main>

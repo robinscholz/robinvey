@@ -1,5 +1,5 @@
 <template>
-  <header class="max-w-[64ch] pt-6 pb-12 md:pt-10">
+  <header class="max-w-[64ch] pt-6 pb-12 md:pt-10 lg:pt-16">
     <h1>{{ profile.name }}</h1>
     <ContentRenderer
       v-if="page.document"
