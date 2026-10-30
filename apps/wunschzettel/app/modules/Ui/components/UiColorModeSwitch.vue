@@ -94,8 +94,10 @@ const ICONS = [...OPTIONS.map((option) => option.icon), 'check', 'spacer'].map(
   (name) => iconName({ name })
 )
 
+// The site’s small size, so the switch reads the same there and here; the
+// app’s own small size is a step below it.
 const ROW =
-  'flex cursor-pointer items-center gap-x-[1ch] whitespace-nowrap text-xs'
+  'flex cursor-pointer items-center gap-x-[1ch] whitespace-nowrap text-[0.8125rem]/[1.5]'
 
 // The primary tint is translucent, so the blur keeps content scrolling
 // underneath legible.
