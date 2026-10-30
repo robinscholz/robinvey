@@ -14,11 +14,11 @@
         <UiSection label="Work">
           <ProfileExperience :experience="experience" />
         </UiSection>
-        <UiSection v-if="sites.length" label="Built">
-          <ProfileSites :sites="sites" />
-        </UiSection>
         <UiSection label="Projects">
           <ProfileProjects :projects="projects" />
+        </UiSection>
+        <UiSection v-if="sites.length" label="Built">
+          <ProfileSites :sites="sites" />
         </UiSection>
         <UiSection v-if="writing.length" label="Writing">
           <ProfileWriting :writing="writing" />
