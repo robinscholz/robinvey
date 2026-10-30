@@ -5,7 +5,14 @@
     aria-label="The next picture"
     @click="next"
   >
-    <UiEmoji :symbol="symbol" :dots="DOTS" class="size-[32ch]" boot />
+    <!-- A dot a character from 400px up; narrower than that, the matrix takes
+         the whole width. -->
+    <UiEmoji
+      :symbol="symbol"
+      :dots="DOTS"
+      class="w-full min-[400px]:size-[32ch]"
+      boot
+    />
   </button>
 </template>
 
